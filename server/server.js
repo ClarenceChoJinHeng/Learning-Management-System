@@ -88,6 +88,37 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  // VALIDATE FORM DATA
+  if (!email || !password) {
+    return res.status(400).json({ message: "Invalid form data" });
+  }
+
+  // CHECK WHETHER THE EMAIL AND PASSWORD IS CORRECT
+  const usersEmail = await userCollection.findOne({ email });
+  console.log(usersEmail);
+
+  // EXTRACT THE EMAIL AND PASSWORD FROM THE DATABASE
+  if (usersEmail) {
+    const dbEmail = usersEmail.email;
+    const dbPassword = usersEmail.password;
+
+    // COMPARE THE EMAIL FIRST
+    if (dbEmail === email) {
+      // COMPARE THE PASSWORD
+      const passwordMatch = await bcrypt.compare(password, dbPassword);
+
+      if (passwordMatch) {
+        return res.status(200).json({ message: "Login successful" });
+      } else {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+    }
+  }
+});
+
 app.listen(5001, () => console.log("Server started on http://localhost:5001"));
 
 // METHODS TO SEND BACK TO CLIENT

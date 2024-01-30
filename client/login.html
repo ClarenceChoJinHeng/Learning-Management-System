@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+  <body>
+    <form id="login-form">
+      <label for="email">Email</label>
+      <input type="text" name="email" id="email" placeholder="Email" />
+      <p id="error__email">Email is empty!!</p>
+      <br />
+      <label for="password">Password</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Password"
+      />
+      <p id="error__password">Password Is Empty !!</p>
+      <br />
+      <input id="submit-login" type="submit" value="Login" />
+    </form>
+
+    <script type="module" src="js/login.js"></script>
+  </body>
+</html>

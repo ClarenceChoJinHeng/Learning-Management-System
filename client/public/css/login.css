@@ -1,0 +1,5 @@
+#error__email,
+#error__password {
+  display: none;
+  color: red;
+}
