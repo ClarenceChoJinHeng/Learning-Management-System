@@ -6,7 +6,7 @@
 
 header {
   background-color: #f8f8f8;
-  border: 0.1px solid black;
+  border: 0.1px solid lightgrey;
 }
 
 .header__main__container {
@@ -17,8 +17,8 @@ header {
   padding: 2vh;
 }
 
-.open__nav{
-  padding: 1vh; 
+.open__nav {
+  padding: 1vh;
   border-radius: 30vh;
   transition: all 0.2s ease;
 }
@@ -73,7 +73,7 @@ main {
 .nav__main__container {
   height: 100%;
   width: 13vh;
-  border: 1px solid black;
+  border: 1px solid lightgrey;
   border-top: none;
   transition: width 0.5s ease;
 }
@@ -118,10 +118,45 @@ main {
   height: 100%;
 }
 
+.create__course__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  /* gap: 2vh; */
+  /* gap: 2vh; */
+}
+
 .background__image__container {
   display: flex;
   justify-content: center;
-  padding: 10vh;
+  /* padding: 10vh; */
+}
+
+.create__title {
+  font-size: 2vh;
+  font-weight: var(--Raleway600);
+  opacity: 0.6;
+  margin-bottom: 2vh;
+}
+
+.join__class,
+.create__class {
+  max-width: 15vh;
+  width: 15vh;
+  padding: 2vh;
+  border-radius: 0.5vh;
+  border: none;
+  background: var(--Dark);
+  color: white;
+  cursor: pointer;
+  font-family: var(--Raleway);
+  font-weight: var(--Raleway600);
+  box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.7);
+  transition: all 0.2s ease;
 }
 /* ========= HOVER CSS ========= */
 
@@ -139,6 +174,12 @@ main {
   background-color: var(--BrightBlue);
 }
 
+.join__class:hover,
+.create__class:hover {
+  background: var(--DarkGold);
+  box-shadow: 0 0 10px 0 var(--DarkGold);
+}
+
 /* ========== ACTIVE CSS ========= */
 
 .nav__main__container:active {
@@ -147,4 +188,16 @@ main {
 
 .nav__function__container:active {
   background-color: var(--BrightBlue);
+}
+
+.join__class:active,
+.create__class:active {
+  background: var(--Gold);
+  transform: scale(0.99);
+}
+
+/* ============== CREATE CLASS POPUP ==============  */
+
+.class__popup__main__container {
+  
 }
