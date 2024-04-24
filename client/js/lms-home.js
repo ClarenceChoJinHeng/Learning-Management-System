@@ -1,8 +1,9 @@
+// SIDE BAR NAVIGATION
 const openCloseSideNav = document.getElementById("openSideNav");
 const navMainContainer = document.getElementById("navMainContainer");
 const sideLabels = navMainContainer.querySelectorAll("label");
 
-// Set initial width in JavaScript
+// SET INITIAL WIDTH OF NAVIGATION CONTAINER
 navMainContainer.style.width = "13vh";
 sideLabels.forEach((label) => {
   label.style.display = "none";
@@ -38,4 +39,26 @@ navMainContainer.addEventListener("mouseout", () => {
       label.style.display = "none";
     });
   }
+});
+
+// ==================== POP UP MODAL ====================
+
+const backgroundOverlay = document.getElementById("popupBackgroundOverlay");
+
+const popupOverlay = document.getElementById("classPopupOverlay");
+
+const createClassBtn = document.getElementById("createClassButton");
+
+const cancelBtn = document.getElementById("cancelClassButton");
+
+// OPEN OVERLAY FOR BACKGROUND AND POPUP
+
+createClassBtn.addEventListener("click", () => {
+  backgroundOverlay.style.display = "block";
+  popupOverlay.style.display = "block";
+});
+
+cancelBtn.addEventListener("click", () => {
+  backgroundOverlay.style.display = "none";
+  popupOverlay.style.display = "none";
 });

@@ -88,7 +88,7 @@
             <!-- ============== CREATE COURSE CONTAINER ============== -->
             <label class="create__title">Create a class to get started</label>
             <div class="create__join__container">
-              <button class="create__class" id="createClass">
+              <button class="create__class" id="createClassButton">
                 Create Class
               </button>
               <button class="join__class" id="joinClass">Join Class</button>
@@ -98,19 +98,48 @@
       </section>
 
       <!-- ============== CREATE CLASS POPUP ============== -->
-      <!-- <div class="class__popup__main__container">
+      <div class="background__overlay__class__popup" id="popupBackgroundOverlay"></div>
+      <div class="class__popup__main__container" id="classPopupOverlay">
         <div class="class__popup__container">
           <div class="create__class__container">
             <label class="create__class__label">Create Class: </label>
             <form class="create__class__form">
-              <input type="text" id="className" class="class__name" />
-              <input type="text" id="classSection" class="class__Section" />
-              <input type="text" id="classSection" class="class__subject" />
-              <input type="text" id="classRoom" class="class__room" />
+              <input
+                type="text"
+                id="className"
+                class="class__name"
+                placeholder="Class Name "
+              />
+              <input
+                type="text"
+                id="classSection"
+                class="class__section"
+                placeholder="Class Section"
+              />
+              <input
+                type="text"
+                id="classSection"
+                class="class__subject"
+                placeholder="Class Subject"
+              />
+              <input
+                type="text"
+                id="classRoom"
+                class="class__room"
+                placeholder="Class Room"
+              />
             </form>
+            <div class="create__class__button__container">
+              <button class="create__class__button" id="createClassButton">
+                Create
+              </button>
+              <button class="cancel__class__button" id="cancelClassButton">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
-      </div> -->
+      </div>
     </main>
 
     <!-- ========= LINK JS ========= -->
