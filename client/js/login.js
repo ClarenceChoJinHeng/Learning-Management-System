@@ -56,7 +56,7 @@ const submitForm = async (event) => {
     const data = await response.json();
     console.log(data.message);
     alert("Login successful");
-    window.location.href = "/LMS/lms_home.html";
+    window.location.href = "lms_home.html";
   } else {
     const text = await response.text();
     console.log(text);

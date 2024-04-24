@@ -36,3 +36,7 @@ npm install bcryptjs compression concurrently cors dotenv express formidable goo
 (14) openai = ChatGPT API
 (15) uuid = Generate Random ID
 (16) stripe = Payment Gateway
+
+
+
+

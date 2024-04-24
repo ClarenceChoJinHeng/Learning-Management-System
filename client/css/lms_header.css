@@ -1,0 +1,150 @@
+@import url("style.css");
+
+* {
+  /* border: 1px solid black; */
+}
+
+header {
+  background-color: #f8f8f8;
+  border: 0.1px solid black;
+}
+
+.header__main__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: 1.8vh;
+  padding: 2vh;
+}
+
+.open__nav{
+  padding: 1vh; 
+  border-radius: 30vh;
+  transition: all 0.2s ease;
+}
+
+.open__nav,
+.lms__logo {
+  font-size: 3vh;
+}
+
+.hamburger__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8vh;
+}
+
+.open__side__nav__container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2vh;
+}
+
+.logo__container > label {
+  font-size: 3vh;
+  font-weight: var(--Raleway700);
+}
+
+.user__account {
+  font-size: 3.5vh;
+  border: 1px solid black;
+  border-radius: 10vh;
+  padding: 0.3vh;
+}
+
+main {
+  height: 100vh;
+}
+
+.lms__main__container {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+}
+
+.nav__main__container {
+  height: 100%;
+  width: 13vh;
+  border: 1px solid black;
+  border-top: none;
+  transition: width 0.5s ease;
+}
+
+.lms__nav__container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+  margin: 2vh;
+}
+
+.nav__function__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1vh;
+  padding: 1.5vh;
+  margin-right: 1vh;
+  border-top-right-radius: 10vh;
+  border-bottom-right-radius: 10vh;
+  transition: all 0.2s ease;
+}
+
+.nav__function__container > i {
+  font-size: 3vh;
+  margin-left: 1vh;
+}
+
+.nav__function__container > label {
+  font-size: 2vh;
+  font-weight: var(--Raleway500);
+  color: var(--DarkBlue);
+  width: max-content;
+  display: none;
+}
+
+.lms__display__functionality__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.background__image__container {
+  display: flex;
+  justify-content: center;
+  padding: 10vh;
+}
+/* ========= HOVER CSS ========= */
+
+.user__account:hover {
+  background-color: var(--BrightBlue);
+  cursor: pointer;
+}
+
+.nav__function__container:hover {
+  background-color: var(--BrightBlue);
+  cursor: pointer;
+}
+
+.open__nav:hover {
+  background-color: var(--BrightBlue);
+}
+
+/* ========== ACTIVE CSS ========= */
+
+.nav__main__container:active {
+  width: 50vh;
+}
+
+.nav__function__container:active {
+  background-color: var(--BrightBlue);
+}

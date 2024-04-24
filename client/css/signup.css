@@ -12,7 +12,7 @@
 
 .signup__inner__container {
   width: 45vh;
-  height: 70vh;
+  height: 75vh;
   border-radius: 1vh;
   border: 1px solid black;
   gap: 2vh;
@@ -100,7 +100,6 @@ label {
 }
 
 /* ============ ACTIVE CSS ============= */
-
 
 #submit-button:active {
   transform: scale(0.99);

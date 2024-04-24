@@ -72,7 +72,7 @@ body {
 .card-img {
   height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border: 4px solid;
   border-color: var(--DarkGold);
   background: white;
@@ -82,6 +82,7 @@ body {
   font-size: 18px;
   font-weight: 500;
   color: #333;
+  width: max-content;
 }
 
 .description__container {

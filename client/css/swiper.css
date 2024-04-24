@@ -1,10 +1,13 @@
 @import url("style.css");
 
 .swiper__body__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin-top: 75vh;
   font-family: var(--Raleway);
-  /* background-color: #efefef; */
-  padding: 5vh 0vh 5vh 0vh;
+  /* padding: 5vh 0vh 5vh 0vh; */
 }
 
 .swiper__title {
@@ -20,21 +23,25 @@
 }
 
 .slide-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   max-width: 130vh;
-  width: 130vh;
-  padding: 40px 0;
 }
 
 .slide-content {
+  display: flex;
+  justify-content: center;
   margin: 30px 40px 30px 60px;
   overflow: hidden;
-  border-radius: 0.5vh;
-  width: 90%;
+  /* border-radius: 0.5vh; */
 }
 
 .card {
-  width: 0vh;
+  width: max-content;
   border-radius: 0.5vh;
+  padding: 0vh;
   background-color: #fff;
 }
 
@@ -55,9 +62,9 @@
 }
 
 .image-content {
-  padding: 4vh;
-  top: 0;
-  left: 0;
+  /* padding: 4vh; */
+  /* top: 0; */
+  /* left: 0; */
   height: 100%;
   width: 100%;
   background-color: var(--Dark);
@@ -131,6 +138,9 @@
   transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
+.swiper-pagination {
+  /* bottom: -50px; */
+}
 /* ============ HOVER CSS ============= */
 
 .explore__button:hover {
@@ -145,7 +155,10 @@
   transform: scale(0.99);
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1180px) {
+  .swiper__body__container {
+    /* margin-top: 95vh; */
+  }
   .slide-content {
     margin: 0px 10px;
   }

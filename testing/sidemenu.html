@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIDE MENU</title>
+    <!-- CSS Link-->
+    <link rel="stylesheet" href="css/sidemenu.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header_div">
+        <!-- button for active side menu -->
+        <button id="menu_button" onclick="sidemenu()">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+        <ion-icon id="logo1" name="logo-github"></ion-icon
+        ><span id="logo">LMS</span>
+        <ion-icon id="user_pic" name="person-circle-outline"></ion-icon>
+        <span id="username">Username</span>
+      </div>
+    </header>
+    <!-- sidebar menu -->
+    <div class="sidebar">
+      <ul>
+        <li>
+          <a href="#">
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <span class="nav_item">User Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <ion-icon name="bookmarks"></ion-icon>
+            <span class="nav_item">Course</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <ion-icon name="chatbubbles"></ion-icon>
+            <span class="nav_item">Chat</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <ion-icon name="calendar"></ion-icon>
+            <span class="nav_item">Calendar</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+            <span class="nav_item">Group Chat</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <ion-icon name="settings"></ion-icon>
+            <span class="nav_item">Setting</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- main content  -->
+    <div class="main_content">
+      <h1>TEST</h1>
+    </div>
+  </body>
+
+  <!-- ion-icon for icon-->
+  <script
+    type="module"
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+  ></script>
+  <script
+    nomodule
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+  ></script>
+  <script src="js/sidemenu.js"></script>
+</html>
