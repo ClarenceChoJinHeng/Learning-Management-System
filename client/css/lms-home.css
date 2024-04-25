@@ -57,7 +57,18 @@ header {
   font-weight: var(--Raleway700);
 }
 
-/* ============== USER ACCOUNT STYLES ==============  */
+/* ============== TOP RIGHT FUNCTION STYLES ==============  */
+.top__right__function__container {
+  display: flex;
+  align-items: center;
+  gap: 2vh;
+}
+
+.create__join__class__icon {
+  font-size: 3vh;
+  cursor: pointer;
+}
+
 .user__account {
   font-size: 3.5vh;
   border: 1px solid black;
@@ -102,6 +113,8 @@ main {
   border-top-right-radius: 10vh;
   border-bottom-right-radius: 10vh;
   transition: all 0.2s ease;
+  text-decoration: none;
+  color: black;
 }
 
 .nav__function__container > i {
@@ -115,6 +128,7 @@ main {
   color: var(--DarkBlue);
   width: max-content;
   display: none;
+  cursor: pointer;
 }
 
 /* ============== DISPLAY FUNCTIONALITY CONTAINER STYLES ==============  */
@@ -282,9 +296,28 @@ main {
   border: none;
   color: black;
   cursor: pointer;
+  background: none;
   font-family: var(--Raleway);
   font-weight: var(--Raleway600);
   transition: all 0.2s ease;
+}
+
+/* ============== ENABLED CSS ==============  */
+
+.create__class__button:enabled {
+  color: var(--Gold);
+}
+
+/* ============== HOVER CSS ==============  */
+
+.create__class__button:hover {
+  background: #f8f8f8;
+}
+
+/* ============== ACTIVE CSS==============  */
+
+.create__class__button:active {
+  transform: scale(0.99);
 }
 
 .cancel__class__button {

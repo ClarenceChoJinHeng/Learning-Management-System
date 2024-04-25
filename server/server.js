@@ -13,6 +13,8 @@ import bcrypt from "bcryptjs";
 dotenv.config();
 
 /* ========== CONNECT EXPRESS, CORS ========== */
+/* ========== MIDDLEWARE ========== */
+
 const app = express(); // Initialize express
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Enable JSON parsing
@@ -43,12 +45,13 @@ initializeMongoClient().catch(console.dir);
 /* ========== GLOBAL VARIABLES FOR MONGODB DATABASE, COLLECTION  ========== */
 const database = client.db("lms-management-system");
 const userCollection = database.collection("Users");
+const courseCollection = database.collection("Courses");
 
 /* ========== EXPRESS SIGNUP CONFIGURATION ========== */
 app.post("/client/signup", async (req, res) => {
   try {
     // GET THE VALUES FROM THE CLIENT (JSON.stringify)
-    const { username, email, password, role} = req.body;
+    const { username, email, password, role } = req.body;
 
     // VALIDATE FORM DATA
     if (!username || !email || !password) {
@@ -128,4 +131,42 @@ app.post("/client/login", async (req, res) => {
 // res.status(200).json({ message: "Signup route" });
 // res.send("Signup route");
 
+// ================ CREATE CLASS VALIDATION ==================
+
+app.post("/client/lms-home", async (req, res) => {
+  try {
+    // GET THE VALUES FROM THE CLIENT (JSON.stringify)
+    const { className, classSection, classSubject, classRoom } = req.body;
+
+    if (!className || !classSection || !classSubject || !classRoom) {
+      return res.status(400).json({ message: "Invalid form data" });
+    } 
+
+    // INSERT DATA INTO THE DATABASE
+    const insert = await courseCollection.insertOne({
+      className,
+      classSection,
+      classSubject,
+      classRoom,
+    });
+
+    if (insert.acknowledged === true) {
+      return res.status(200).json({ message: "Class Created Succesfully" });
+    } else {
+      res.status(500).json({ error: "Failed to insert data" });
+    }
+  } catch (error) {
+    console.error("Error handling form submission:", error);
+
+    // CHECK IF THE ERROR IS A DUPLICATE KEY ERROR IN OTHER TERMS TO CHECK IF THE USER ALREADY EXISTS
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "User already exists" });
+    } else {
+      console.error("Error handling form submission:", error);
+      res.status(500).send({ error: "Internal Server Error" });
+    }
+  }
+});
+
+// ================ SERVER LISTENING PORT ==================
 app.listen(5001, () => console.log("Server started on http://localhost:5001"));
