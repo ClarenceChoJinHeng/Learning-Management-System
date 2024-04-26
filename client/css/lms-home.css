@@ -131,17 +131,15 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.1vh;
   transition: all 0.2s ease;
-  border-radius: 10vh;
+  border-radius: 50%;
   border: 1px solid grey;
-  padding: 1vh;
-  position: relative;
   cursor: pointer;
+  padding: 0.15rem;
 }
 
 #userName {
-  font-size: 2.5vh;
+  font-size: 1rem;
   font-weight: var(--Raleway600);
   color: var(--DarkBlue);
   cursor: pointer;
@@ -149,10 +147,8 @@ header {
 }
 
 .user__account {
-  font-size: 3.5vh;
-  border-radius: 10vh;
-  padding: 0.3vh;
-  cursor: pointer;
+  font-size: 2rem;
+  border-radius: 50%;
 }
 
 /* ============== MAIN CONTAINER STYLES ==============  */

@@ -1,15 +1,9 @@
-// const logoutBtn = document.getElementById("logoutButton");
+// ==================== LOGOUT FUNCTION ====================
+const logoutButton = document.getElementById("logoutButton");
 
-// logoutBtn.addEventListener("click", async () => {
-//   try {
-//     const response = await fetch("/logout", { method: "POST" });
-//     if (response.ok) {
-//       // If the logout was successful, redirect to the index page
-//       window.location.href = "index.html";
-//     } else {
-//       console.error("Logout failed");
-//     }
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// });
+logoutButton.addEventListener("click", () => {
+  // Remove the token from the local storage
+  localStorage.removeItem("username");
+  // Redirect the user to the login page
+  window.location.href = "index.html";
+});

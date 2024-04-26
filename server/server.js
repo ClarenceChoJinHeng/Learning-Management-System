@@ -110,8 +110,11 @@ app.post("/client/login", async (req, res) => {
       );
 
       if (passwordMatches) {
+        // EXTRACT THE USERNAME FROM THE DATABASE
+        const username = user.username;
+
         // PASSWORD IS CORRECT
-        return res.status(200).json({ message: "Password Match" });
+        return res.status(200).json({ message: "Password Match", username: username });
       } else {
         // PASSWORD IS INCORRECT
         res.status(401).json({ error: "Failed to insert data" });
