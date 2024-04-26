@@ -69,11 +69,16 @@ header {
   cursor: pointer;
 }
 
-.user__account {
-  font-size: 3.5vh;
+.user__account__container {
   border: 1px solid black;
-  border-radius: 10vh;
-  padding: 0.3vh;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  padding: 0.15rem;
+}
+
+.user__account {
+  font-size: 2rem;
 }
 
 /* ============== MAIN CONTAINER STYLES ==============  */
@@ -182,7 +187,7 @@ main {
 }
 
 /* ============== HOVER STYLES ==============  */
-.user__account:hover {
+.user__account__container:hover {
   background-color: var(--BrightBlue);
   cursor: pointer;
 }
