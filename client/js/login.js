@@ -55,6 +55,12 @@ const submitForm = async (event) => {
   if (response.ok) {
     const data = await response.json();
     console.log(data.message);
+
+    // USE LOCAL STORAGE TO STORE THE USERNAME
+    const username = data.username;
+
+    localStorage.setItem("username", username);
+
     alert("Login successful");
     window.location.href = "lms-home.html";
   } else {
