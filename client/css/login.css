@@ -51,6 +51,7 @@ label {
   border-radius: 0.5vh;
   max-width: 30vh;
   width: 30vh;
+  highlight: none;
 }
 
 .remember__me__container {

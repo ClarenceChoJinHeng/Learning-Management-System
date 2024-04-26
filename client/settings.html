@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ========= LINK CSS ========= -->
+
+    <link rel="stylesheet" href="css/lms-home.css" />
+
+    <!-- ========= LINK BOX ICONS ========= -->
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- ======== FONT AWESOME ======== -->
+    <script
+      src="https://kit.fontawesome.com/21bf2f8b90.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- ======== FAVICON ========  -->
+    <link rel="icon" href="image/book-reader-regular-24(2).png" />
+    <title>Settings</title>
+  </head>
+  <body>
+    <!-- ============== HEADER NAVIGATION ============== -->
+    <header>
+      <section class="header__main__container">
+        <div class="hamburger__container" id="hamburger__container">
+          <div class="open__side__nav__container" id="openSideNav">
+            <i class="bx bx-menu-alt-left open__nav" id="openSideNav"></i>
+          </div>
+          <div class="logo__container">
+            <div class="lms__logo__container">
+              <i class="bx bx-book-reader lms__logo"></i>
+            </div>
+            <label>LMS</label>
+          </div>
+        </div>
+
+        <div class="top__right__function__container">
+          <div class="create__join__class__container">
+            <i class="bx bx-plus create__join__class__icon"></i>
+          </div>
+          <div class="user__account__container">
+            <i class="bx bx-user-circle user__account"></i>
+            <label id="userName"></label>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="lms__main__container">
+        <!-- ============== FUNCTIONALITY NAVIGATION ============== -->
+        <div class="nav__main__container" id="navMainContainer">
+          <div class="lms__nav__container">
+            <a href="lms-home.html" class="nav__function__container">
+              <i class="bx bx-home"></i><label id="sideLabel">Home</label>
+            </a>
+            <a href="calendar.html" class="nav__function__container">
+              <i class="bx bx-calendar"></i
+              ><label id="sideLabel">Calendar</label>
+            </a>
+            <a class="nav__function__container">
+              <i class="bx bx-group"></i
+              ><label id="sideLabel">Study Group</label>
+            </a>
+            <a class="nav__function__container">
+              <i class="bx bx-note"></i><label id="sideLabel">Note</label>
+            </a>
+            <a href="settings.html" class="nav__function__container">
+              <i class="bx bx-cog"></i><label id="sideLabel">Settings</label>
+            </a>
+          </div>
+        </div>
+
+        <!-- ============== SETTINGS ============== -->
+
+        <div class="logout__button__container">
+          <button id="logoutButton">Logout</button>
+        </div>
+      </section>
+    </main>
+    <!-- ========= LINK JS ========= -->
+    <script src="js/lms-home.js"></script>
+    <script src="js/logout.js"></script>
+  </body>
+</html>

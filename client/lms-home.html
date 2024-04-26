@@ -7,6 +7,7 @@
     <!-- ========= LINK CSS ========= -->
 
     <link rel="stylesheet" href="css/lms-home.css" />
+    <link rel="stylesheet" href="css/display-course-container.css" />
 
     <!-- ========= LINK BOX ICONS ========= -->
 
@@ -41,12 +42,32 @@
           </div>
         </div>
 
+        <!-- ============== ADD / JOIN AND ACCOUNT CONTAINER ============== -->
         <div class="top__right__function__container">
           <div class="create__join__class__container">
-            <i class='bx bx-plus create__join__class__icon'></i>
+            <i
+              class="bx bx-plus create__join__class__icon"
+              id="triggerPopupForCreateJoin"
+            ></i>
+
+            <!-- ============== CREATE / JOIN POPUP ============== -->
+            <div
+              class="create__join__popup__top__section"
+              id="popupForCreateJoin"
+            >
+              <div class="create__join__container">
+                <div class="create__class__popup">
+                  <button id="retriggerCreatePopup">Create Class</button>
+                </div>
+                <div class="join__class__popup">
+                  <button id="retriggerJoinPopup">Join Class</button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="user__account__container">
             <i class="bx bx-user-circle user__account"></i>
+            <label id="userName"></label>
           </div>
         </div>
       </section>
@@ -71,7 +92,7 @@
             <a class="nav__function__container">
               <i class="bx bx-note"></i><label id="sideLabel">Note</label>
             </a>
-            <a class="nav__function__container">
+            <a href="settings.html" class="nav__function__container">
               <i class="bx bx-cog"></i><label id="sideLabel">Settings</label>
             </a>
 
@@ -80,25 +101,42 @@
         </div>
         <!-- ============== DISPLAY FUNCTIONALITY ============== -->
 
-        <div class="lms__display__functionality__container" id="pageRedirectClass">
-          <div class="create__course__container">
-            <!-- ============== BACKGROUND IMAGE CONTAINER ============== -->
-            <div class="background__image__container">
-              <img
-                src="image/8132244.png"
-                alt=""
-                style="height: 100px; width: 100px"
-              />
+        <div
+          class="lms__display__main__functionality__container"
+          id="displayFunctionalityContainer"
+        >
+          <div class="lms__display__functionality__container" id="lmsDisplayFunctionalityContainer">
+            <div class="create__course__container" id="createCourseContainer">
+              <!-- ============== BACKGROUND IMAGE CONTAINER ============== -->
+              <div class="background__image__container">
+                <img
+                  src="image/8132244.png"
+                  alt=""
+                  style="height: 100px; width: 100px"
+                  id="backgroundImage"
+                />
+              </div>
+
+              <!-- ============== CREATE COURSE CONTAINER ============== -->
+              <label class="create__title">Create a class to get started</label>
+              <div class="create__join__container">
+                <button class="create__class" id="createClassButton">
+                  Create Class
+                </button>
+                <button class="join__class" id="joinClassButton">
+                  Join Class
+                </button>
+              </div>
             </div>
 
-            <!-- ============== CREATE COURSE CONTAINER ============== -->
-            <label class="create__title">Create a class to get started</label>
-            <div class="create__join__container">
-              <button class="create__class" id="createClassButton">
-                Create Class
-              </button>
-              <button class="join__class" id="joinClass">Join Class</button>
-            </div>
+            <!-- ============== DISPLAY COURSE CONTAINER ============== -->
+
+            <!-- <div class="display__course__container">
+              <button id="deleteContainer">Delete</button>
+            </div> -->
+
+
+
           </div>
         </div>
       </section>
@@ -112,7 +150,7 @@
         <div class="class__popup__container">
           <div class="create__class__container">
             <label class="create__class__label">Create Class: </label>
-            <form class="create__class__form">
+            <form class="create__class__form" id="createClassForm">
               <input
                 type="text"
                 id="className"
@@ -139,11 +177,11 @@
               />
             </form>
             <div class="create__class__button__container">
-              <button class="create__class__button" id="createCourse">
-                Create
-              </button>
               <button class="cancel__class__button" id="cancelCreate">
                 Cancel
+              </button>
+              <button class="create__class__button" id="createCourse">
+                Create
               </button>
             </div>
           </div>
@@ -153,5 +191,7 @@
 
     <!-- ========= LINK JS ========= -->
     <script src="js/lms-home.js"></script>
+    <script src="js/createCourse.js"></script>
+    <script src="js/deleteCourse.js"></script>
   </body>
 </html>

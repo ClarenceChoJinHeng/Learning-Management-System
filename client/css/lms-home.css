@@ -5,6 +5,10 @@ body {
   overflow: hidden;
 }
 
+/* * {
+  border: 1px solid black;
+} */
+
 header {
   background-color: #f8f8f8;
   border: 0.1px solid lightgrey;
@@ -29,6 +33,7 @@ header {
 .open__nav,
 .lms__logo {
   font-size: 3vh;
+  user-select: none;
 }
 
 .hamburger__container {
@@ -55,25 +60,99 @@ header {
 .logo__container > label {
   font-size: 3vh;
   font-weight: var(--Raleway700);
+  user-select: none;
 }
 
-/* ============== TOP RIGHT FUNCTION STYLES ==============  */
+/* ============== ACCOUNT LOGOUT STYLES ==============  */
 .top__right__function__container {
   display: flex;
   align-items: center;
   gap: 2vh;
 }
 
+.create__join__class__container {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
 .create__join__class__icon {
   font-size: 3vh;
   cursor: pointer;
+  border-radius: 10vh;
+  padding: 1vh;
+}
+
+.create__join__popup__top__section {
+  /* border: 1px solid black; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2vh;
+  position: absolute;
+  transform: translate(-90%, 40%);
+  top: 0.1%;
+  left: 50%;
+  background: white;
+  border: none;
+  box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.7);
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
+  display: none;
+  transition: all 0.2s ease;
+  border-radius: 0.5vh;
+}
+
+.create__join__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.create__class__popup,
+.join__class__popup {
+  transition: all 0.15s ease;
+}
+
+.create__class__popup > button,
+.join__class__popup > button {
+  padding: 1.5vh;
+  width: 13vh;
+  font-weight: var(--Raleway500);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.user__account__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1vh;
+  transition: all 0.2s ease;
+  border-radius: 10vh;
+  border: 1px solid grey;
+  padding: 1vh;
+  position: relative;
+  cursor: pointer;
+}
+
+#userName {
+  font-size: 2.5vh;
+  font-weight: var(--Raleway600);
+  color: var(--DarkBlue);
+  cursor: pointer;
+  user-select: none;
 }
 
 .user__account {
   font-size: 3.5vh;
-  border: 1px solid black;
   border-radius: 10vh;
   padding: 0.3vh;
+  cursor: pointer;
 }
 
 /* ============== MAIN CONTAINER STYLES ==============  */
@@ -115,6 +194,7 @@ main {
   transition: all 0.2s ease;
   text-decoration: none;
   color: black;
+  user-select: none;
 }
 
 .nav__function__container > i {
@@ -132,10 +212,16 @@ main {
 }
 
 /* ============== DISPLAY FUNCTIONALITY CONTAINER STYLES ==============  */
-.lms__display__functionality__container {
+.lms__display__main__functionality__container {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.lms__display__functionality__container {
+  display: flex;
   width: 100%;
   height: 100%;
 }
@@ -165,10 +251,18 @@ main {
 }
 
 /* ============== JOIN AND CREATE CLASS STYLES ==============  */
-.join__class,
+
+.create__join__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh;
+}
+
 .create__class {
-  max-width: 15vh;
-  width: 15vh;
+  max-width: max-content;
+  width: max-content;
   padding: 2vh;
   border-radius: 0.5vh;
   border: none;
@@ -181,8 +275,22 @@ main {
   transition: all 0.2s ease;
 }
 
+.join__class {
+  max-width: max-content;
+  width: max-content;
+  padding: 2vh;
+  border-radius: 0.5vh;
+  border: none;
+  background: var(--Dark);
+  color: white;
+  cursor: pointer;
+  font-family: var(--Raleway);
+  font-weight: var(--Raleway600);
+  box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.7);
+  transition: all 0.2s ease;
+}
 /* ============== HOVER STYLES ==============  */
-.user__account:hover {
+.user__account__container:hover {
   background-color: var(--BrightBlue);
   cursor: pointer;
 }
@@ -202,6 +310,16 @@ main {
   box-shadow: 0 0 10px 0 var(--DarkGold);
 }
 
+.create__join__class__icon:hover {
+  border-radius: 10vh;
+  background-color: var(--BrightBlue);
+}
+
+.create__class__popup:hover,
+.join__class__popup:hover {
+  background-color: lightgrey;
+}
+
 /* ============== ACTIVE STYLES ==============  */
 .nav__main__container:active {
   width: 50vh;
@@ -215,6 +333,19 @@ main {
 .create__class:active {
   background: var(--Gold);
   transform: scale(0.99);
+}
+
+.user__account__container:active {
+  transform: scale(0.99);
+}
+
+.create__join__class__icon:active {
+  transform: scale(0.99);
+}
+
+.create__class__popup:active,
+.join__class__popup:active {
+  background-color: hsl(0, 0%, 70%);
 }
 
 /* ============== CREATE CLASS POPUP STYLES ==============  */
@@ -294,7 +425,7 @@ main {
   padding: 2vh;
   border-radius: 0.5vh;
   border: none;
-  color: black;
+  color: grey;
   cursor: pointer;
   background: none;
   font-family: var(--Raleway);
@@ -303,10 +434,6 @@ main {
 }
 
 /* ============== ENABLED CSS ==============  */
-
-.create__class__button:enabled {
-  color: var(--Gold);
-}
 
 /* ============== HOVER CSS ==============  */
 
@@ -318,6 +445,8 @@ main {
 
 .create__class__button:active {
   transform: scale(0.99);
+  background: lightgrey;
+  color: black;
 }
 
 .cancel__class__button {
@@ -331,6 +460,17 @@ main {
   transition: all 0.2s ease;
 }
 
+/* #logoutButton {
+  padding: 2vh;
+  border-radius: 0.5vh;
+  border: none;
+  color: black;
+  cursor: pointer;
+  font-family: var(--Raleway);
+  font-weight: var(--Raleway600);
+  transition: all 0.2s ease;
+} */
+
 /* ============== INPUT STYLES ==============  */
 input:focus {
   outline: none;
@@ -342,3 +482,7 @@ input:focus {
   display: none;
   transition: opacity 0.5s ease-in-out;
 }
+
+/* ============== RESPONSIVE STYLES ==============  */
+
+

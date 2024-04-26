@@ -125,7 +125,7 @@ header {
 
 /* ============ ACTIVE CSS ============= */
 .login__link__container:active {
-  transform: scale(0.97);
+  transform: scale(0.99);
 }
 
 /* ============= RESPONSIVE DESIGN ============= */
