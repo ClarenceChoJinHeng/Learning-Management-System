@@ -50,67 +50,16 @@ navMainContainer.addEventListener("mouseout", () => {
   }
 });
 
-// ==================== POP UP MODAL ====================
-// Get the elements needed for the popup modal
-const backgroundOverlay = document.getElementById("popupBackgroundOverlay");
-const popupOverlay = document.getElementById("classPopupOverlay");
-const createClassBtn = document.getElementById("createClassButton");
-const cancelCreate = document.getElementById("cancelCreate");
-
-// OPEN OVERLAY FOR BACKGROUND AND POPUP
-// Add a click event listener to the create class button
-createClassBtn.addEventListener("click", () => {
-  // Show the background overlay and the popup
-  backgroundOverlay.style.display = "block";
-  popupOverlay.style.display = "block";
-});
-
-// Add a click event listener to the cancel button
-cancelCreate.addEventListener("click", () => {
-  // Hide the background overlay and the popup
-  backgroundOverlay.style.display = "none";
-  popupOverlay.style.display = "none";
-});
-
-// ==================== CREATE CLASS FORM VALIDATION ====================
-
-// Get the input fields and the button
-const classNameInput = document.getElementById("className");
-const classSectionInput = document.getElementById("classSection");
-const classSubjectInput = document.getElementById("classSubject");
-const classRoomInput = document.getElementById("classRoom");
-const createCourseButton = document.getElementById("createCourse");
-
-// Disable the button initially
-createCourseButton.disabled = true;
-
-// Function to check if all fields are filled
-function checkFields() {
-  if (
-    classNameInput.value.trim() !== "" &&
-    classSectionInput.value.trim() !== "" &&
-    classSubjectInput.value.trim() !== "" &&
-    classRoomInput.value.trim() !== ""
-  ) {
-    createCourseButton.disabled = false;
-  } else {
-    createCourseButton.disabled = true;
-  }
-}
-
-// Add event listeners to the input fields
-classNameInput.addEventListener("input", checkFields);
-classSectionInput.addEventListener("input", checkFields);
-classSubjectInput.addEventListener("input", checkFields);
-classRoomInput.addEventListener("input", checkFields);
-
 // ==================== CREATE CLASS FORM ====================
 // Get the elements needed for the create class form
 
 const pageRedirectClass = document.getElementById("pageRedirectClass");
 const createCourse = document.getElementById("createCourse");
 
-// CREATE CLASS FORM SUBMISSION
+/// Initialize a counter variable
+let classCreatedCount = 0;
+
+// Modify the submitForm function
 const submitForm = async (event) => {
   event.preventDefault();
 
@@ -134,16 +83,15 @@ const submitForm = async (event) => {
     const data = await response.json();
     console.log(data.message);
     alert("Class created succesfully");
-    // window.location.href = "course-display.html";
-    createCourse.addEventListener("click", () => {
-      const pageRedirectClass = document.getElementById("pageRedirectClass");
-      pageRedirectClass.src = "https://course-display.html";
-    });
+
+    popupOverlay.style.display = "none";
+    backgroundOverlay.style.display = "none";
   } else {
     const error = await response.json();
     console.error(error.message);
     alert("Fail to Create Class");
   }
+  createClassForm.reset();
 };
 
 // ADD EVENT LISTENER TO THE BUTTON
@@ -151,18 +99,4 @@ createCourse.addEventListener("click", (event) => {
   submitForm(event);
 });
 
-//  ==================== PAGE REDIRECT ====================
-
-// Get the container that you want to replace
-const container = document.getElementById("pageRedirectClass");
-
-// Fetch the new HTML page
-fetch("course-display.html")
-  .then((response) => response.text())
-  .then((html) => {
-    // Replace the container's content with the new HTML
-    container.innerHTML = html;
-  })
-  .catch((error) => {
-    console.warn(error);
-  });
+// ==================== REQUEST FORM INPUT DATA FROM DATABASE ====================
