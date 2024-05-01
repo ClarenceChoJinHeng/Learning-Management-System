@@ -112,9 +112,12 @@ app.post("/client/login", async (req, res) => {
       if (passwordMatches) {
         // EXTRACT THE USERNAME FROM THE DATABASE
         const username = user.username;
+        const email = user.email;
 
         // PASSWORD IS CORRECT
-        return res.status(200).json({ message: "Password Match", username: username });
+        return res
+          .status(200)
+          .json({ message: "Password Match", username: username });
       } else {
         // PASSWORD IS INCORRECT
         res.status(401).json({ error: "Failed to insert data" });
@@ -129,28 +132,31 @@ app.post("/client/login", async (req, res) => {
   }
 });
 
-// METHODS TO SEND BACK TO CLIENT
-// res.json({ message: "Signup route" });
-// res.status(200).json({ message: "Signup route" });
-// res.send("Signup route");
-
 // ================ CREATE CLASS VALIDATION ==================
 
 app.post("/client/lms-home", async (req, res) => {
   try {
     // GET THE VALUES FROM THE CLIENT (JSON.stringify)
-    const { className, classSection, classSubject, classRoom } = req.body;
+    const { className, lecturerName, classSubject, classRoom, userEmail } =
+      req.body;
 
-    if (!className || !classSection || !classSubject || !classRoom) {
+    if (
+      !className ||
+      !lecturerName ||
+      !classSubject ||
+      !classRoom ||
+      !userEmail
+    ) {
       return res.status(400).json({ message: "Invalid form data" });
-    } 
+    }
 
     // INSERT DATA INTO THE DATABASE
     const insert = await courseCollection.insertOne({
       className,
-      classSection,
+      lecturerName,
       classSubject,
       classRoom,
+      userEmail,
     });
 
     if (insert.acknowledged === true) {
@@ -171,5 +177,25 @@ app.post("/client/lms-home", async (req, res) => {
   }
 });
 
+// ================ RETRIEVE CLASS VALIDATION ==================
+app.get("/client/retrieveCourse", async (req, res) => {
+  try {
+    const userEmail = req.query.userEmail; // Get the userEmail from the query parameters
+    if (!userEmail) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    const courses = await courseCollection.find({ userEmail }).toArray(); // Filter courses by userEmail
+    return res.status(200).json({ courses });
+  } catch (error) {
+    console.error("Error retrieving courses:", error);
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
 // ================ SERVER LISTENING PORT ==================
 app.listen(5001, () => console.log("Server started on http://localhost:5001"));
+// METHODS TO SEND BACK TO CLIENT
+// res.json({ message: "Signup route" });
+// res.status(200).json({ message: "Signup route" });
+// res.send("Signup route");
