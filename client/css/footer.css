@@ -4,18 +4,18 @@
   /* border: 1px solid black; */
 }
 
+
 /* =========== FOOTER SECTION ============  */
 
 .footer__main__container {
+  display: flex;
   background: hsla(228, 16%, 12%, 0.5);
   backdrop-filter: blur(5px);
   padding: 20px 0;
   font-weight: var(--Raleway500);
-  display: flex;
   justify-content: center;
-  height: 20vh;
+  height: max-content;
   color: white;
-  margin-top: auto;
 }
 
 .footer__container {
@@ -66,6 +66,11 @@
 .phone__number,
 .email__address,
 .address {
+  display: flex;
+  flex-direction: row;
+  gap: 0.1rem;
+  align-items: center;
+
   font-size: 1.5vh;
   font-weight: var(--Raleway500);
   line-height: 1.5;
@@ -113,7 +118,7 @@
   transition: color 0.15s;
 }
 
- /* ========== HOVER CSS ========= */
+/* ========== HOVER CSS ========= */
 
 .insta:hover,
 .face:hover,

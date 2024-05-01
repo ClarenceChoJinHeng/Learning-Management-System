@@ -45,3 +45,11 @@
 .display__three__dots__container:hover {
   background-color: var(--BrightBlue);
 }
+
+.cancel__button:hover {
+background: lightgrey
+}
+
+.delete__button:hover {
+  transform: translateY(-0.5%);
+}

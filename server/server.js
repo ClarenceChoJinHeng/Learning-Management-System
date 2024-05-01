@@ -5,6 +5,7 @@ import express from "express";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
+import { ObjectId } from "mongodb";
 
 /* ========== SECURITY MODULE ========== */
 import bcrypt from "bcryptjs";
@@ -178,7 +179,7 @@ app.post("/client/lms-home", async (req, res) => {
 });
 
 // ================ RETRIEVE CLASS VALIDATION ==================
-app.get("/client/retrieveCourse", async (req, res) => {
+app.get("/client/lms-home", async (req, res) => {
   try {
     const userEmail = req.query.userEmail; // Get the userEmail from the query parameters
     if (!userEmail) {
@@ -193,6 +194,24 @@ app.get("/client/retrieveCourse", async (req, res) => {
   }
 });
 
+// ================ DELETE CLASS VALIDATION ==================
+
+app.delete("/client/lms/:courseId", async (req, res) => {
+  const { courseId } = req.params;
+
+  try {
+    const result = await courseCollection.deleteOne({
+      _id: new ObjectId(courseId),
+    });
+    if (result.deletedCount === 1) {
+      res.json({ message: "Course deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Course not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 // ================ SERVER LISTENING PORT ==================
 app.listen(5001, () => console.log("Server started on http://localhost:5001"));
 // METHODS TO SEND BACK TO CLIENT

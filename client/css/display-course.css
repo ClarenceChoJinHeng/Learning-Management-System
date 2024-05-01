@@ -122,8 +122,17 @@
 
 /* ==================== DELETE CONFIRMATION CONTAINER ===================== */
 
-.grid-cell {
-  position: relative;
+.delete__background__overlay {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  width: 100%;
+  background: rgba(45, 45, 45, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 2;
+  display: none;
 }
 
 .display__delete__confirmation__container {
@@ -132,16 +141,67 @@
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
-  z-index: 1;
+  z-index: 2;
   width: max-content;
-  border: 1px solid black;
   flex-direction: column;
   gap: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.2rem;
+}
+
+.delete__title {
+  font-size: 1.2rem;
+  font-weight: var(--Raleway500);
 }
 
 .paragraph__container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   width: 20rem;
+}
+
+.paragraph__bottom {
+  font-size: 1rem;
+}
+
+.cancel__delete__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.cancel__button {
+  padding: 0.5rem;
+  font-weight: var(--Raleway500);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  border-radius: 0.2rem;
+}
+
+.delete__button {
+  background: hsl(0, 100%, 50%);
+  color: white;
+  display: flex;
+  padding: 0.5rem;
+  font-weight: var(--Raleway500);
+  background: red;
+  border: none;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  border-radius: 0.2rem;
+}
+
+#cancelButton:disabled {
+  color: grey;
+}
+
+#cancelButton:disabled:hover,
+#cancelButton:disabled:active {
+  background: none;
+  color: grey;
 }

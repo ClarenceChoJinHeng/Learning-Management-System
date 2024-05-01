@@ -39,5 +39,16 @@
 }
 
 .display__three__dots__container:active {
-  transform: scale(0.90);
+  transform: scale(0.9);
 }
+
+.cancel__button:active {
+  background: grey;
+  transform: scale(0.99);
+}
+
+.delete__button:active {
+  transform: scale(0.99);
+  box-shadow: none;
+}
+

@@ -5,15 +5,15 @@
 }
 
 body {
-  background-color: #efefef;  
+  background-color: #efefef;
 }
 
 .main__container {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 45%;
-  left: 50%;
-  max-width: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 35rem;
 }
 
 .top__container {
@@ -21,9 +21,8 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 1vh;
-  max-width: 170vh;
-  gap: 15vh;
+  gap: 5rem;
+  max-width: max-content;
 }
 
 .title__container {
@@ -94,14 +93,11 @@ body {
 /* =============== CONTACT US =============== */
 
 .feedback__main__container {
-  /* border: 1px solid black; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 90vh;
-  max-width: 200vh;
-  /* 703.2 */
+  height: 50rem;
 }
 
 .feedback__info__container {

@@ -85,6 +85,14 @@
               <i class="bx bx-home"></i>
               <p id="sideLabel">Home</p>
             </a>
+            <a href="teaching.html" class="nav__function__container">
+             <i class='bx bx-chalkboard'></i>
+              <p id="sideLabel">Teaching</p>
+            </a>
+            <a href="enrolled.html" class="nav__function__container">
+              <i class='bx bx-book-content'></i>
+              <p id="sideLabel">Enrolled</p>
+            </a>
             <a href="calendar.html" class="nav__function__container">
               <i class="bx bx-calendar"></i>
               <p id="sideLabel">Calendar</p>
@@ -115,148 +123,7 @@
             class="display__course__main__container"
             id="createDisplayCourseContainer"
             \
-          >
-            <div class="display__course__container">
-              <div class="display__course__data__container">
-                <div class="display__course__data">
-                  <p id="displayClassTitle">${className}</p>
-                  <p id="displayLecturerName">${lecturerName}</p>
-                </div>
-              </div>
-
-              <div class="empty__main__container">
-                <div
-                  class="empty__functionality__container"
-                  id="emptyFunctionalityContainer"
-                >
-                  <button id="editButton">Edit</button>
-                  <button id="deleteButton">Delete</button>
-                </div>
-              </div>
-
-              <div
-                class="display__delete__confirmation__container"
-                id="displayDeleteConfirmationContainer"
-              >
-                <p>Delete 1?</p>
-
-                <div class="paragraph__container">
-                  <p>
-                    You will no longer have access to any posts or comments that
-                    have been added to this class.
-                  </p>
-
-                  <p>Class files will remain in Google Drive.</p>
-                </div>
-                <p>You can't undo this action.</p>
-              </div>
-
-              <div class="class__room__main__container">
-                <p id="displayClassRoom">ClassRoom - ${classRoom}</p>
-                <div
-                  class="display__three__dots__container"
-                  id="displayEmptyFunctionalityContainer"
-                >
-                  <i class="bx bx-dots-vertical-rounded three-dots"></i>
-                </div>
-              </div>
-            </div>
-
-            <div class="display__course__container">
-              <div class="display__course__data__container">
-                <div class="display__course__data">
-                  <p id="displayClassTitle">${className}</p>
-                  <p id="displayLecturerName">${lecturerName}</p>
-                </div>
-              </div>
-
-              <div class="empty__main__container">
-                <div
-                  class="empty__functionality__container"
-                  id="emptyFunctionalityContainer"
-                >
-                  <button id="editButton">Edit</button>
-                  <button id="deleteButton">Delete</button>
-                </div>
-              </div>
-
-              <div
-                class="display__delete__confirmation__container"
-                id="displayDeleteConfirmationContainer"
-              >
-                <p>Delete 1?</p>
-
-                <div class="paragraph__container">
-                  <p>
-                    You will no longer have access to any posts or comments that
-                    have been added to this class.
-                  </p>
-
-                  <p>Class files will remain in Google Drive.</p>
-                </div>
-                <p>You can't undo this action.</p>
-              </div>
-
-              <div class="class__room__main__container">
-                <p id="displayClassRoom">ClassRoom - ${classRoom}</p>
-                <div
-                  class="display__three__dots__container"
-                  id="displayEmptyFunctionalityContainer"
-                >
-                  <i class="bx bx-dots-vertical-rounded three-dots"></i>
-                </div>
-              </div>
-            </div>
-
-            <div class="display__course__container">
-              <div class="display__course__data__container">
-                <div class="display__course__data">
-                  <p id="displayClassTitle">${className}</p>
-                  <p id="displayLecturerName">${lecturerName}</p>
-                </div>
-              </div>
-
-              <div class="empty__main__container">
-                <div
-                  class="empty__functionality__container"
-                  id="emptyFunctionalityContainer"
-                >
-                  <button id="editButton">Edit</button>
-                  <button id="deleteButton">Delete</button>
-                </div>
-              </div>
-
-              <div
-                class="display__delete__confirmation__container"
-                id="displayDeleteConfirmationContainer"
-              >
-                <p>Delete 1?</p>
-
-                <div class="paragraph__container">
-                  <p>
-                    You will no longer have access to any posts or comments that
-                    have been added to this class.
-                  </p>
-
-                  <p>Class files will remain in Google Drive.</p>
-                </div>
-                <p>You can't undo this action.</p>
-              </div>
-
-              <div class="class__room__main__container">
-                <p id="displayClassRoom">ClassRoom - ${classRoom}</p>
-                <div
-                  class="display__three__dots__container"
-                  id="displayEmptyFunctionalityContainer"
-                >
-                  <i class="bx bx-dots-vertical-rounded three-dots"></i>
-                </div>
-              </div>
-
-
-              
-            </div>
-          </div>
+          ></div>
 
           <div class="create__course__container" id="createCourseContainer">
             <!-- ============== BACKGROUND IMAGE CONTAINER ============== -->
@@ -293,30 +160,50 @@
           <div class="create__class__container">
             <p class="create__class__label">Create Class:</p>
             <form class="create__class__form" id="createClassForm">
-              <input
-                type="text"
-                id="className"
-                class="input__fields"
-                placeholder="Class Name "
-              />
-              <input
-                type="text"
-                id="lecturerName"
-                class="input__fields"
-                placeholder="Lecturer Name"
-              />
-              <input
-                type="text"
-                id="classSubject"
-                class="input__fields"
-                placeholder="Class Subject"
-              />
-              <input
-                type="text"
-                id="classRoom"
-                class="input__fields"
-                placeholder="Class Room"
-              />
+              <div class="input__field__container">
+                <input
+                  type="text"
+                  id="className"
+                  class="input__fields"
+                  placeholder="Class Name "
+                />
+                <p class="field__error__response" id="fieldErrorResponse">
+                  Class name is empty
+                </p>
+              </div>
+              <div class="input__field__container">
+                <input
+                  type="text"
+                  id="lecturerName"
+                  class="input__fields"
+                  placeholder="Lecturer Name"
+                />
+                <p class="field__error__response" id="fieldErrorResponse">
+                  Lecturer name is empty
+                </p>
+              </div>
+              <div class="input__field__container">
+                <input
+                  type="text"
+                  id="classSubject"
+                  class="input__fields"
+                  placeholder="Class Subject"
+                />
+                <p class="field__error__response" id="fieldErrorResponse">
+                  Class subject is empty
+                </p>
+              </div>
+              <div class="input__field__container">
+                <input
+                  type="text"
+                  id="classRoom"
+                  class="input__fields"
+                  placeholder="Class Room"
+                />
+                <p class="field__error__response" id="fieldErrorResponse">
+                  Class room is empty
+                </p>
+              </div>
             </form>
             <div class="create__class__button__container">
               <button class="cancel__class__button" id="cancelCreateButton">

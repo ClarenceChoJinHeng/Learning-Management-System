@@ -10,6 +10,11 @@ const protectRoute = () => {
   return true;
 };
 
-if (window.location.pathname === "/lms-home.html" || window.location.pathname === "/settings.html") {
+if (
+  window.location.pathname === "/lms-home.html" ||
+  window.location.pathname === "/enrolled.html" ||
+  window.location.pathname === "/teaching.html" ||
+  window.location.pathname === "/settings.html"
+) {
   protectRoute();
 }

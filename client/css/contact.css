@@ -5,8 +5,11 @@
 }
 
 .contact__main__container {
-  height: 100%;
-  margin: 11vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* height: 50rem; */
+  /* margin: 11vh; */
   font-family: var(--Raleway);
 }
 
@@ -15,10 +18,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 50vh;
+  height: 40rem;
   background-color: #efefef;
   gap: 5vh;
   border-radius: 1vh;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
 }
 
 .contact__us__container {

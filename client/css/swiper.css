@@ -1,20 +1,26 @@
 @import url("style.css");
 
+.swiper__body__main__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50rem;
+}
+
 .swiper__body__container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 75vh;
   font-family: var(--Raleway);
-  /* padding: 5vh 0vh 5vh 0vh; */
 }
 
 .swiper__title {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh;
+  gap: 0.5rem;
 }
 
 .swiper__title p {
@@ -27,7 +33,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 130vh;
+  max-width: 75rem;
 }
 
 .slide-content {
@@ -35,13 +41,12 @@
   justify-content: center;
   margin: 30px 40px 30px 60px;
   overflow: hidden;
-  /* border-radius: 0.5vh; */
 }
 
 .card {
   width: max-content;
-  border-radius: 0.5vh;
-  padding: 0vh;
+  border-radius: 0.1rem;
+  padding: 0rem;
   background-color: #fff;
 }
 
@@ -50,7 +55,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3vh;
+  padding: 1rem;
 }
 
 .card-content {
@@ -58,13 +63,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 35vh;
+  height: 18rem;
 }
 
 .image-content {
-  /* padding: 4vh; */
-  /* top: 0; */
-  /* left: 0; */
   height: 100%;
   width: 100%;
   background-color: var(--Dark);
@@ -90,7 +92,7 @@
 }
 
 .name {
-  font-size: 18px;
+  font-size: 1rem;
   font-weight: 500;
   color: #333;
 }
@@ -99,39 +101,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 50vh;
-  width: 30vh;
+  height: 10rem;
+  width: 20rem;
 }
 
 .description__container > h2 {
   font-weight: var(--Raleway700);
-  margin-bottom: 1vh;
+  margin-bottom: 1rem;
 }
 
 .description__container > p {
-  font-size: 1.8vh;
+  font-size: 1rem;
   opacity: 0.5;
   text-align: center;
   line-height: 2.5vh;
 }
 
 .description {
-  font-size: 14px;
+  font-size: 1rem;
   opacity: 0.5;
   text-align: center;
 }
 
 .explore__button {
-  /* margin-top: 4.5vh; */
   font-weight: var(--Raleway500);
   max-width: max-content;
-  padding: 2vh;
-  border-radius: 0.5vh;
+  padding: 1rem;
+  border-radius: 0.1rem;
   border: none;
   background: var(--Dark);
   color: white;
   cursor: pointer;
-  font-size: 2vh;
+  font-size: 1rem;
   text-decoration: none;
   font-family: var(--Raleway);
   box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.7);
