@@ -60,6 +60,8 @@ const submitForm = async (event) => {
     const username = data.username;
 
     localStorage.setItem("username", username);
+    localStorage.setItem("userEmail", email);
+    
 
     alert("Login successful");
     window.location.href = "lms-home.html";

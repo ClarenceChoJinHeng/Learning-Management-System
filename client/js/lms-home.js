@@ -2,28 +2,28 @@
 // Get the elements needed for the side navigation
 const openCloseSideNav = document.getElementById("openSideNav");
 const navMainContainer = document.getElementById("navMainContainer");
-const sideLabels = navMainContainer.querySelectorAll("label");
+const sideLabels = navMainContainer.querySelectorAll("p");
 
 // SET INITIAL WIDTH OF NAVIGATION CONTAINER
 // Set the initial width of the navigation container and hide the labels
-navMainContainer.style.width = "13vh";
-sideLabels.forEach((label) => {
-  label.style.display = "none";
+navMainContainer.style.width = "7rem";
+sideLabels.forEach((p) => {
+  p.style.display = "none";
 });
 
 // Add a click event listener to the open/close button
 openCloseSideNav.addEventListener("click", () => {
   // If the navigation container is closed, open it and show the labels
-  if (navMainContainer.style.width === "13vh") {
-    navMainContainer.style.width = "50vh";
-    sideLabels.forEach((label) => {
-      label.style.display = "flex";
+  if (navMainContainer.style.width === "7rem") {
+    navMainContainer.style.width = "20rem";
+    sideLabels.forEach((p) => {
+      p.style.display = "flex";
     });
   } else {
     // If the navigation container is open, close it and hide the labels
-    navMainContainer.style.width = "13vh";
-    sideLabels.forEach((label) => {
-      label.style.display = "none";
+    navMainContainer.style.width = "7rem";
+    sideLabels.forEach((p) => {
+      p.style.display = "none";
     });
   }
 });
@@ -31,10 +31,10 @@ openCloseSideNav.addEventListener("click", () => {
 // Add a mouseover event listener to the navigation container
 navMainContainer.addEventListener("mouseover", () => {
   // If the navigation container is closed, open it and show the labels
-  if (navMainContainer.style.width === "13vh") {
-    navMainContainer.style.width = "50vh";
-    sideLabels.forEach((label) => {
-      label.style.display = "flex";
+  if (navMainContainer.style.width === "7rem") {
+    navMainContainer.style.width = "20rem";
+    sideLabels.forEach((p) => {
+      p.style.display = "flex";
     });
   }
 });
@@ -42,66 +42,13 @@ navMainContainer.addEventListener("mouseover", () => {
 // Add a mouseout event listener to the navigation container
 navMainContainer.addEventListener("mouseout", () => {
   // If the navigation container is open, close it and hide the labels
-  if (navMainContainer.style.width === "50vh") {
-    navMainContainer.style.width = "13vh";
-    sideLabels.forEach((label) => {
-      label.style.display = "none";
+  if (navMainContainer.style.width === "20rem") {
+    navMainContainer.style.width = "7rem";
+    sideLabels.forEach((p) => {
+      p.style.display = "none";
     });
   }
 });
-
-// ==================== CREATE CLASS FORM ====================
-// Get the elements needed for the create class form
-
-const pageRedirectClass = document.getElementById("pageRedirectClass");
-const createCourse = document.getElementById("createCourse");
-
-/// Initialize a counter variable
-let classCreatedCount = 0;
-
-// Modify the submitForm function
-const submitForm = async (event) => {
-  event.preventDefault();
-
-  // GETTING THE VALUES FROM THE FORM
-  const className = document.getElementById("className").value;
-  const classSection = document.getElementById("classSection").value;
-  const classSubject = document.getElementById("classSubject").value;
-  const classRoom = document.getElementById("classRoom").value;
-
-  // MAKE A REQUEST TO THE SERVER
-  const response = await fetch("http://localhost:5001/client/lms-home", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ className, classSection, classSubject, classRoom }),
-  });
-
-  // GETTING THE RESPONSE FROM THE SERVER IF THE REQUEST IS SUCCESSFUL
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.message);
-    alert("Class created succesfully");
-
-    popupOverlay.style.display = "none";
-    backgroundOverlay.style.display = "none";
-  } else {
-    const error = await response.json();
-    console.error(error.message);
-    alert("Fail to Create Class");
-  }
-  createClassForm.reset();
-};
-
-// ADD EVENT LISTENER TO THE BUTTON
-if (createCourse) {
-  createCourse.addEventListener("click", (event) => {
-    submitForm(event);
-  });
-}
-
-// ==================== REQUEST FORM INPUT DATA FROM DATABASE ====================
 
 // ==================== RETRIEVE USERNAME FROM LOCALSTORAGE ====================
 const username = document.querySelectorAll(".userName");
@@ -119,3 +66,37 @@ username.forEach((element) => {
 userAccountParent.style.borderRadius = "0.25rem";
 userAccountParent.style.gap = "0.25rem";
 userAccountParent.style.padding = "0.25rem";
+
+// // Select all the display__three__dots__container elements
+// const threeDotContainers = document.querySelectorAll('.display__three__dots__container');
+
+// // Function to close all empty__functionality__container elements
+// function closeAllFunctionalityContainers() {
+//     const functionalityContainers = document.querySelectorAll('.empty__functionality__container');
+//     functionalityContainers.forEach(container => {
+//         container.style.display = 'none';
+//     });
+// }
+
+// // Add event listener to each display__three__dots__container
+// threeDotContainers.forEach(container => {
+//     container.addEventListener('click', function(event) {
+//         // Prevent the window click event from firing
+//         event.stopPropagation();
+
+//         // Get the empty__functionality__container corresponding to the clicked display__three__dots__container
+//         const parentContainer = container.closest('.display__course__container');
+//         const functionalityContainer = parentContainer.querySelector('.empty__functionality__container');
+
+//         // If the functionalityContainer is already open, close it; otherwise, close all containers and open it
+//         if (functionalityContainer.style.display === 'flex') {
+//             functionalityContainer.style.display = 'none';
+//         } else {
+//             closeAllFunctionalityContainers();
+//             functionalityContainer.style.display = 'flex';
+//         }
+//     });
+// });
+
+// // Add event listener to the window that closes the empty__functionality__container when clicked
+// window.addEventListener('click', closeAllFunctionalityContainers);

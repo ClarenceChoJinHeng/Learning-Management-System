@@ -1,0 +1,47 @@
+/* ============== LMS HOME STYLES ==============  */
+.user__account__container:hover {
+  background-color: var(--BrightBlue);
+  cursor: pointer;
+}
+
+.nav__function__container:hover {
+  background-color: var(--BrightBlue);
+  cursor: pointer;
+}
+
+.open__nav:hover {
+  background-color: var(--BrightBlue);
+}
+
+.join__class:hover,
+.create__class:hover {
+  background: var(--DarkGold);
+  box-shadow: 0 0 10px 0 var(--DarkGold);
+}
+
+.create__join__class__icon:hover {
+  border-radius: 10vh;
+  background-color: var(--BrightBlue);
+}
+
+.create__class__popup:hover,
+.join__class__popup:hover {
+  background-color: lightgrey;
+}
+
+.create__class__button:hover {
+  background: #f8f8f8;
+}
+
+.nav__main__container:hover {
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+#deleteButton:hover,
+#editButton:hover {
+  background-color: lightgrey;
+}
+
+.display__three__dots__container:hover {
+  background-color: var(--BrightBlue);
+}

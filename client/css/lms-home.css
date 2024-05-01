@@ -1,20 +1,25 @@
 @import url("style.css");
 
 /* ============== BODY AND HEADER STYLES ==============  */
+
+* {
+  /* border: 1px solid black; */
+}
+
 body {
   overflow: hidden;
 }
 
-/* * {
-  border: 1px solid black;
-} */
+/* ============== HEADER CONTAINER STYLES ==============  */
 
 header {
+  position: fixed;
   background-color: #f8f8f8;
+  width: 100%;
   border: 0.1px solid lightgrey;
+  z-index: 2;
 }
 
-/* ============== HEADER CONTAINER STYLES ==============  */
 .header__main__container {
   display: flex;
   align-items: center;
@@ -24,23 +29,17 @@ header {
 }
 
 /* ============== NAVIGATION STYLES ==============  */
+
 .open__nav {
   padding: 1vh;
-  border-radius: 30vh;
+  border-radius: 10rem;
   transition: all 0.2s ease;
 }
 
 .open__nav,
 .lms__logo {
-  font-size: 3vh;
+  font-size: 1.5rem;
   user-select: none;
-}
-
-.hamburger__container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8vh;
 }
 
 .open__side__nav__container {
@@ -49,63 +48,67 @@ header {
   cursor: pointer;
 }
 
-/* ============== LOGO CONTAINER STYLES ==============  */
+.hamburger__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+}
+
 .logo__container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2vh;
+  gap: 1rem;
 }
 
-.logo__container > label {
-  font-size: 3vh;
+.logo__container > p {
+  font-size: 1.5rem;
   font-weight: var(--Raleway700);
   user-select: none;
 }
 
-/* ============== ACCOUNT LOGOUT STYLES ==============  */
 .top__right__function__container {
   display: flex;
   align-items: center;
-  gap: 2vh;
+  gap: 1rem;
 }
 
 .create__join__class__container {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
 
 .create__join__class__icon {
-  font-size: 3vh;
+  font-size: 1.5rem;
   cursor: pointer;
-  border-radius: 10vh;
-  padding: 1vh;
+  border-radius: 4rem;
+  padding: 0.5rem;
 }
 
 .create__join__popup__top__section {
-  /* border: 1px solid black; */
-  display: flex;
-  flex-direction: column;
+  display: none;
   align-items: center;
   justify-content: center;
-  gap: 2vh;
+  flex-direction: column;
+  gap: 1rem;
   position: absolute;
-  transform: translate(-90%, 40%);
-  top: 0.1%;
+  transform: translate(-90%, 30%);
+  top: 0%;
   left: 50%;
   background: white;
   border: none;
   box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.7);
-  padding-top: 0.5vh;
-  padding-bottom: 0.5vh;
-  display: none;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
   transition: all 0.2s ease;
-  border-radius: 0.5vh;
+  border-radius: 0.1rem;
+  width: max-content;
 }
 
-.create__join__container {
+.retrigger__create__join__container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,8 +122,8 @@ header {
 
 .create__class__popup > button,
 .join__class__popup > button {
-  padding: 1.5vh;
-  width: 13vh;
+  padding: 1rem;
+  width: 8rem;
   font-weight: var(--Raleway500);
   background: none;
   border: none;
@@ -152,41 +155,48 @@ header {
 }
 
 /* ============== MAIN CONTAINER STYLES ==============  */
+
 main {
-  height: 100vh;
+  height: 100rem;
 }
 
 .lms__main__container {
   display: flex;
-  align-items: center;
-  height: 100vh;
+  flex-direction: row;
+  gap: 1rem;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
-/* ============== NAVIGATION CONTAINER STYLES ==============  */
 .nav__main__container {
-  height: 100%;
-  width: 13vh;
+  height: 100rem;
+  width: 7rem;
   border: 1px solid lightgrey;
   border-top: none;
+  border-bottom: none;
   transition: width 0.5s ease;
+  background: white;
+  overflow: hidden;
+  position: fixed;
+  z-index: 1;
+  transition: all 0.2s ease;
 }
 
 .lms__nav__container {
   display: flex;
   flex-direction: column;
-  gap: 0.5vh;
-  margin: 2vh;
+  margin-top: 6rem;
 }
 
 .nav__function__container {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1vh;
-  padding: 1.5vh;
-  margin-right: 1vh;
-  border-top-right-radius: 10vh;
-  border-bottom-right-radius: 10vh;
+  gap: 1rem;
+  padding: 1rem 1rem 1rem 2rem;
+  border-top-right-radius: 5rem;
+  border-bottom-right-radius: 5rem;
   transition: all 0.2s ease;
   text-decoration: none;
   color: black;
@@ -194,37 +204,34 @@ main {
 }
 
 .nav__function__container > i {
-  font-size: 3vh;
-  margin-left: 1vh;
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
 }
 
-.nav__function__container > label {
-  font-size: 2vh;
+.nav__function__container > p {
+  display: none;
+  font-size: 1rem;
   font-weight: var(--Raleway500);
   color: var(--DarkBlue);
+  max-width: max-content;
   width: max-content;
-  display: none;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ============== DISPLAY FUNCTIONALITY CONTAINER STYLES ==============  */
 .lms__display__main__functionality__container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top: 5rem;
+  margin-left: 7rem;
   width: 100%;
+  overflow: hidden;
   height: 100%;
 }
 
-.lms__display__functionality__container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-/* ============== CREATE COURSE CONTAINER STYLES ==============  */
 .create__course__container {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   position: absolute;
@@ -238,29 +245,26 @@ main {
   justify-content: center;
 }
 
-/* ============== TITLE STYLES ==============  */
 .create__title {
-  font-size: 2vh;
+  font-size: 1rem;
   font-weight: var(--Raleway600);
-  opacity: 0.6;
-  margin-bottom: 2vh;
+  opacity: 0.4;
+  margin-bottom: 0.5rem;
 }
-
-/* ============== JOIN AND CREATE CLASS STYLES ==============  */
 
 .create__join__container {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 1vh;
+  gap: 0.5rem;
 }
 
 .create__class {
   max-width: max-content;
   width: max-content;
-  padding: 2vh;
-  border-radius: 0.5vh;
+  padding: 1rem;
+  border-radius: 0.2rem;
   border: none;
   background: var(--Dark);
   color: white;
@@ -274,8 +278,8 @@ main {
 .join__class {
   max-width: max-content;
   width: max-content;
-  padding: 2vh;
-  border-radius: 0.5vh;
+  padding: 1rem;
+  border-radius: 0.2rem;
   border: none;
   background: var(--Dark);
   color: white;
@@ -284,64 +288,6 @@ main {
   font-weight: var(--Raleway600);
   box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.7);
   transition: all 0.2s ease;
-}
-/* ============== HOVER STYLES ==============  */
-.user__account__container:hover {
-  background-color: var(--BrightBlue);
-  cursor: pointer;
-}
-
-.nav__function__container:hover {
-  background-color: var(--BrightBlue);
-  cursor: pointer;
-}
-
-.open__nav:hover {
-  background-color: var(--BrightBlue);
-}
-
-.join__class:hover,
-.create__class:hover {
-  background: var(--DarkGold);
-  box-shadow: 0 0 10px 0 var(--DarkGold);
-}
-
-.create__join__class__icon:hover {
-  border-radius: 10vh;
-  background-color: var(--BrightBlue);
-}
-
-.create__class__popup:hover,
-.join__class__popup:hover {
-  background-color: lightgrey;
-}
-
-/* ============== ACTIVE STYLES ==============  */
-.nav__main__container:active {
-  width: 50vh;
-}
-
-.nav__function__container:active {
-  background-color: var(--BrightBlue);
-}
-
-.join__class:active,
-.create__class:active {
-  background: var(--Gold);
-  transform: scale(0.99);
-}
-
-.user__account__container:active {
-  transform: scale(0.99);
-}
-
-.create__join__class__icon:active {
-  transform: scale(0.99);
-}
-
-.create__class__popup:active,
-.join__class__popup:active {
-  background-color: hsl(0, 0%, 70%);
 }
 
 /* ============== CREATE CLASS POPUP STYLES ==============  */
@@ -352,10 +298,10 @@ main {
   left: 50%;
   background: rgba(45, 45, 45, 0.5);
   backdrop-filter: blur(5px);
-  height: 119vh;
+  height: 100%;
   width: 100%;
-  border: 1px solid black;
-  z-index: 1;
+  z-index: 2;
+  display: none;
 }
 
 .class__popup__main__container {
@@ -363,63 +309,58 @@ main {
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
-  padding: 5vh;
-  max-width: 80vh;
-  width: 80vh;
-  border-radius: 1vh;
+  padding: 2rem;
+  max-width: 40rem;
+  width: 40rem;
+  border-radius: 0.5rem;
   background: white;
   height: max-content;
   z-index: 2;
 }
 
-/* ============== CLASS POPUP CONTAINER STYLES ==============  */
 .class__popup__container {
   display: flex;
   flex-direction: column;
 }
 
 .create__class__label {
-  font-size: 2.5vh;
+  font-size: 1.2rem;
   font-weight: var(--Raleway600);
-  margin-bottom: 2vh;
+  margin-bottom: 0.5rem;
 }
 
 .create__class__container {
   display: flex;
   flex-direction: column;
-  gap: 1vh;
+  gap: 0.5rem;
 }
 
 .create__class__form {
   display: flex;
   flex-direction: column;
-  gap: 3vh;
+  gap: 1rem;
 }
 
-.class__name,
-.class__section,
-.class__subject,
-.class__room {
+.input__fields {
   flex-direction: column;
-  gap: 1vh;
-  padding: 2.5vh;
-  border-radius: 0.5vh;
-  border: 1px solid lightgrey;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
   background-color: #efefef;
 }
 
 /* ============== CREATE CLASS BUTTON CONTAINER STYLES ==============  */
 .create__class__button__container {
   display: flex;
-  gap: 1vh;
+  gap: 0.5rem;
   align-items: center;
   justify-content: right;
-  margin-top: 1vh;
+  margin-top: 0.1rem;
 }
 
 .create__class__button {
-  padding: 2vh;
-  border-radius: 0.5vh;
+  padding: 1rem;
+  border-radius: 0.2rem;
   border: none;
   color: grey;
   cursor: pointer;
@@ -429,25 +370,9 @@ main {
   transition: all 0.2s ease;
 }
 
-/* ============== ENABLED CSS ==============  */
-
-/* ============== HOVER CSS ==============  */
-
-.create__class__button:hover {
-  background: #f8f8f8;
-}
-
-/* ============== ACTIVE CSS==============  */
-
-.create__class__button:active {
-  transform: scale(0.99);
-  background: lightgrey;
-  color: black;
-}
-
 .cancel__class__button {
-  padding: 2vh;
-  border-radius: 0.5vh;
+  padding: 1rem;
+  border-radius: 0.2rem;
   border: none;
   color: black;
   cursor: pointer;
@@ -455,17 +380,6 @@ main {
   font-weight: var(--Raleway600);
   transition: all 0.2s ease;
 }
-
-/* #logoutButton {
-  padding: 2vh;
-  border-radius: 0.5vh;
-  border: none;
-  color: black;
-  cursor: pointer;
-  font-family: var(--Raleway);
-  font-weight: var(--Raleway600);
-  transition: all 0.2s ease;
-} */
 
 /* ============== INPUT STYLES ==============  */
 input:focus {
@@ -478,7 +392,3 @@ input:focus {
   display: none;
   transition: opacity 0.5s ease-in-out;
 }
-
-/* ============== RESPONSIVE STYLES ==============  */
-
-

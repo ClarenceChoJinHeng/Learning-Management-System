@@ -44,7 +44,7 @@ header {
   cursor: pointer;
 }
 
-.logo__container > label {
+.logo__container > p {
   font-size: 3vh;
   font-weight: var(--Raleway700);
   cursor: pointer;

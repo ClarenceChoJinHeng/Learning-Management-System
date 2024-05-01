@@ -1,0 +1,43 @@
+/* ============== LMS HOME STYLES ==============  */
+.nav__main__container:active {
+  width: 5rem;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+.nav__function__container:active {
+  background-color: var(--BrightBlue);
+}
+
+.join__class:active,
+.create__class:active {
+  background: var(--Gold);
+  transform: scale(0.99);
+}
+
+.user__account__container:active {
+  transform: scale(0.99);
+}
+
+.create__join__class__icon:active {
+  transform: scale(0.99);
+}
+
+.create__class__popup:active,
+.join__class__popup:active {
+  background-color: hsl(0, 0%, 70%);
+}
+
+.create__class__button:active {
+  transform: scale(0.99);
+  background: lightgrey;
+  color: black;
+}
+
+#deleteButton:active,
+#editButton:active {
+  background-color: hsl(0, 0%, 70%);
+}
+
+.display__three__dots__container:active {
+  transform: scale(0.90);
+}
