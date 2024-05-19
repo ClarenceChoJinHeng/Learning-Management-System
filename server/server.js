@@ -47,6 +47,7 @@ initializeMongoClient().catch(console.dir);
 const database = client.db("lms-management-system");
 const userCollection = database.collection("Users");
 const courseCollection = database.collection("Courses");
+const Chat = database.collection("Chat");
 
 /* ========== EXPRESS SIGNUP CONFIGURATION ========== */
 app.post("/client/signup", async (req, res) => {
@@ -113,7 +114,6 @@ app.post("/client/login", async (req, res) => {
       if (passwordMatches) {
         // EXTRACT THE USERNAME FROM THE DATABASE
         const username = user.username;
-        const email = user.email;
 
         // PASSWORD IS CORRECT
         return res
@@ -212,6 +212,161 @@ app.delete("/client/lms/:courseId", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// ================ CREATE CHAT VALIDATION ==================
+app.post("/client/group-study", async (req, res) => {
+  try {
+    const {
+      senderName,
+      senderUserEmail,
+      senderUserMessage,
+      receiverNameInput,
+      receiverEmailInput,
+      receiverUserMessage,
+    } = req.body;
+
+    if (
+      !senderName ||
+      !senderUserEmail ||
+      !receiverNameInput ||
+      !receiverEmailInput
+    ) {
+      return res.status(400).json({ message: "Invalid form data" });
+    }
+
+    // Check if userEmailInput exists in the userCollection
+    const user = await userCollection.findOne({ email: receiverEmailInput });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: `User ${receiverEmailInput} does not exist` });
+    }
+
+    // Check if userEmailInput already exists in the Chat collection
+    const chatUser = await Chat.findOne({
+      senderUserEmail,
+      receiverEmailInput,
+    });
+
+    if (chatUser) {
+      return res.status(400).json({
+        message: `User with email ${receiverEmailInput} already exists in the chat`,
+      });
+    }
+
+    const insert = await Chat.insertOne({
+      senderName,
+      senderUserEmail,
+      receiverNameInput,
+      receiverEmailInput,
+    });
+
+    if (insert.acknowledged === true) {
+      return res
+        .status(200)
+        .json({ message: `Succesfully Added ${receiverEmailInput}` });
+    } else {
+      res.status(500).json({ error: `Failed to add ${receiverEmailInput}` });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ================ RETRIEVE THE GROUP CHAT ACCOUNT FROM DATABASE ================
+app.get("/client/group-study", async (req, res) => {
+  try {
+    const { userEmail } = req.query;
+
+    // FILTER COURSE BASE ON EMAIL
+    const userChat = await client
+      .db("lms-management-system")
+      .collection("Chat")
+      .find({
+        $or: [
+          { senderUserEmail: userEmail },
+          { receiverEmailInput: userEmail },
+        ],
+      })
+      .toArray();
+
+    if (!userChat || userChat.length === 0) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    return res.status(200).json({ userChat: userChat });
+  } catch (error) {
+    console.error("Error retrieving user account:", error);
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+// ================= SEND MESSAGES =================
+
+app.put("/client/group-study", async (req, res) => {
+  try {
+    const {
+      enterMessage,
+      chatId,
+      senderName,
+      senderUserEmail,
+      receiverNameInput,
+      receiverEmailInput,
+    } = req.body;
+
+    if (!enterMessage || !chatId) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    const insert = await Chat.updateOne(
+      { _id: new ObjectId(chatId) },
+      {
+        $setOnInsert: {
+          senderName,
+          senderUserEmail,
+          receiverNameInput,
+          receiverEmailInput,
+        },
+        $push: {
+          messages: {
+            $each: [enterMessage],
+          },
+        },
+      },
+      { upsert: true }
+    );
+
+    if (insert.acknowledged === true) {
+      return res.status(200).json({ message: "Messages sent successfully" });
+    } else {
+      res.status(500).json({ error: "Failed to send messages" });
+    }
+  } catch (error) {
+    console.error("Error sending messages:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+// ================ RETRIEVE MESSAGES =================
+// app.get("/client/group-study", async (req, res) => {
+//   try {
+//     const { senderUserEmail } = req.query;
+
+//     const userChat = await Chat.find({
+//       senderUserEmail,
+//     }).toArray();
+
+//     if (!userChat || userChat.length === 0) {
+//       return res.status(400).json({ message: "Invalid request" });
+//     }
+
+//     return res.status(200).json({ userChat: userChat });
+//   } catch (error) {
+//     console.error("Error retrieving user account:", error);
+//     return res.status(500).send({ error: "Internal Server Error" });
+//   }
+// });
+
 // ================ SERVER LISTENING PORT ==================
 app.listen(5001, () => console.log("Server started on http://localhost:5001"));
 // METHODS TO SEND BACK TO CLIENT
