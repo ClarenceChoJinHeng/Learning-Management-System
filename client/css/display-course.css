@@ -1,17 +1,20 @@
 @import url("style.css");
+.lms__display__main__functionality__container {
+  padding: 1.5rem 1rem 1rem 8rem;
+  width: 100%;
+  height: 40rem;
+  /* border: 1px solid black; */
+  overflow-y: auto;
+}
 
 .display__course__main__container {
   display: grid;
-  grid-template-columns: 18.5rem 18.5rem 18.5rem 18.5rem 18.5rem;
-  grid-template-rows: repeat(auto-fill, 18.5rem);
+  grid-template-columns: 18.5rem 18.5rem 18.5rem 18.5rem;
+  grid-auto-rows: 18.5rem;
   grid-gap: 1.5rem;
-  padding: 2rem;
   width: 100%;
   height: 100%;
-}
-
-* {
-  /* border: 1px solid black; */
+  overflow-y: auto;
 }
 
 .display__course__container {
@@ -19,7 +22,6 @@
   flex-direction: column;
   width: 100%;
   border: 1px solid lightgrey;
-  /* position: relative; */
 }
 
 .display__course__data__container {

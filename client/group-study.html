@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Group Study</title>
+
+    <!-- ========= LINK CSS ========= -->
+
+    <link rel="stylesheet" href="css/lms-nav.css" />
+    <link rel="stylesheet" href="css/hover.css" />
+    <link rel="stylesheet" href="css/active.css" />
+    <link rel="stylesheet" href="css/group-study.css" />
+    <link rel="stylesheet" href="css/display-course.css" />
+
+    <!-- ========= LINK BOX ICONS ========= -->
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- ======== FONT AWESOME ======== -->
+    <script
+      src="https://kit.fontawesome.com/21bf2f8b90.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- ======== FAVICON ========  -->
+    <link rel="icon" href="image/book-reader-regular-24(2).png" />
+    <title>Group Study</title>
+  </head>
+  <body>
+    <header>
+      <section class="header__main__container">
+        <div class="hamburger__container" id="hamburger__container">
+          <div class="open__side__nav__container" id="openSideNav">
+            <i class="bx bx-menu-alt-left open__nav" id="openSideNav"></i>
+          </div>
+          <div class="logo__container">
+            <div class="lms__logo__container">
+              <i class="bx bx-book-reader lms__logo"></i>
+            </div>
+            <p>LMS - Group Study</p>
+          </div>
+        </div>
+
+        <!-- ============== ADD / JOIN AND ACCOUNT CONTAINER ============== -->
+        <div class="top__right__function__container">
+          <div class="user__account__container">
+            <i class="bx bx-user-circle user__account"></i>
+            <p class="userName"></p>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <!-- ============== FUNCTIONALITY NAVIGATION ============== -->
+      <div class="nav__main__container" id="navMainContainer">
+        <div class="lms__nav__container">
+          <a href="lms-home.html" class="nav__function__container">
+            <i class="bx bx-home"></i>
+            <p id="sideLabel">Home</p>
+          </a>
+          <a href="teaching.html" class="nav__function__container">
+            <i class="bx bx-chalkboard"></i>
+            <p id="sideLabel">Teaching</p>
+          </a>
+          <a href="enrolled.html" class="nav__function__container">
+            <i class="bx bx-book-content"></i>
+            <p id="sideLabel">Enrolled</p>
+          </a>
+          <a href="calendar.html" class="nav__function__container">
+            <i class="bx bx-calendar"></i>
+            <p id="sideLabel">Calendar</p>
+          </a>
+          <a class="nav__function__container">
+            <i class="bx bx-group"></i>
+            <p id="sideLabel">Study Group</p>
+          </a>
+          <a class="nav__function__container">
+            <i class="bx bx-note"></i>
+            <p id="sideLabel">Note</p>
+          </a>
+          <a href="settings.html" class="nav__function__container">
+            <i class="bx bx-cog"></i>
+            <p id="sideLabel">Settings</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============== GROUP CHAT ============== -->
+
+      <section class="group__chat__main__container">
+        <div class="group__chat__container">
+          <div class="search__user__main__container">
+            <!-- ============= SEARCH USER ============= -->
+            <div class="search__user__container">
+              <div class="search__title">
+                <h1>Group Chat</h1>
+                <div class="display__add__user__container">
+                  <i class="bx bx-comment-add" id="triggerAddUser"></i>
+
+                  <!-- ============ ADD USER OVERLAY ============ -->
+
+                  <div
+                    class="display__add__user__overlay__container"
+                    id="addUserContainer"
+                  >
+                    <div class="add__user__contacts__container">
+                      <button id="addUser">Add Classmate</button>
+                    </div>
+                  </div>
+                  <!-- ============ ADD USER INPUT OVERLAY ============ -->
+                  <div
+                    class="add__user__input__overlay__container"
+                    id="addUserForm"
+                  >
+                    <!-- =========== ENTER USERNAME =========== -->
+                    <div class="username__name__container">
+                      <p>Username:</p>
+                      <input
+                        type="text"
+                        name="Username"
+                        id="userNameInput"
+                        placeholder="Enter Username"
+                      />
+                    </div>
+
+                    <!-- =========== ENTER USER EMAIL =========== -->
+                    <div class="user__email__container">
+                      <p>Email:</p>
+                      <input
+                        type="email"
+                        name="userEmail"
+                        id="userEmailInput"
+                        placeholder="Enter user email"
+                      />
+                    </div>
+
+                    <!-- =========== ADD USER BUTTON =========== -->
+                    <div class="add__user__button__container">
+                      <button id="addUserButton">Add User</button>
+                      <button id="cancelUserButton">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input
+                type="search"
+                name="Search"
+                value="Search"
+                id="searchUser"
+              />
+            </div>
+
+            <!-- =========== USER LIST =========== -->
+            <div
+              class="display__user__container"
+              id="displayUserContainer"
+            ></div>
+          </div>
+
+          <!-- ============== CHAT BOX ============== -->
+          <div class="chatbox__main__container" id="chatBoxMainContainer">
+            <!-- ============ CHAT BOX NO USER OVERLAY ============ -->
+
+            <div
+              class="chatbox__no__user__container"
+              id="chatBoxNoUserContainer"
+            >
+              <div class="chatbox__no__user__display">
+                <h1>Welcome to Group Chat</h1>
+                <p>Add your classmate to begin talking</p>
+              </div>
+            </div>
+
+            <!-- ============== CHAT BOX HEADER ============== -->
+            <div class="chatbox__header" id="chatBoxHeader">
+              <div class="chatbox__header__details">
+                <i class="bx bx-user-circle user__profile__picture"></i>
+
+                <div class="user__status__container" id="userStatusContainer">
+                  <p id="receiverName"></p>
+                  <p id="receiverStatus"></p>
+                </div>
+              </div>
+
+              <div class="video__audio__call">
+                <i class="bx bx-video"></i> <i class="bx bx-phone"></i>
+              </div>
+            </div>
+
+            <!-- ============== CHAT BOX BODY ============== -->
+            <div
+              class="chatbox__display__message__main__container"
+              id="chatBoxDisplayMessageMainContainer"
+            >
+              <div
+                class="chatbox__display__message__container"
+                id="chatBoxDisplayMessageContainer"
+              >
+
+              <!-- <div class="sender__container">
+                <p id="senderContainer">31231321</p>
+              </div>
+
+                <div class="receiver__container">
+                  <p id="receiverContainer">313123</p>
+                </div> -->
+
+              </div>
+            </div>
+
+            <!-- ============== CHAT BOX FOOTER ============== -->
+            <div class="chatbox__enter__message__container">
+              <div class="enter__message__container">
+                <i class="bx bx-paperclip"></i>
+                <input
+                  type="text"
+                  name="Enter Message"
+                  id="enterMessage"
+                  placeholder="Enter Message"
+                />
+                <i class="bx bx-send" id="sendMessage"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- ========= LINK JS ========= -->
+    <script src="js/authMiddleware.js"></script>
+    <script src="js/lms-home.js"></script>
+    <script src="js/lms-nav.js"></script>
+    <script src="js/group-study.js"></script>
+  </body>
+</html>

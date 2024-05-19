@@ -29,12 +29,16 @@
   background-color: lightgrey;
 }
 
+.add__user__contacts__container:hover {
+  background-color: lightgrey;
+}
+
 .create__class__button:hover {
   background: #f8f8f8;
 }
 
 .nav__main__container:hover {
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.7);
+  box-shadow: 2.5px 3px 5px rgba(0, 0, 0, 0.2);
 }
 
 #deleteButton:hover,
@@ -52,4 +56,13 @@ background: lightgrey
 
 .delete__button:hover {
   transform: translateY(-0.5%);
+}
+
+
+.user__container:hover {
+  background-color: lightgrey;
+}
+
+#sendMessage:hover {
+  background-color: lightgrey;
 }

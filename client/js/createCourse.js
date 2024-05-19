@@ -267,7 +267,6 @@ const retrieveCourse = async () => {
       );
       const cancelButton = courseDiv.querySelector("#cancelButton");
       const deleteCourseButton = courseDiv.querySelector("#deleteCourseButton");
-      // const loadingIndicator = courseDiv.querySelector(".loading__indicator");
 
       // Add event listener to the delete button of the current course
       deleteButton.addEventListener("click", (event) => {
@@ -275,6 +274,7 @@ const retrieveCourse = async () => {
         const emptyFunctionalityContainer = courseDiv.querySelector(
           ".empty__functionality__container"
         );
+        
         // Hide the empty__functionality__container
         emptyFunctionalityContainer.style.display = "none";
         deleteConfirmatonContainer.style.display = "flex";
@@ -340,7 +340,6 @@ const retrieveCourse = async () => {
         });
       });
 
-      // ========================================================================================
       // FUNCTION TO CLOSE ALL EMPTY__FUNCTIONALITY__CONTAINER ELEMENTS
       function closeAllFunctionalityContainers() {
         const functionalityContainers = document.querySelectorAll(
@@ -386,7 +385,7 @@ const retrieveCourse = async () => {
     const error = await response.json();
     console.error(error.message);
   }
-};
+}; // here ends
 
 // ADD EVENT LISTENER TO THE CREATE COURSE BUTTON
 createCourseButton.addEventListener("click", async (event) => {
@@ -394,6 +393,7 @@ createCourseButton.addEventListener("click", async (event) => {
   await retrieveCourse();
 });
 
+// ENSURE THAT THE CREATE COURSE CONTAINER ONLY APPEAR AFTER THERE IS NO MORE COURSES
 window.onload = async function () {
   const createCourseContainer = document.getElementById(
     "createCourseContainer"
@@ -409,13 +409,9 @@ window.onload = async function () {
   if (createDisplayCourseContainer.children.length === 0) {
     // IF THERE ARE NO COURSES, DISPLAY THE CREATECOURSECONTAINER
     createCourseContainer.style.display = "flex";
-    localStorage.setItem("createCourseContainerDisplay", "flex");
   } else {
-    // IF THERE ARE COURSES, USE THE DISPLAY VALUE FROM LOCAL STORAGE
-    const display = localStorage.getItem("createCourseContainerDisplay");
-    if (display !== null) {
-      createCourseContainer.style.display = display;
-    }
+    // IF THERE ARE COURSES, HIDE THE CREATECOURSECONTAINER
+    createCourseContainer.style.display = "none";
   }
 };
 
