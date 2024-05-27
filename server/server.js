@@ -219,10 +219,8 @@ app.post("/client/group-study", async (req, res) => {
     const {
       senderName,
       senderUserEmail,
-      senderUserMessage,
       receiverNameInput,
       receiverEmailInput,
-      receiverUserMessage,
     } = req.body;
 
     if (
@@ -260,6 +258,7 @@ app.post("/client/group-study", async (req, res) => {
       senderUserEmail,
       receiverNameInput,
       receiverEmailInput,
+      messages: [], // Initialize messages as an empty array
     });
 
     if (insert.acknowledged === true) {
@@ -306,66 +305,65 @@ app.get("/client/group-study", async (req, res) => {
 
 app.put("/client/group-study", async (req, res) => {
   try {
-    const {
-      enterMessage,
-      chatId,
-      senderName,
-      senderUserEmail,
-      receiverNameInput,
-      receiverEmailInput,
-    } = req.body;
+    const { message, chatId } = req.body;
 
-    if (!enterMessage || !chatId) {
+    if (!chatId || !message) {
       return res.status(400).json({ message: "Invalid request" });
     }
 
     const insert = await Chat.updateOne(
       { _id: new ObjectId(chatId) },
       {
-        $setOnInsert: {
-          senderName,
-          senderUserEmail,
-          receiverNameInput,
-          receiverEmailInput,
-        },
         $push: {
-          messages: {
-            $each: [enterMessage],
-          },
+          messages: message,
         },
       },
       { upsert: true }
     );
 
-    if (insert.acknowledged === true) {
-      return res.status(200).json({ message: "Messages sent successfully" });
+    if (insert.nModified > 0) {
+      return res.status(200).json({ message: "Message sent successfully" });
     } else {
-      res.status(500).json({ error: "Failed to send messages" });
+      res.status(500).json({ error: "Failed to send message" });
     }
   } catch (error) {
-    console.error("Error sending messages:", error);
+    console.error("Error sending message:", error);
     res.status(500).json({ message: error.message });
   }
 });
 // ================ RETRIEVE MESSAGES =================
-// app.get("/client/group-study", async (req, res) => {
-//   try {
-//     const { senderUserEmail } = req.query;
+app.get("/client/group-study", async (req, res) => {
+  try {
+    const { chatId } = req.query;
 
-//     const userChat = await Chat.find({
-//       senderUserEmail,
-//     }).toArray();
+    if (!chatId) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
 
-//     if (!userChat || userChat.length === 0) {
-//       return res.status(400).json({ message: "Invalid request" });
-//     }
+    const chat = await Chat.findOne({ _id: new ObjectId(chatId) });
 
-//     return res.status(200).json({ userChat: userChat });
-//   } catch (error) {
-//     console.error("Error retrieving user account:", error);
-//     return res.status(500).send({ error: "Internal Server Error" });
-//   }
-// });
+    if (!chat) {
+      return res.status(404).json({ message: "Chat not found" });
+    }
+
+    res.json({ userChat: chat });
+
+    let messages = [];
+    for (let index = 0; index < chat.messages.length; index++) {
+      let message = chat.messages[index];
+      messages.push({
+        type: message.sender === req.user.email ? "sender" : "receiver",
+        message: message.text,
+        sequence: index,
+      });
+    }
+
+    return res.status(200).json({ messages: messages });
+  } catch (error) {
+    console.error("Error retrieving user account:", error);
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+});
 
 // ================ SERVER LISTENING PORT ==================
 app.listen(5001, () => console.log("Server started on http://localhost:5001"));

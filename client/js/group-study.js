@@ -46,41 +46,6 @@ window.addEventListener("click", (event) => {
   }
 });
 
-// ============  ADD USER ACCOUNT ============
-const submitForm = async (event) => {
-  event.preventDefault();
-  const senderName = localStorage.getItem("username");
-  const senderUserEmail = localStorage.getItem("userEmail");
-  const receiverNameInput = document.getElementById("userNameInput").value;
-  const receiverEmailInput = document.getElementById("userEmailInput").value;
-
-  //============  MAKE A REQUEST TO THE SERVER ============
-  const response = await fetch("http://localhost:5001/client/group-study", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      senderName,
-      senderUserEmail,
-      receiverNameInput,
-      receiverEmailInput,
-    }),
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    alert(data.message);
-    console.log(data.message);
-    addUserForm.style.display = "none";
-  } else {
-    const error = await response.json();
-    alert(error.message);
-    console.log(error.message);
-    addUserForm.style.display = "none";
-  }
-};
-
 document.addEventListener("DOMContentLoaded", function () {
   // ============ RETRIEVE THE USER ACCOUNT DATABASE ============
   const displayUserContainer = document.getElementById("displayUserContainer");
@@ -105,6 +70,41 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatBoxDisplayMessageMainContainer = document.querySelector(
     ".chatbox__display__message__main__container"
   );
+
+  // ============  ADD USER ACCOUNT ============
+  const submitForm = async (event) => {
+    event.preventDefault();
+    const senderName = localStorage.getItem("username");
+    const senderUserEmail = localStorage.getItem("userEmail");
+    const receiverNameInput = document.getElementById("userNameInput").value;
+    const receiverEmailInput = document.getElementById("userEmailInput").value;
+
+    //============  MAKE A REQUEST TO THE SERVER ============
+    const response = await fetch("http://localhost:5001/client/group-study", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        senderName,
+        senderUserEmail,
+        receiverNameInput,
+        receiverEmailInput,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      alert(data.message);
+      console.log(data.message);
+      addUserForm.style.display = "none";
+    } else {
+      const error = await response.json();
+      alert(error.message);
+      console.log(error.message);
+      addUserForm.style.display = "none";
+    }
+  };
 
   const retrieveChatForm = async () => {
     let userEmail = localStorage.getItem("userEmail");
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         chatIDs.push(chatID);
 
         // ============ MAKING HTML AND APPLY DATA INTO IT `============
-        let chatDiv; // Declare chatDiv here
+
         if (senderUserEmail === userEmail) {
           const chatDiv = document.createElement("div");
           chatDiv.className = "user__container";
@@ -154,34 +154,16 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverName.innerHTML = receiverNameInput;
-            const chatBoxDisplayMessageContainer =
-              document.createElement("div");
-            chatBoxDisplayMessageContainer.className =
-              "chatbox__display__message__container";
-            chatBoxDisplayMessageContainer.innerHTML = `
-            
-            <div class="sender__container">
-            <p id="senderContainer">31312</p>
-            </div>
-
-            <div class="receiver__container">
-            <p id="receiverContainer">3123211</p>
-          </div>
-            `;
 
             sendMessage.dataset.chatId = chat._id;
-
-            chatBoxDisplayMessageMainContainer.appendChild(
-              chatBoxDisplayMessageContainer
-            );
             if (
               chatBoxNoUserContainer.style.display === "flex" ||
               chatBoxNoUserContainer.style.display === ""
             ) {
               chatBoxNoUserContainer.style.display = "none";
               chatBoxHeader.style.display = "flex";
-              chatBoxDisplayMessageContainer.style.display = "flex";
               chatBoxDisplayMessageMainContainer.style.display = "flex";
+              chatBoxDisplayMessageContainer.style.display = "flex";
               chatBoxEnterMessageContainer.style.display = "flex";
               enterMessageContainer.style.display = "flex";
             }
@@ -205,35 +187,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
-            receiverName.innerHTML = receiverNameInput;
-            const chatBoxDisplayMessageContainer =
-              document.createElement("div");
-            chatBoxDisplayMessageContainer.className =
-              "chatbox__display__message__container";
-            chatBoxDisplayMessageContainer.innerHTML = `
-            
-            <div class="sender__container">
-            <p id="senderContainer">31312</p>
-            </div>
-
-            <div class="receiver__container">
-            <p id="receiverContainer">3123211</p>
-          </div>
-            `;
-
+            receiverName.innerHTML = senderName;
             sendMessage.dataset.chatId = chat._id;
 
-            chatBoxDisplayMessageMainContainer.appendChild(
-              chatBoxDisplayMessageContainer
-            );
             if (
               chatBoxNoUserContainer.style.display === "flex" ||
               chatBoxNoUserContainer.style.display === ""
             ) {
               chatBoxNoUserContainer.style.display = "none";
               chatBoxHeader.style.display = "flex";
-              chatBoxDisplayMessageContainer.style.display = "flex";
               chatBoxDisplayMessageMainContainer.style.display = "flex";
+              chatBoxDisplayMessageContainer.style.display = "flex";
               chatBoxEnterMessageContainer.style.display = "flex";
               enterMessageContainer.style.display = "flex";
             }
@@ -251,6 +215,8 @@ document.addEventListener("DOMContentLoaded", function () {
   addUserButton.addEventListener("click", async (event) => {
     await submitForm(event);
     await retrieveChatForm();
+    receiverNameInput.value = "";
+    receiverEmailInput.value = "";
   });
 });
 
@@ -259,51 +225,121 @@ document.addEventListener("DOMContentLoaded", function () {
 const sendMessage = document.getElementById("sendMessage");
 
 const sendMessages = async () => {
-  let chatId = sendMessage.dataset.chatId;
+  let userEmail = localStorage.getItem("userEmail");
 
-  const enterMessage = document.getElementById("enterMessage").value;
-
-  const response = await fetch("http://localhost:5001/client/group-study", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      enterMessage,
-      chatId,
-    }),
-
-  });
-  console.log(chatId);
+  const response = await fetch(
+    `http://localhost:5001/client/group-study/?userEmail=${userEmail}`
+  );
 
   if (response.ok) {
     const data = await response.json();
-    console.log(data.message);
+    console.log(data.userChat);
+
+    data.userChat.forEach(async (chat) => {
+      const enterMessage = document.getElementById("enterMessage").value;
+
+      // Prevent sending empty messages
+      if (!enterMessage.trim()) {
+        console.log("Cannot send an empty message");
+        return;
+      }
+
+      const message = {
+        sender: userEmail,
+        text: enterMessage,
+      };
+
+      let chatId = chat._id;
+
+      const response = await fetch("http://localhost:5001/client/group-study", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message,
+          chatId,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+      } else {
+        const error = await response.json();
+        console.log(error.message);
+      }
+    });
+  }
+};
+
+//  =================  RETRIEVE MESSAGES  =================
+const retrieveMessages = async () => {
+  let userEmail = localStorage.getItem("userEmail");
+
+  const response = await fetch(
+    `http://localhost:5001/client/group-study/?userEmail=${userEmail}`
+  );
+
+  if (response.ok) {
+    const data = await response.json(); 
+    console.log(data.userChat);
+
+    // ============  CREATE AN ARRAY TO STORE THE COURSE IDS ============
+    let chatIDs = [];
+
+    const chatBoxDisplayMessageContainer = document.getElementById(
+      "chatBoxDisplayMessageContainer"
+    );
+
+    chatBoxDisplayMessageContainer.innerHTML = "";
+
+    data.userChat.forEach((chat) => {
+      const messages = [];
+
+      chat.messages.forEach((message, index) => {
+        messages.push({
+          type: message.sender === userEmail ? "sender" : "receiver",
+          message: message.text,
+          sequence: index,
+        });
+      });
+
+      messages.forEach((message, index) => {
+        const container = document.createElement("div");
+        container.className = `${message.type}__container`;
+        container.dataset.chatId = `${chat._id}-${index}`;
+        container.innerHTML = `<p id="${message.type}Container">${message.message}</p>`;
+        chatBoxDisplayMessageContainer.appendChild(container);
+      });
+
+      chatBoxDisplayMessageContainer.scrollTop =
+        chatBoxDisplayMessageContainer.scrollHeight;
+    });
   } else {
     const error = await response.json();
     console.log(error.message);
   }
 };
 
-sendMessage.addEventListener("click", async (event) => {
+window.onload = () => {
+  retrieveMessages();
+  setInterval(retrieveMessages, 2000); // Fetch new messages every 5 seconds
+};
+
+async function handleSendMessage(event) {
+  event.preventDefault();
+  // Wait for sendMessages to complete before calling retrieveMessages
   await sendMessages(event);
+  await retrieveMessages();
+  setTimeout(retrieveMessages, 0.1);
+  enterMessage.value = "";
+}
+
+sendMessage.addEventListener("click", handleSendMessage);
+
+enterMessage.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    handleSendMessage(event);
+  }
 });
-
-//  =================  RETRIEVE MESSAGES  =================
-
-// const retrieveMessages = async () => {
-//   const response = await fetch("http://localhost:5001/client/group-study", {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   });
-
-//   if (response.ok) {
-//     const data = await response.json();
-//     console.log(data);
-//   } else {
-//     const error = await response.json();
-//     console.log(error.message);
-//   }
-// };
