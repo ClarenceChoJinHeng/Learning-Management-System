@@ -1,27 +1,26 @@
 /* =========================== MODULES =========================== */
 
 /* ========== CONNECTION MODULE ========== */
-import express from "express";
-import { MongoClient, ServerApiVersion } from "mongodb";
-import cors from "cors";
-import dotenv from "dotenv";
-import { ObjectId } from "mongodb";
+import express from 'express'
+import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb'
+import cors from 'cors'
+import dotenv from 'dotenv'
 
 /* ========== SECURITY MODULE ========== */
-import bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs'
 
 /* ========== ENVIRONMENT VARIABLES ========== */
-dotenv.config();
+dotenv.config()
 
 /* ========== CONNECT EXPRESS, CORS ========== */
 /* ========== MIDDLEWARE ========== */
 
-const app = express(); // Initialize express
-app.use(cors()); // Enable CORS
-app.use(express.json()); // Enable JSON parsing
+const app = express() // Initialize express
+app.use(cors()) // Enable CORS
+app.use(express.json()) // Enable JSON parsing
 
 /* ========== EXTRACT KEYS FROM ENV FILE ========== */
-const uri = process.env.MONGODB_KEY;
+const uri = process.env.MONGODB_KEY
 
 /* ========== CONNECT TO MONGODB ========== */
 const client = new MongoClient(uri, {
@@ -30,42 +29,42 @@ const client = new MongoClient(uri, {
     strict: true,
     deprecationErrors: true,
   },
-});
+})
 
-async function initializeMongoClient() {
+async function initializeMongoClient () {
   try {
-    await client.connect();
-    console.log("Connected to MongoDB");
+    await client.connect()
+    console.log('Connected to MongoDB')
   } catch (error) {
-    console.error("Error Connecting To MongoDB: ", error);
+    console.error('Error Connecting To MongoDB: ', error)
   }
 }
 
-initializeMongoClient().catch(console.dir);
+initializeMongoClient().catch(console.dir)
 
 /* ========== GLOBAL VARIABLES FOR MONGODB DATABASE, COLLECTION  ========== */
-const database = client.db("lms-management-system");
-const userCollection = database.collection("Users");
-const courseCollection = database.collection("Courses");
-const Chat = database.collection("Chat");
+const database = client.db('lms-management-system')
+const userCollection = database.collection('Users')
+const courseCollection = database.collection('Courses')
+const Chat = database.collection('Chat')
 
 /* ========== EXPRESS SIGNUP CONFIGURATION ========== */
-app.post("/client/signup", async (req, res) => {
+app.post('/client/signup', async (req, res) => {
   try {
     // GET THE VALUES FROM THE CLIENT (JSON.stringify)
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role } = req.body
 
     // VALIDATE FORM DATA
     if (!username || !email || !password) {
-      return res.status(400).json({ message: "Invalid form data" });
-    } else if (role !== "user") {
-      return res.status(400).json({ message: "Invalid role" });
+      return res.status(400).json({ message: 'Invalid form data' })
+    } else if (role !== 'user') {
+      return res.status(400).json({ message: 'Invalid role' })
     }
     // HASH THE PASSWORD BEFORE SAVING TO DATABASE
-    const hashedPasword = await bcrypt.hash(password, 10);
+    const hashedPasword = await bcrypt.hash(password, 10)
 
     // CREATE UNIQUE INDEXES ON USERNAME AND EMAIL
-    await userCollection.createIndex({ email: 1 }, { unique: true });
+    await userCollection.createIndex({ email: 1 }, { unique: true })
 
     // INSERT THE USER INTO THE DATABASE
     const insert = await userCollection.insertOne({
@@ -73,73 +72,73 @@ app.post("/client/signup", async (req, res) => {
       email,
       password: hashedPasword,
       role,
-    });
+    })
 
     // CHECK IF THE USER WAS INSERTED SUCCESSFULLY
     if (insert.acknowledged === true) {
-      return res.status(200).json({ message: "User created successfully" });
+      return res.status(200).json({ message: 'User created successfully' })
     } else {
-      res.status(500).json({ error: "Failed to insert data" });
+      res.status(500).json({ error: 'Failed to insert data' })
     }
   } catch (error) {
-    console.error("Error handling form submission:", error);
+    console.error('Error handling form submission:', error)
 
     // CHECK IF THE ERROR IS A DUPLICATE KEY ERROR IN OTHER TERMS TO CHECK IF THE USER ALREADY EXISTS
     if (error.code === 11000) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: 'User already exists' })
     } else {
-      console.error("Error handling form submission:", error);
-      res.status(500).send({ error: "Internal Server Error" });
+      console.error('Error handling form submission:', error)
+      res.status(500).send({ error: 'Internal Server Error' })
     }
   }
-});
+})
 
 // ================ LOGIN VALIDATION ==================
 
-app.post("/client/login", async (req, res) => {
+app.post('/client/login', async (req, res) => {
   try {
     // RETRIEVE THE DATA FROM THE DATABASE
     const user = await client
-      .db("lms-management-system")
-      .collection("Users")
-      .findOne({ email: req.body.email });
+      .db('lms-management-system')
+      .collection('Users')
+      .findOne({ email: req.body.email })
 
     if (user) {
       // COMPARE THE PASSWORD WITH STORED PASSWORD BY DECRYPTING THE STORED PASSWORD
       const passwordMatches = await bcrypt.compare(
         req.body.password,
         user.password
-      );
+      )
 
       if (passwordMatches) {
         // EXTRACT THE USERNAME FROM THE DATABASE
-        const username = user.username;
+        const username = user.username
 
         // PASSWORD IS CORRECT
         return res
           .status(200)
-          .json({ message: "Password Match", username: username });
+          .json({ message: 'Password Match', username: username })
       } else {
         // PASSWORD IS INCORRECT
-        res.status(401).json({ error: "Failed to insert data" });
+        res.status(401).json({ error: 'Failed to insert data' })
       }
     } else {
       // User not found
-      res.status(404).send("User does not exist");
+      res.status(404).send('User does not exist')
     }
   } catch (error) {
-    console.error("Error handling form submission:", error);
-    res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error handling form submission:', error)
+    res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================ CREATE CLASS VALIDATION ==================
 
-app.post("/client/lms-home", async (req, res) => {
+app.post('/client/lms-home', async (req, res) => {
   try {
     // GET THE VALUES FROM THE CLIENT (JSON.stringify)
     const { className, lecturerName, classSubject, classRoom, userEmail } =
-      req.body;
+      req.body
 
     if (
       !className ||
@@ -148,7 +147,7 @@ app.post("/client/lms-home", async (req, res) => {
       !classRoom ||
       !userEmail
     ) {
-      return res.status(400).json({ message: "Invalid form data" });
+      return res.status(400).json({ message: 'Invalid form data' })
     }
 
     // INSERT DATA INTO THE DATABASE
@@ -158,70 +157,70 @@ app.post("/client/lms-home", async (req, res) => {
       classSubject,
       classRoom,
       userEmail,
-    });
+    })
 
     if (insert.acknowledged === true) {
-      return res.status(200).json({ message: "Class Created Succesfully" });
+      return res.status(200).json({ message: 'Class Created Succesfully' })
     } else {
-      res.status(500).json({ error: "Failed to insert data" });
+      res.status(500).json({ error: 'Failed to insert data' })
     }
   } catch (error) {
-    console.error("Error handling form submission:", error);
+    console.error('Error handling form submission:', error)
 
     // CHECK IF THE ERROR IS A DUPLICATE KEY ERROR IN OTHER TERMS TO CHECK IF THE USER ALREADY EXISTS
     if (error.code === 11000) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: 'User already exists' })
     } else {
-      console.error("Error handling form submission:", error);
-      res.status(500).send({ error: "Internal Server Error" });
+      console.error('Error handling form submission:', error)
+      res.status(500).send({ error: 'Internal Server Error' })
     }
   }
-});
+})
 
 // ================ RETRIEVE CLASS VALIDATION ==================
-app.get("/client/lms-home", async (req, res) => {
+app.get('/client/lms-home', async (req, res) => {
   try {
-    const userEmail = req.query.userEmail; // Get the userEmail from the query parameters
+    const userEmail = req.query.userEmail // Get the userEmail from the query parameters
     if (!userEmail) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
-    const courses = await courseCollection.find({ userEmail }).toArray(); // Filter courses by userEmail
-    return res.status(200).json({ courses });
+    const courses = await courseCollection.find({ userEmail }).toArray() // Filter courses by userEmail
+    return res.status(200).json({ courses })
   } catch (error) {
-    console.error("Error retrieving courses:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error retrieving courses:', error)
+    return res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================ DELETE CLASS VALIDATION ==================
 
-app.delete("/client/lms/:courseId", async (req, res) => {
-  const { courseId } = req.params;
+app.delete('/client/lms/:courseId', async (req, res) => {
+  const { courseId } = req.params
 
   try {
     const result = await courseCollection.deleteOne({
       _id: new ObjectId(courseId),
-    });
+    })
     if (result.deletedCount === 1) {
-      res.json({ message: "Course deleted successfully" });
+      res.json({ message: 'Course deleted successfully' })
     } else {
-      res.status(404).json({ message: "Course not found" });
+      res.status(404).json({ message: 'Course not found' })
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message })
   }
-});
+})
 
 // ================ CREATE CHAT VALIDATION ==================
-app.post("/client/group-study", async (req, res) => {
+app.post('/client/group-study', async (req, res) => {
   try {
     const {
       senderName,
       senderUserEmail,
       receiverNameInput,
       receiverEmailInput,
-    } = req.body;
+    } = req.body
 
     if (
       !senderName ||
@@ -229,28 +228,28 @@ app.post("/client/group-study", async (req, res) => {
       !receiverNameInput ||
       !receiverEmailInput
     ) {
-      return res.status(400).json({ message: "Invalid form data" });
+      return res.status(400).json({ message: 'Invalid form data' })
     }
 
     // Check if userEmailInput exists in the userCollection
-    const user = await userCollection.findOne({ email: receiverEmailInput });
+    const user = await userCollection.findOne({ email: receiverEmailInput })
 
     if (!user) {
       return res
         .status(400)
-        .json({ message: `User ${receiverEmailInput} does not exist` });
+        .json({ message: `User ${receiverEmailInput} does not exist` })
     }
 
     // Check if userEmailInput already exists in the Chat collection
     const chatUser = await Chat.findOne({
       senderUserEmail,
       receiverEmailInput,
-    });
+    })
 
     if (chatUser) {
       return res.status(400).json({
         message: `User with email ${receiverEmailInput} already exists in the chat`,
-      });
+      })
     }
 
     const insert = await Chat.insertOne({
@@ -259,56 +258,56 @@ app.post("/client/group-study", async (req, res) => {
       receiverNameInput,
       receiverEmailInput,
       messages: [], // Initialize messages as an empty array
-    });
+    })
 
     if (insert.acknowledged === true) {
       return res
         .status(200)
-        .json({ message: `Succesfully Added ${receiverEmailInput}` });
+        .json({ message: `Succesfully Added ${receiverEmailInput}` })
     } else {
-      res.status(500).json({ error: `Failed to add ${receiverEmailInput}` });
+      res.status(500).json({ error: `Failed to add ${receiverEmailInput}` })
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message })
   }
-});
+})
 
 // ================ RETRIEVE THE GROUP CHAT ACCOUNT FROM DATABASE ================
-app.get("/client/group-study", async (req, res) => {
+app.get('/client/group-study', async (req, res) => {
   try {
-    const { userEmail } = req.query;
+    const { userEmail } = req.query
 
     // FILTER COURSE BASE ON EMAIL
     const userChat = await client
-      .db("lms-management-system")
-      .collection("Chat")
+      .db('lms-management-system')
+      .collection('Chat')
       .find({
         $or: [
           { senderUserEmail: userEmail },
           { receiverEmailInput: userEmail },
         ],
       })
-      .toArray();
+      .toArray()
 
     if (!userChat || userChat.length === 0) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
-    return res.status(200).json({ userChat: userChat });
+    return res.status(200).json({ userChat: userChat })
   } catch (error) {
-    console.error("Error retrieving user account:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error retrieving user account:', error)
+    return res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================= SEND MESSAGES =================
 
-app.put("/client/group-study", async (req, res) => {
+app.put('/client/group-study', async (req, res) => {
   try {
-    const { message, chatId } = req.body;
+    const { message, chatId } = req.body
 
     if (!chatId || !message) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
     const insert = await Chat.updateOne(
@@ -319,54 +318,54 @@ app.put("/client/group-study", async (req, res) => {
         },
       },
       { upsert: true }
-    );
+    )
 
     if (insert.nModified > 0) {
-      return res.status(200).json({ message: "Message sent successfully" });
+      return res.status(200).json({ message: 'Message sent successfully' })
     } else {
-      res.status(500).json({ error: "Failed to send message" });
+      res.status(500).json({ error: 'Failed to send message' })
     }
   } catch (error) {
-    console.error("Error sending message:", error);
-    res.status(500).json({ message: error.message });
+    console.error('Error sending message:', error)
+    res.status(500).json({ message: error.message })
   }
-});
+})
 // ================ RETRIEVE MESSAGES =================
-app.get("/client/group-study", async (req, res) => {
+app.get('/client/group-study', async (req, res) => {
   try {
-    const { chatId } = req.query;
+    const { chatId } = req.query
 
     if (!chatId) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
-    const chat = await Chat.findOne({ _id: new ObjectId(chatId) });
+    const chat = await Chat.findOne({ _id: new ObjectId(chatId) })
 
     if (!chat) {
-      return res.status(404).json({ message: "Chat not found" });
+      return res.status(404).json({ message: 'Chat not found' })
     }
 
-    res.json({ userChat: chat });
+    res.json({ userChat: chat })
 
-    let messages = [];
+    let messages = []
     for (let index = 0; index < chat.messages.length; index++) {
-      let message = chat.messages[index];
+      let message = chat.messages[index]
       messages.push({
-        type: message.sender === req.user.email ? "sender" : "receiver",
+        type: message.sender === req.user.email ? 'sender' : 'receiver',
         message: message.text,
         sequence: index,
-      });
+      })
     }
 
-    return res.status(200).json({ messages: messages });
+    return res.status(200).json({ messages: messages })
   } catch (error) {
-    console.error("Error retrieving user account:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error retrieving user account:', error)
+    return res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================ SERVER LISTENING PORT ==================
-app.listen(5001, () => console.log("Server started on http://localhost:5001"));
+app.listen(5001, () => console.log('Server started on http://localhost:5001'))
 // METHODS TO SEND BACK TO CLIENT
 // res.json({ message: "Signup route" });
 // res.status(200).json({ message: "Signup route" });
