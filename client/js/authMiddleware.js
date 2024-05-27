@@ -1,21 +1,21 @@
 // PREVENT USER FROM GOING TO lms-home.html WHEN LOCAL STORAGE DONT HAVE USERNAME
 const protectRoute = () => {
-  const username = localStorage.getItem("username");
+  const username = localStorage.getItem('username')
   if (!username) {
-    alert("You are not login");
-    window.location.href = "index.html";
-    return false;
+    alert('You are not login')
+    window.location.href = 'index.html'
+    return false
   }
 
-  return true;
-};
+  return true
+}
 
 if (
-  window.location.pathname === "/lms-home.html" ||
-  window.location.pathname === "/enrolled.html" ||
-  window.location.pathname === "/teaching.html" ||
-  window.location.pathname === "/settings.html" ||
-  window.location.pathname === "/calendar.html"
+  window.location.pathname === '/lms-home.html' ||
+  window.location.pathname === '/enrolled.html' ||
+  window.location.pathname === '/teaching.html' ||
+  window.location.pathname === '/settings.html' ||
+  window.location.pathname === '/calendar.html'
 ) {
-  protectRoute();
+  protectRoute()
 }
