@@ -47,6 +47,7 @@ const database = client.db("lms-management-system");
 const userCollection = database.collection("Users");
 const courseCollection = database.collection("Courses");
 const Chat = database.collection("Chat");
+const groupChat = database.collection("GroupChat");
 
 /* ========== EXPRESS SIGNUP CONFIGURATION ========== */
 app.post("/client/signup", async (req, res) => {
@@ -272,7 +273,7 @@ app.post("/client/group-study", async (req, res) => {
   }
 });
 
-// ================ RETRIEVE THE GROUP CHAT ACCOUNT FROM DATABASE ================
+// ================ RETRIEVE THE CHAT ACCOUNT FROM DATABASE ================
 app.get("/client/group-study", async (req, res) => {
   try {
     const { userEmail } = req.query;
@@ -333,8 +334,6 @@ app.put("/client/group-study", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-// ================ RETRIEVE MESSAGES =================
-
 // ================ RETRIEVE THE MESSAGES FROM A SPECIFIC CHAT ================
 app.get("/client/group-study/api/chats/:chatId/messages", async (req, res) => {
   try {
@@ -358,6 +357,69 @@ app.get("/client/group-study/api/chats/:chatId/messages", async (req, res) => {
     return res.status(500).send({ error: "Internal Server Error" });
   }
 });
+
+// ================ CREATE THE GROUP CHAT AND INSERT INTO DATABASE ================
+
+app.post("/client/group-study/group-chat", async (req, res) => {
+  try {
+    const { userGroupNameInput, users } = req.body;
+
+    if (!userGroupNameInput || !users) {
+      return res.status(400).json({ message: "Invalid form data" });
+    }
+
+    // Loop through selectedUserEmail array and check if each user exists
+    for (let user of users) {
+      const { email } = user;
+      const userInDb = await userCollection.findOne({ email: email });
+
+      if (!userInDb) {
+        return res
+          .status(400)
+          .json({ message: `User ${email} does not exist` });
+      }
+    }
+
+    const insert = await Chat.insertOne({
+      groupName: userGroupNameInput,
+      emails: users,
+      messages: [], // Initialize messages as an empty array
+    });
+
+    if (insert) {
+      return res
+        .status(200)
+        .json({ message: "Group Chat Created Successfully" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to create group chat" });
+  }
+});
+
+// ================ RETRIEVE THE GROUP CHAT AND DISPLAY ================
+
+app.get("/client/group-study/group-chat-retrieval", async (req, res) => {
+  try {
+    const { userEmail } = req.query;
+
+    // FILTER COURSE BASE ON EMAIL
+    const userChat = await client
+      .db("lms-management-system")
+      .collection("Chat")
+      .find({ emails: { $elemMatch: { email: userEmail } } })
+      .toArray();
+
+    if (!userChat || userChat.length === 0) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    return res.status(200).json({ userChat: userChat });
+  } catch (error) {
+    console.error("Error retrieving user account:", error);
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
 
 
 // ================ SERVER LISTENING PORT ==================

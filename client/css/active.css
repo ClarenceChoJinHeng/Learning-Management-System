@@ -52,7 +52,8 @@
   box-shadow: none;
 }
 
-.add__user__contacts__container:active {
+.add__user__contacts__container:active,
+.create__group__contacts__container:active {
   background-color: hsl(0, 0%, 70%);
 }
 

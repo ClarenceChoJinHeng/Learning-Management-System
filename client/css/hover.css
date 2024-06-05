@@ -29,7 +29,8 @@
   background-color: lightgrey;
 }
 
-.add__user__contacts__container:hover {
+.add__user__contacts__container:hover,
+.create__group__contacts__container:hover {
   background-color: lightgrey;
 }
 
@@ -51,13 +52,12 @@
 }
 
 .cancel__button:hover {
-background: lightgrey
+  background: lightgrey;
 }
 
 .delete__button:hover {
   transform: translateY(-0.5%);
 }
-
 
 .user__container:hover {
   background-color: lightgrey;

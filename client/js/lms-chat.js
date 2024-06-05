@@ -4,7 +4,9 @@ let messageRetrievalInterval;
 const triggerAddUser = document.getElementById("triggerAddUser");
 const addUserContainer = document.getElementById("addUserContainer");
 const addUser = document.getElementById("addUser");
+const createGroup = document.getElementById("createGroup");
 const addUserForm = document.getElementById("addUserForm");
+const createGroupForm = document.getElementById("createGroupForm");
 const cancelUserButton = document.getElementById("cancelUserButton");
 const receiverNameInput = document.getElementById("receiverNameInput");
 
@@ -12,8 +14,12 @@ const receiverNameInput = document.getElementById("receiverNameInput");
 triggerAddUser.addEventListener("click", (event) => {
   event.preventDefault();
   event.stopPropagation();
-  if (addUserForm.style.display === "flex") {
+  if (
+    addUserForm.style.display === "flex" ||
+    createGroupForm.style.display === "flex"
+  ) {
     addUserForm.style.display = "none";
+    createGroupForm.style.display = "none";
   } else if (
     addUserContainer.style.display === "none" ||
     addUserContainer.style.display === ""
@@ -30,11 +36,28 @@ addUser.addEventListener("click", (event) => {
   event.stopPropagation();
   addUserContainer.style.display = "none";
   addUserForm.style.display = "flex";
+  createGroupForm.style.display = "none";
+});
+
+createGroup.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  addUserContainer.style.display = "none";
+  createGroupForm.style.display = "flex";
+  addUserForm.style.display = "none";
 });
 
 cancelUserButton.addEventListener("click", (event) => {
   event.stopPropagation();
   event.preventDefault();
+  createGroupForm.style.display = "none";
+  addUserForm.style.display = "none";
+});
+
+cancelGroupButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  createGroupForm.style.display = "none";
   addUserForm.style.display = "none";
 });
 
@@ -42,10 +65,12 @@ cancelUserButton.addEventListener("click", (event) => {
 window.addEventListener("click", (event) => {
   if (
     !addUserContainer.contains(event.target) &&
-    !addUserForm.contains(event.target)
+    !addUserForm.contains(event.target) &&
+    !createGroupForm.contains(event.target)
   ) {
     addUserContainer.style.display = "none";
     addUserForm.style.display = "none";
+    createGroupForm.style.display = "none";
   }
 });
 
@@ -112,13 +137,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const retrieveChatForm = async () => {
     let userEmail = localStorage.getItem("userEmail");
 
-    const response = await fetch(
+    const individualChatsResponse = await fetch(
       `http://localhost:5001/client/group-study/?userEmail=${userEmail}`
     );
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data.userChat);
+    const groupChatsResponse = await fetch(
+      `http://localhost:5001/client/group-study/group-chat-retrieval/?userEmail=${userEmail}`
+    );
+
+    if (individualChatsResponse.ok && groupChatsResponse.ok) {
+      const individualChatsData = await individualChatsResponse.json();
+      const groupChatsData = await groupChatsResponse.json();
 
       // ============  CLEAN THE EXISTING CODE ============
       displayUserContainer.innerHTML = "";
@@ -126,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // ============  CREATE AN ARRAY TO STORE THE COURSE IDS ============
       let chatIDs = [];
 
-      data.userChat.forEach((chat) => {
+      individualChatsData.userChat.forEach((chat) => {
         const senderName = chat.senderName;
         const senderUserEmail = chat.senderUserEmail;
         const receiverNameInput = chat.receiverNameInput;
@@ -143,13 +172,14 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.dataset.chatId = chat._id;
           chatDiv.innerHTML = `
        
+          <div class="user__message__name__container">
           <i class="bx bx-user-circle user__profile__picture"></i>
-          <div class="user__details__container">
-            <div class="user__message__time__container">
-              <p>${receiverNameInput}</p> 
-              <p>Test</p>
-            </div>
-          </div>
+          <p class="user__message__name">${receiverNameInput}</p>
+        </div>
+
+        <div class="user__message__time__container">
+          <p>Test</p>
+        </div>
       `;
 
           displayUserContainer.appendChild(chatDiv);
@@ -178,12 +208,13 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.dataset.chatId = chat._id;
           chatDiv.innerHTML = `
        
-          <i class="bx bx-user-circle user__profile__picture"></i>
-          <div class="user__details__container">
-            <div class="user__message__time__container">
-              <p>${senderName}</p> 
-              <p>Test</p>
-            </div>
+          <div class="user__message__name__container">
+            <i class="bx bx-user-circle user__profile__picture"></i>
+            <p class="user__message__name">${senderName}</p>
+          </div>
+
+          <div class="user__message__time__container">
+            <p>Test</p>
           </div>
       `;
 
@@ -209,9 +240,65 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         }
       });
+
+      let displayedChatIDs = new Set();
+
+      groupChatsData.userChat.forEach((chat) => {
+        const groupName = chat.groupName;
+        const chatID = chat._id;
+
+        if (displayedChatIDs.has(chatID)) {
+          return;
+        }
+
+        chatIDs.push(chatID);
+        displayedChatIDs.add(chatID);
+
+        const emailObject = chat.emails.find(
+          (emailObject) => emailObject.email === userEmail
+        );
+
+        // ============ MAKING HTML AND APPLY DATA INTO IT `============
+
+        if (emailObject) {
+          const chatDiv = document.createElement("div");
+          chatDiv.className = "user__container";
+          chatDiv.dataset.chatId = chat._id;
+          chatDiv.innerHTML = `
+     
+        <div class="user__message__name__container">
+        <i class="bx bx-user-circle user__profile__picture"></i>
+        <p class="user__message__name">${groupName}</p>
+      </div>
+
+      <div class="user__message__time__container">
+        <p>Test</p>
+      </div>
+    `;
+
+          displayUserContainer.appendChild(chatDiv);
+          chatDiv.addEventListener("click", async (event) => {
+            event.preventDefault();
+            receiverName.innerHTML = groupName;
+            if (
+              chatBoxNoUserContainer.style.display === "flex" ||
+              chatBoxNoUserContainer.style.display === ""
+            ) {
+              chatBoxNoUserContainer.style.display = "none";
+              chatBoxHeader.style.display = "flex";
+              chatBoxDisplayMessageMainContainer.style.display = "flex";
+              chatBoxDisplayMessageContainer.style.display = "flex";
+              chatBoxEnterMessageContainer.style.display = "flex";
+              enterMessageContainer.style.display = "flex";
+            }
+          });
+        }
+      });
     } else {
-      const error = await response.json();
-      console.log(error.message);
+      const individualChatsError = await individualChatsResponse.json();
+      const groupChatsError = await groupChatsResponse.json();
+      console.log(individualChatsError.message);
+      console.log(groupChatsError.message);
     }
   };
 
@@ -222,6 +309,13 @@ document.addEventListener("DOMContentLoaded", function () {
     await retrieveChatForm();
     receiverNameInput.value = "";
     receiverEmailInput.value = "";
+  });
+
+  const createGroupButtonConfirm = document.getElementById("createGroupButton");
+
+  createGroupButtonConfirm.addEventListener("click", async (event) => {
+    await createGroupChat(event);
+    await retrieveChatForm();
   });
 });
 
@@ -336,7 +430,7 @@ window.onload = () => {
   clearInterval(messageRetrievalInterval);
   messageRetrievalInterval = setInterval(
     () => retrieveMessages(currentChatId),
-    1000
+    100000
   );
 };
 
@@ -348,7 +442,7 @@ async function handleSendMessage(event) {
   clearInterval(messageRetrievalInterval);
   messageRetrievalInterval = setInterval(
     () => retrieveMessages(currentChatId),
-    1000
+    100000
   );
 }
 
@@ -360,3 +454,5 @@ enterMessage.addEventListener("keydown", (event) => {
     enterMessage.value = "";
   }
 });
+
+// =================== GROUP CHAT ===================
