@@ -27,7 +27,7 @@
     ></script>
 
     <!-- ======== FAVICON ========  -->
-    <link rel="icon" href="image/book-reader-regular-24(2).png" />
+    <link rel="icon" href="Images/book-reader-regular-24(2).png" />
     <title>Group Study</title>
   </head>
   <body>
@@ -47,7 +47,10 @@
 
         <!-- ============== ADD / JOIN AND ACCOUNT CONTAINER ============== -->
         <div class="top__right__function__container">
-          <div class="user__account__container">
+          <div
+            class="user__account__container"
+            id="userProfilePictureContainer"
+          >
             <i class="bx bx-user-circle user__account"></i>
             <p class="userName"></p>
           </div>
@@ -231,8 +234,12 @@
             <!-- ============== CHAT BOX HEADER ============== -->
             <div class="chatbox__header" id="chatBoxHeader">
               <div class="chatbox__header__details">
-                <i class="bx bx-user-circle user__profile__picture"></i>
-
+                <div
+                  class="user__profile__picture"
+                  id="userProfilePictureContainer"
+                >
+                  <i class="bx bx-user-circle user__profile__picture"></i>
+                </div>
                 <div class="user__status__container" id="userStatusContainer">
                   <p id="receiverName"></p>
                   <p id="receiverStatus"></p>

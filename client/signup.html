@@ -1,232 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-  <!-- ========= LINK CSS ========= -->
+    <!-- ========= LINK CSS ========= -->
 
-  <link href="css/signup.css" rel="stylesheet"/>
+    <link href="css/signup.css" rel="stylesheet" />
 
-  <link href="css/header.css" rel="stylesheet"/>
+    <link href="css/header.css" rel="stylesheet" />
 
-  <link href="css/footer.css" rel="stylesheet"/>
+    <link href="css/footer.css" rel="stylesheet" />
 
-  <!-- ========= LINK BOX ICONS ========= -->
+    <!-- ========= LINK BOX ICONS ========= -->
 
-  <link
+    <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
-  />
+    />
 
-  <!-- ======== FONT AWESOME ======== -->
-  <script
+    <!-- ======== FONT AWESOME ======== -->
+    <script
       crossorigin="anonymous"
       src="https://kit.fontawesome.com/21bf2f8b90.js"
-  ></script>
+    ></script>
 
-  <!-- FontAwesome CSS -->
-  <link
+    <!-- FontAwesome CSS -->
+    <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
       rel="stylesheet"
-  />
+    />
 
-  <!-- ======== FAVICON ========  -->
-  <link href="image/book-reader-regular-24(2).png" rel="icon"/>
+    <!-- ======== FAVICON ========  -->
+    <link href="Images/book-reader-regular-24(2).png" rel="icon" />
 
-  <!-- ======== NOTYF ========  -->
-  <link
+    <!-- ======== NOTYF ========  -->
+    <link
       href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css"
       rel="stylesheet"
-  />
+    />
 
-  <!-- ======== NOTYF ========  -->
-  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <!-- ======== NOTYF ========  -->
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
-  <title>Sign Up</title>
-</head>
-<body>
-<!-- =====================  HEADER SECTION =====================   -->
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <!-- =====================  HEADER SECTION =====================   -->
 
-<header>
-  <section class="header__container">
-    <!-- =====================  HAMBURGER AND ICON CONTAINER =====================   -->
+    <header>
+      <section class="header__container">
+        <!-- =====================  HAMBURGER AND ICON CONTAINER =====================   -->
 
-    <div class="icon__container">
-      <div class="hamburger__container" id="hamburger__container">
-        <i class="bx bx-menu-alt-left open__nav" id="open__nav"></i>
-      </div>
+        <div class="icon__container">
+          <div class="hamburger__container" id="hamburger__container">
+            <i class="bx bx-menu-alt-left open__nav" id="open__nav"></i>
+          </div>
 
-      <div class="logo__container">
-        <i class="bx bx-book-reader lms__logo"></i>
-        <label>LMS</label>
-      </div>
-    </div>
-
-    <!-- =====================  NAV CONTAINER =====================   -->
-    <div class="nav__container__wrapper">
-      <div class="nav__container" id="nav__container">
-        <a class="nav__link" href="index.html">Home</a>
-        <a class="nav__link" href="about.html">About Us</a>
-        <a class="nav__link" href="contact.html">Contact Us</a>
-        <a class="nav__link" href="news_blog.html">News & Blog</a>
-      </div>
-
-      <!-- =====================  LOGIN AND SIGNUP BUTTONS =====================   -->
-
-      <div class="login__signup__container">
-        <div class="login__link__container">
-          <a href="signup.html" id="signupLink">Sign Up</a>
+          <div class="logo__container">
+            <i class="bx bx-book-reader lms__logo"></i>
+            <label>LMS</label>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
-</header>
 
-<!-- =====================  SIGNUP SECTION =====================  -->
+        <!-- =====================  NAV CONTAINER =====================   -->
+        <div class="nav__container__wrapper">
+          <div class="nav__container" id="nav__container">
+            <a class="nav__link" href="index.html">Home</a>
+            <a class="nav__link" href="about.html">About Us</a>
+            <a class="nav__link" href="contact.html">Contact Us</a>
+            <a class="nav__link" href="news_blog.html">News & Blog</a>
+          </div>
 
-<main>
-  <section class="signup__main__container">
-    <div class="signup__inner__container">
-      <div class="signup__wrap__container">
-        <h1>Registration</h1>
-        <div class="signup__container">
-          <form id="signup-form">
-            <div class="input__container">
-              <label for="name">Username:</label>
+          <!-- =====================  LOGIN AND SIGNUP BUTTONS =====================   -->
 
-              <input
-                  class="input__field"
-                  id="username"
-                  placeholder="Username"
-                  type="text"
-              />
-              <p id="username-error">Username is required</p>
+          <div class="login__signup__container">
+            <div class="login__link__container">
+              <a href="signup.html" id="signupLink">Sign Up</a>
             </div>
+          </div>
+        </div>
+      </section>
+    </header>
 
-            <div class="input__container">
-              <label for="email">Email:</label>
+    <!-- =====================  SIGNUP SECTION =====================  -->
 
-              <input
-                  class="input__field"
-                  id="email"
-                  placeholder="Email"
-                  type="email"
-              />
+    <main>
+      <section class="signup__main__container">
+        <div class="signup__inner__container">
+          <div class="signup__wrap__container">
+            <h1>Registration</h1>
+            <div class="signup__container">
+              <form id="signup-form">
+                <div class="input__container">
+                  <label for="name">Username:</label>
 
-              <p id="email-error">Email is required</p>
+                  <input
+                    class="input__field"
+                    id="username"
+                    placeholder="Username"
+                    type="text"
+                  />
+                  <p id="username-error">Username is required</p>
+                </div>
+
+                <div class="input__container">
+                  <label for="email">Email:</label>
+
+                  <input
+                    class="input__field"
+                    id="email"
+                    placeholder="Email"
+                    type="email"
+                  />
+
+                  <p id="email-error">Email is required</p>
+                </div>
+
+                <div class="input__container">
+                  <label for="password">Password:</label>
+
+                  <input
+                    class="input__field"
+                    id="password"
+                    placeholder="Password"
+                    type="password"
+                  />
+
+                  <p id="password-error">Password is required</p>
+                </div>
+
+                <div class="input__container">
+                  <label for="confirm-password">Confirm Password:</label>
+
+                  <input
+                    class="input__field"
+                    id="confirm-password"
+                    placeholder="Confirm Password"
+                    type="password"
+                  />
+
+                  <p id="confirm-password-error">
+                    Password Confirmation is required
+                  </p>
+                </div>
+              </form>
+
+              <div class="signup__button__container">
+                <input id="submit-button" type="submit" value="Sign Up" />
+                <i
+                  class="bx bxl-google google__icon"
+                  style="color: #2b2323"
+                  title="Sign up using google account"
+                ></i>
+
+                <a class="login__redirect" href="login.html"
+                  >Already have an account?</a
+                >
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
-            <div class="input__container">
-              <label for="password">Password:</label>
+    <!-- =========== FOOTER SECTION ============ -->
+    <footer class="footer__main__container">
+      <div class="footer__container">
+        <!-- ===========  FOOTER TITLE ============ -->
+        <div class="footer__title">
+          <div class="footer__logo">
+            <i class="bx bx-book-reader lms__logo"></i>
+            <label class="footer__label">LMS</label>
+          </div>
+          <p>
+            LMS is a platform where you can learn with each other and share your
+            knowledge with one another without any cost.
+          </p>
+        </div>
 
-              <input
-                  class="input__field"
-                  id="password"
-                  placeholder="Password"
-                  type="password"
-              />
+        <!-- ===========  FOOTER CONTACTS ============ -->
+        <div class="footer__contacts">
+          <label class="footer__label">Contacts</label>
+          <div class="phone__number">
+            <i class="bx bx-phone"></i>
+            <label>+60163342538</label>
+          </div>
 
-              <p id="password-error">Password is required</p>
-            </div>
+          <div class="email__address">
+            <i class="bx bx-mail-send"></i>
+            <label>clarencechojinheng@gmail.com</label>
+          </div>
 
-            <div class="input__container">
-              <label for="confirm-password">Confirm Password:</label>
-
-              <input
-                  class="input__field"
-                  id="confirm-password"
-                  placeholder="Confirm Password"
-                  type="password"
-              />
-
-              <p id="confirm-password-error">
-                Password Confirmation is required
-              </p>
-            </div>
-          </form>
-
-          <div class="signup__button__container">
-            <input id="submit-button" type="submit" value="Sign Up"/>
-            <i
-                class="bx bxl-google google__icon"
-                style="color: #2b2323"
-                title="Sign up using google account"
-            ></i>
-
-            <a class="login__redirect" href="login.html"
-            >Already have an account?</a
+          <div class="address">
+            <i class="bx bx-location-plus"></i>
+            <label
+              >122, Jalan Pakis 2 Taman Cuepacs 43200 Cheras Selangor</label
             >
           </div>
         </div>
+
+        <!-- ===========  FOOTER LINKS ============ -->
+
+        <div class="footer__links">
+          <label class="footer__label">Links</label>
+          <a class="nav__link" href="index.html">Home</a>
+          <a class="nav__link" href="about.html">About Us</a>
+          <a class="nav__link" href="contact.html">Contact Us</a>
+          <a class="nav__link" href="news_blog.html">News & Blog</a>
+        </div>
+
+        <!-- ===========  FOOTER SOCIAL ============ -->
+
+        <div class="footer__social">
+          <label class="footer__label">Social Links</label>
+          <div class="social__links">
+            <i class="bx bxl-instagram insta"></i>
+            <i class="bx bxl-facebook-square face"></i>
+            <i class="bx bxl-whatsapp whats"></i>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-</main>
+    </footer>
 
-<!-- =========== FOOTER SECTION ============ -->
-<footer class="footer__main__container">
-  <div class="footer__container">
-    <!-- ===========  FOOTER TITLE ============ -->
-    <div class="footer__title">
-      <div class="footer__logo">
-        <i class="bx bx-book-reader lms__logo"></i>
-        <label class="footer__label">LMS</label>
-      </div>
-      <p>
-        LMS is a platform where you can learn with each other and share your
-        knowledge with one another without any cost.
-      </p>
-    </div>
+    <!-- JAVASCRIPT ACCESS -->
 
-    <!-- ===========  FOOTER CONTACTS ============ -->
-    <div class="footer__contacts">
-      <label class="footer__label">Contacts</label>
-      <div class="phone__number">
-        <i class="bx bx-phone"></i>
-        <label>+60163342538</label>
-      </div>
-
-      <div class="email__address">
-        <i class="bx bx-mail-send"></i>
-        <label>clarencechojinheng@gmail.com</label>
-      </div>
-
-      <div class="address">
-        <i class="bx bx-location-plus"></i>
-        <label
-        >122, Jalan Pakis 2 Taman Cuepacs 43200 Cheras Selangor</label
-        >
-      </div>
-    </div>
-
-    <!-- ===========  FOOTER LINKS ============ -->
-
-    <div class="footer__links">
-      <label class="footer__label">Links</label>
-      <a class="nav__link" href="index.html">Home</a>
-      <a class="nav__link" href="about.html">About Us</a>
-      <a class="nav__link" href="contact.html">Contact Us</a>
-      <a class="nav__link" href="news_blog.html">News & Blog</a>
-    </div>
-
-    <!-- ===========  FOOTER SOCIAL ============ -->
-
-    <div class="footer__social">
-      <label class="footer__label">Social Links</label>
-      <div class="social__links">
-        <i class="bx bxl-instagram insta"></i>
-        <i class="bx bxl-facebook-square face"></i>
-        <i class="bx bxl-whatsapp whats"></i>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<!-- JAVASCRIPT ACCESS -->
-
-<script src="js/signup.js"></script>
-<script src="js/header.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-</body>
+    <script src="js/signup.js"></script>
+    <script src="js/header.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  </body>
 </html>

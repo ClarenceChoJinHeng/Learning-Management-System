@@ -5,6 +5,8 @@ import express from "express";
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
+import multer from "multer";
+import path from "path";
 
 /* ========== SECURITY MODULE ========== */
 import bcrypt from "bcryptjs";
@@ -19,6 +21,27 @@ const app = express(); // Initialize express
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Enable JSON parsing
 
+// Your multer configuration
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "client/Image"));
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const validImagesTypes = ["Images/gif", "Images/jpeg", "Images/png"];
+    if (validImagesTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type. Only GIF, JPEG, and PNG are allowed."));
+    }
+  },
+});
 /* ========== EXTRACT KEYS FROM ENV FILE ========== */
 const uri = process.env.MONGODB_KEY;
 
@@ -420,10 +443,53 @@ app.get("/client/group-study/group-chat-retrieval", async (req, res) => {
   }
 });
 
+// ================ UPLOAD PROFILE PICTURE ================
+app.put(
+  "/client/profile-picture",
+  upload.single("profilePicture"),
+  async (req, res) => {
+    try {
+      const profilePicture = req.file;
+      const userEmail = req.body.userEmail;
 
+      console.log(req.file);
 
+      if (!profilePicture) {
+        return res.status(400).json({ message: "Invalid form data" });
+      }
+
+      const update = await userCollection.updateOne(
+        { email: userEmail },
+        {
+          $set: {
+            profilePicture: profilePicture.path,
+            profilePictureType: profilePicture.mimetype,
+          },
+        } // Use $set instead of $push
+      );
+
+      console.log(update);
+
+      if (update.result.nModified === 1) {
+        // Check nModified instead of n
+        return res.status(200).json({ message: "Profile Picture Uploaded" });
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Failed to update profile picture" });
+      }
+    } catch (error) {
+      console.error(error); // Log the error
+      return res.status(500).json({ error: error.message }); // Send a response in case of error
+    }
+  }
+);
 // ================ SERVER LISTENING PORT ==================
 app.listen(5001, () => console.log("Server started on http://localhost:5001"));
+
+app.use((req, res) => {
+  res.status(404).send({ error: `Not found: ${req.method} ${req.url}` });
+});
 // METHODS TO SEND BACK TO CLIENT
 // res.json({ message: "Signup route" });
 // res.status(200).json({ message: "Signup route" });

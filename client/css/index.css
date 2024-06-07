@@ -45,7 +45,7 @@ body {
   width: 60vh;
 }
 
-.home__image__container {
+.home__Images__container {
   height: max-content;
   width: 500px;
   box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.7);
@@ -53,7 +53,7 @@ body {
   z-index: -1;
 }
 
-.lms__image__container img {
+.lms__Images__container img {
   height: 100%;
   width: 100%;
 }

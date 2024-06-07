@@ -173,13 +173,15 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.innerHTML = `
        
           <div class="user__message__name__container">
-          <i class="bx bx-user-circle user__profile__picture"></i>
-          <p class="user__message__name">${receiverNameInput}</p>
-        </div>
+          <div class="user__profile__picture">
+            <i class="bx bx-user-circle user__profile__picture"></i>
+          </div>
+            <p class="user__message__name">${receiverNameInput}</p>
+          </div>
 
-        <div class="user__message__time__container">
-          <p>Test</p>
-        </div>
+          <div class="user__message__time__container">
+            <p>Test</p>
+          </div>
       `;
 
           displayUserContainer.appendChild(chatDiv);
@@ -209,7 +211,9 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.innerHTML = `
        
           <div class="user__message__name__container">
+          <div class="user__profile__picture">
             <i class="bx bx-user-circle user__profile__picture"></i>
+          </div>
             <p class="user__message__name">${senderName}</p>
           </div>
 
@@ -266,20 +270,25 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.dataset.chatId = chat._id;
           chatDiv.innerHTML = `
      
-        <div class="user__message__name__container">
-        <i class="bx bx-user-circle user__profile__picture"></i>
-        <p class="user__message__name">${groupName}</p>
-      </div>
+          <div class="user__message__name__container">
+          <div class="user__profile__picture">
+            <i class="bx bx-user-circle user__profile__picture"></i>
+          </div>
+            <p class="user__message__name">${groupName}</p>
+          </div>
 
-      <div class="user__message__time__container">
-        <p>Test</p>
-      </div>
+          <div class="user__message__time__container">
+            <p>Test</p>
+          </div>
     `;
 
           displayUserContainer.appendChild(chatDiv);
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverName.innerHTML = groupName;
+            currentChatId = chat._id;
+            sendMessage.dataset.chatId = chat._id;
+            retrieveMessages(currentChatId);
             if (
               chatBoxNoUserContainer.style.display === "flex" ||
               chatBoxNoUserContainer.style.display === ""

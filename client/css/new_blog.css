@@ -39,7 +39,7 @@ body {
   background-color: #fff;
 }
 
-.image-content,
+.Images-content,
 .card-content {
   display: flex;
   flex-direction: column;
@@ -55,14 +55,14 @@ body {
   height: 35vh;
 }
 
-.image-content {
+.Images-content {
   height: 100%;
   width: 100%;
   background-color: var(--Dark);
   border-radius: 1vh;
 }
 
-.card-image {
+.card-Images {
   position: relative;
   height: 100%;
   width: 100%;

@@ -1,8 +1,143 @@
 @import url("style.css");
 
-.logout__button__container {
+.settings__section__container {
+  height: 53rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  padding: 1rem;
+}
+
+.profile__section__container {
+  border: 1px solid black;
+  padding: 1rem;
+  width: 40rem;
+  display: flex;
+  /* justify-content: center;   */
+}
+
+.profile__title {
+  height: max-content;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid black;
+  padding: 1rem;
+}
+
+.change__profile__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.change__profile__overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.change__profile__overlay__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile__picture__title {
+  font-size: 1.5rem;
+  font-weight: var(--Raleway600);
+}
+
+.profile__picture__display__section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user__account__display {
+  font-size: 15rem;
+}
+
+#changeProfileOverlayContainer {
   position: absolute;
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
+  padding: 2rem;
+  max-width: 40rem;
+  width: 30rem;
+  border-radius: 0.5rem;
+  background: white;
+  height: max-content;
+  z-index: 2;
+  border: 1px solid black;
+  display: none;
+}
+
+#backgroundSettingsOverlay {
+  position: fixed;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  background: rgba(45, 45, 45, 0.5);
+  backdrop-filter: blur(5px);
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  display: none;
+}
+
+.cancel__title__container {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.cancel__button {
+  font-size: 1.5rem;
+  /* padding: 0.5rem; */
+  border-radius: 5rem;
+}
+
+.cancel__upload__choose__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#chooseProfilePicture {
+  background: var(--primaryColor);
+  border: none;
+  width: 12rem;
+  cursor: pointer;
+}
+
+#cancelProfileUpload {
+  color: black;
+  border: none;
+  /* background: none; */
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  transition: 0.15s;
+  cursor: pointer;
+}
+
+#uploadProfilePicture {
+  /* background: none; */
+  color: black;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  transition: 0.15s;
+  cursor: pointer;
+}
+
+.logout__button__container {
+  /* position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%; */
 }

@@ -95,6 +95,7 @@ header {
   transition: all 0.2s ease;
   border-radius: 0.1rem;
   width: max-content;
+  z-index: 1;
 }
 
 .retrigger__create__join__container {

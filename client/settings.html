@@ -1,95 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
-  <!-- ========= LINK CSS ========= -->
+    <!-- ========= LINK CSS ========= -->
 
-  <link href="css/lms-home.css" rel="stylesheet"/>
-  <link href="css/settings.css" rel="stylesheet"/>
+    <link href="css/lms-home.css" rel="stylesheet" />
+    <link href="css/settings.css" rel="stylesheet" />
+    <link href="css/hover.css" rel="stylesheet" />
+    <link href="css/active.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/lms-nav.css" />
 
+    <!-- ========= LINK BOX ICONS ========= -->
 
-  <!-- ========= LINK BOX ICONS ========= -->
-
-  <link
+    <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
-  />
+    />
 
-  <!-- ======== FONT AWESOME ======== -->
-  <script
+    <!-- ======== FONT AWESOME ======== -->
+    <script
       crossorigin="anonymous"
       src="https://kit.fontawesome.com/21bf2f8b90.js"
-  ></script>
+    ></script>
 
-  <!-- ======== FAVICON ========  -->
-  <link href="image/book-reader-regular-24(2).png" rel="icon"/>
-  <title>Settings</title>
-</head>
-<body>
-<!-- ============== HEADER NAVIGATION ============== -->
-<header>
-  <section class="header__main__container">
-    <div class="hamburger__container" id="hamburger__container">
-      <div class="open__side__nav__container" id="openSideNav">
-        <i class="bx bx-menu-alt-left open__nav" id="openSideNav"></i>
-      </div>
-      <div class="logo__container">
-        <div class="lms__logo__container">
-          <i class="bx bx-book-reader lms__logo"></i>
+    <!-- ======== FAVICON ========  -->
+    <link href="Images/book-reader-regular-24(2).png" rel="icon" />
+    <title>Settings</title>
+  </head>
+  <body>
+    <!-- ============== HEADER NAVIGATION ============== -->
+    <header>
+      <section class="header__main__container">
+        <div class="hamburger__container" id="hamburger__container">
+          <div class="open__side__nav__container" id="openSideNav">
+            <i class="bx bx-menu-alt-left open__nav" id="openSideNav"></i>
+          </div>
+          <div class="logo__container">
+            <div class="lms__logo__container">
+              <i class="bx bx-book-reader lms__logo"></i>
+            </div>
+            <p>LMS - Settings</p>
+          </div>
         </div>
-        <label>LMS</label>
-      </div>
-    </div>
 
-    <div class="top__right__function__container">
-      <div class="create__join__class__container">
-        <i class="bx bx-plus create__join__class__icon"></i>
-      </div>
-      <div class="user__account__container">
-        <i class="bx bx-user-circle user__account"></i>
-        <label class="userName"></label>
-      </div>
-    </div>
-  </section>
-</header>
+        <!-- ============== ADD / JOIN AND ACCOUNT CONTAINER ============== -->
+        <div class="top__right__function__container">
+          <div class="user__account__container">
+            <i class="bx bx-user-circle user__account"></i>
+            <p class="userName"></p>
+          </div>
+        </div>
+      </section>
+    </header>
 
-<main>
-  <section class="lms__main__container">
-    <!-- ============== FUNCTIONALITY NAVIGATION ============== -->
-    <div class="nav__main__container" id="navMainContainer">
-      <div class="lms__nav__container">
-        <a class="nav__function__container" href="lms-home.html">
-          <i class="bx bx-home"></i><label id="sideLabel">Home</label>
-        </a>
-        <a class="nav__function__container" href="calendar.html">
-          <i class="bx bx-calendar"></i
-          ><label id="sideLabel">Calendar</label>
-        </a>
-        <a class="nav__function__container">
-          <i class="bx bx-group"></i
-          ><label id="sideLabel">Study Group</label>
-        </a>
-        <a class="nav__function__container">
-          <i class="bx bx-note"></i><label id="sideLabel">Note</label>
-        </a>
-        <a class="nav__function__container" href="settings.html">
-          <i class="bx bx-cog"></i><label id="sideLabel">Settings</label>
-        </a>
-      </div>
-    </div>
+    <main>
+      <section class="lms__main__container">
+        <!-- ============== FUNCTIONALITY NAVIGATION ============== -->
+        <div class="nav__main__container" id="navMainContainer">
+          <div class="lms__nav__container">
+            <a href="lms-home.html" class="nav__function__container">
+              <i class="bx bx-home"></i>
+              <p id="sideLabel">Home</p>
+            </a>
+            <a href="teaching.html" class="nav__function__container">
+              <i class="bx bx-chalkboard"></i>
+              <p id="sideLabel">Teaching</p>
+            </a>
+            <a href="enrolled.html" class="nav__function__container">
+              <i class="bx bx-book-content"></i>
+              <p id="sideLabel">Enrolled</p>
+            </a>
+            <a href="calendar.html" class="nav__function__container">
+              <i class="bx bx-calendar"></i>
+              <p id="sideLabel">Calendar</p>
+            </a>
+            <a href="group-study.html" class="nav__function__container">
+              <i class="bx bx-group"></i>
+              <p id="sideLabel">Study Group</p>
+            </a>
+            <a class="nav__function__container">
+              <i class="bx bx-note"></i>
+              <p id="sideLabel">Note</p>
+            </a>
+            <a href="settings.html" class="nav__function__container">
+              <i class="bx bx-cog"></i>
+              <p id="sideLabel">Settings</p>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- ============== SETTINGS ============== -->
+      <section class="settings__section__container">
+        <div class="profile__section__container">
+          <div class="profile__title">
+            <h1>Profile</h1>
+            <p>Profile picture</p>
+            <div class="change__profile__button__container">
+              <button class="change__profile__button" id="changeProfileButton">
+                <i class="bx bx-user-circle user__account"></i> Change Profile
+              </button>
+            </div>
+          </div>
+        </div>
 
-    <!-- ============== SETTINGS ============== -->
+        <div
+          class="change__profile__overlay__container"
+          id="changeProfileOverlayContainer"
+        >
+          <div class="change__profile__overlay">
+            <div class="cancel__title__container">
+              <i class="bx bx-x cancel__button" id="cancelChangeProfile"></i>
+              <h1>Change Profile Picture</h1>
+            </div>
+            <div class="change__profile__overlay__content">
+              <p class="profile__picture__title">Profile picture</p>
+              <p>
+                A picture helps people recognize you and lets you know when you
+                are signed in to your account
+              </p>
+            </div>
+            <div class="profile__picture__display__section">
+              <i class="bx bx-user-circle user__account__display"></i>
+            </div>
 
-    <div class="logout__button__container">
-      <button id="logoutButton">Logout</button>
-    </div>
-  </section>
-</main>
-<!-- ========= LINK JS ========= -->
-<script src="js/authMiddleware.js"></script>
-<script src="js/lms-home.js"></script>
-<script src="js/logout.js"></script>
-</body>
+            <div class="cancel__upload__choose__container">
+              <input type="file" id="chooseProfilePicture" accept="Images/*" />
+              <button id="cancelProfileUpload">Cancel</button>
+              <button id="uploadProfilePicture">Upload</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================ BACKGROUND OVERLAY ================ -->
+        <div
+          class="background__overlay__settings__popup"
+          id="backgroundSettingsOverlay"
+        ></div>
+        <div class="logout__button__container">
+          <button id="logoutButton">Logout</button>
+        </div>
+      </section>
+    </main>
+    <!-- ========= LINK JS ========= -->
+    <script src="js/authMiddleware.js"></script>
+    <script src="js/lms-home.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/lms-nav.js"></script>
+    <script src="js/settings.js"></script>
+  </body>
 </html>

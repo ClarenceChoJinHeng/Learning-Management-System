@@ -169,28 +169,28 @@
   background: rgba(0, 0, 0, 0.15);
 }
 .swiper-3d .swiper-slide-shadow-left {
-  background-image: linear-gradient(
+  background-images: linear-gradient(
     to left,
     rgba(0, 0, 0, 0.5),
     rgba(0, 0, 0, 0)
   );
 }
 .swiper-3d .swiper-slide-shadow-right {
-  background-image: linear-gradient(
+  background-images: linear-gradient(
     to right,
     rgba(0, 0, 0, 0.5),
     rgba(0, 0, 0, 0)
   );
 }
 .swiper-3d .swiper-slide-shadow-top {
-  background-image: linear-gradient(
+  background-images: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.5),
     rgba(0, 0, 0, 0)
   );
 }
 .swiper-3d .swiper-slide-shadow-bottom {
-  background-image: linear-gradient(
+  background-images: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.5),
     rgba(0, 0, 0, 0)

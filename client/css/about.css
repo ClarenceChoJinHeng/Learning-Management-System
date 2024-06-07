@@ -22,7 +22,7 @@
   backdrop-filter: blur(5px);
 }
 
-.about__image__container > img {
+.about__Images__container > img {
   object-fit: contain;
   border: 4px solid var(--DarkGold);
 }

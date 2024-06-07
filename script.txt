@@ -26,9 +26,9 @@ npm install bcryptjs compression concurrently cors dotenv express formidable goo
 (4) cors = Cross Origin Resouce Sharing
 (5) dotenv = Secure API keys (Environment Variable)
 (6) express = Define Routes using HTTP methods and URL
-(7) formidable = Parse Multipart Form Data (Including Text and Image)
+(7) formidable = Parse Multipart Form Data (Including Text and Images)
 (8) googleapis = Gmail API needed this package
-(9) gridfs-stream = Upload Image To MongoDB
+(9) gridfs-stream = Upload Images To MongoDB
 (10) jsonwebtoken = Store token and it can verify whether the user is authorized
 (11) mongodb = Connect to database
 (12) nodemailer = Sending gmail response to client

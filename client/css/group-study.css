@@ -180,6 +180,8 @@ main {
 }
 
 .user__profile__picture {
+  display:flex;
+  align-items: center;
   font-size: 2rem;
   border: 1px solid black;
   border-radius: 10rem;
