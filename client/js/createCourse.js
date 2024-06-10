@@ -1,130 +1,130 @@
 // DISPLAY CREATE CLASS POPUP
-const createClassButton = document.getElementById('createClassButton')
-const backgroundOverlay = document.getElementById('backgroundOverlay')
-const classPopupOverlay = document.getElementById('classPopupOverlay')
-const cancelCreateButton = document.getElementById('cancelCreateButton')
-const createCourseButton = document.getElementById('createCourseButton')
+const createClassButton = document.getElementById("createClassButton");
+const backgroundOverlay = document.getElementById("backgroundOverlay");
+const classPopupOverlay = document.getElementById("classPopupOverlay");
+const cancelCreateButton = document.getElementById("cancelCreateButton");
+const createCourseButton = document.getElementById("createCourseButton");
 
 // FUNCTION TO SHOW THE POPUP
-createClassButton.addEventListener('click', (event) => {
-  event.stopPropagation()
-  showPopup()
-})
+createClassButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  showPopup();
+});
 
-function showPopup () {
-  backgroundOverlay.style.display = 'flex'
-  classPopupOverlay.style.display = 'block'
+function showPopup() {
+  backgroundOverlay.style.display = "flex";
+  classPopupOverlay.style.display = "block";
 }
 
 // FUNCTION TO HIDE THE POPUP AND RESET THE FORM
-function hidePopupAndResetForm () {
-  backgroundOverlay.style.display = 'none'
-  classPopupOverlay.style.display = 'none'
-  createClassForm.reset()
+function hidePopupAndResetForm() {
+  backgroundOverlay.style.display = "none";
+  classPopupOverlay.style.display = "none";
+  createClassForm.reset();
 }
 
 // ADD EVENT LISTENERS TO THE CANCEL BUTTON AND THE BACKGROUND OVERLAY
-cancelCreateButton.addEventListener('click', hidePopupAndResetForm)
-backgroundOverlay.addEventListener('click', hidePopupAndResetForm)
-document.addEventListener('click', hidePopupAndResetForm)
+cancelCreateButton.addEventListener("click", hidePopupAndResetForm);
+backgroundOverlay.addEventListener("click", hidePopupAndResetForm);
+document.addEventListener("click", hidePopupAndResetForm);
 
 // PREVENT THE POPUP FROM CLOSING WHEN CLICKING ON THE POPUP ITSELF
-classPopupOverlay.addEventListener('click', (event) => {
-  event.stopPropagation()
-})
+classPopupOverlay.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
 
 // RETRIGGER CREATE JOIN POPUP
-const retriggerPopupIcon = document.getElementById('retriggerPopupIcon')
+const retriggerPopupIcon = document.getElementById("retriggerPopupIcon");
 const retriggerCreateJoinContainer = document.getElementById(
-  'retriggerCreateJoinContainer'
-)
+  "retriggerCreateJoinContainer"
+);
 
-const retriggerCreate = document.getElementById('retriggerCreate')
+const retriggerCreate = document.getElementById("retriggerCreate");
 
 // ADD EVENT LISTENERS TO THE CREATE CLASS BUTTON AND THE RETRIGGER BUTTON
-retriggerPopupIcon.addEventListener('click', (event) => {
-  event.stopPropagation()
-  if (retriggerCreateJoinContainer.style.display === 'flex') {
-    hideRetriggerPopupContainer()
+retriggerPopupIcon.addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (retriggerCreateJoinContainer.style.display === "flex") {
+    hideRetriggerPopupContainer();
   } else {
-    showCreateJoin()
+    showCreateJoin();
   }
-})
+});
 
-retriggerCreate.addEventListener('click', (event) => {
-  event.stopPropagation()
-  hideRetriggerPopupContainer()
-  showPopup()
-})
+retriggerCreate.addEventListener("click", (event) => {
+  event.stopPropagation();
+  hideRetriggerPopupContainer();
+  showPopup();
+});
 
-function showCreateJoin () {
-  retriggerCreateJoinContainer.style.display = 'flex'
+function showCreateJoin() {
+  retriggerCreateJoinContainer.style.display = "flex";
 }
 
-function hideRetriggerPopupContainer () {
-  retriggerCreateJoinContainer.style.display = 'none'
+function hideRetriggerPopupContainer() {
+  retriggerCreateJoinContainer.style.display = "none";
 }
 
-document.addEventListener('click', hideRetriggerPopupContainer)
+document.addEventListener("click", hideRetriggerPopupContainer);
 
 // PREVENT THE POPUP FROM CLOSING WHEN CLICKNG ON THE POPUP ITSELF
-retriggerCreateJoinContainer.addEventListener('click', (event) => {
-  event.stopPropagation()
-})
+retriggerCreateJoinContainer.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
 
 // ====================================================================================
 
 // CHECKING WHETHER THE FORM IS FILLED OUT
-const inputFields = document.querySelectorAll('.input__fields')
+const inputFields = document.querySelectorAll(".input__fields");
 
 // CHECK IF ALL INPUT FIELDS ARE FILLED OUT
-function checkFields () {
+function checkFields() {
   for (let i = 0; i < inputFields.length; i++) {
-    if (inputFields[i].value.trim() === '') {
-      return false
+    if (inputFields[i].value.trim() === "") {
+      return false;
     }
   }
-  return true
+  return true;
 }
 
 // UPDATE THE COLOR AND DISABLED STATE OF THE CREATE COURSE BUTTON
-function updateButtonColor () {
+function updateButtonColor() {
   if (checkFields()) {
-    createCourseButton.style.color = 'black'
-    createCourseButton.disabled = false
+    createCourseButton.style.color = "black";
+    createCourseButton.disabled = false;
   } else {
-    createCourseButton.style.color = ''
-    createCourseButton.disabled = true
+    createCourseButton.style.color = "";
+    createCourseButton.disabled = true;
   }
 }
 
 // INITIALLY DISABLE THE CREATECOURSEBUTTON
-createCourseButton.disabled = true
+createCourseButton.disabled = true;
 
 // ADD EVENT LISTENERS TO THE INPUT FIELDS
 for (let i = 0; i < inputFields.length; i++) {
-  inputFields[i].addEventListener('input', updateButtonColor)
+  inputFields[i].addEventListener("input", updateButtonColor);
 }
 
 // ==================== CREATE A NEW COURSE ====================
 
-const createClassForm = document.getElementById('createClassForm')
+const createClassForm = document.getElementById("createClassForm");
 
 const submitForm = async (event) => {
-  event.preventDefault()
+  event.preventDefault();
 
   // GETTING THE VALUE FROM THE FORM
-  const className = document.getElementById('className').value
-  const lecturerName = document.getElementById('lecturerName').value
-  const classSubject = document.getElementById('classSubject').value
-  const classRoom = document.getElementById('classRoom').value
+  const className = document.getElementById("className").value;
+  const lecturerName = document.getElementById("lecturerName").value;
+  const classSubject = document.getElementById("classSubject").value;
+  const classRoom = document.getElementById("classRoom").value;
 
-  const userEmail = localStorage.getItem('userEmail')
+  const userEmail = localStorage.getItem("userEmail");
   // MAKE A REQUEST TO THE SERVER
-  const response = await fetch('http://localhost:5001/client/lms-home', {
-    method: 'POST',
+  const response = await fetch("http://localhost:5001/client/lms-home", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       className,
@@ -133,74 +133,159 @@ const submitForm = async (event) => {
       classRoom,
       userEmail,
     }),
-  })
+  });
 
   const createCourseContainer = document.getElementById(
-    'createCourseContainer'
-  )
+    "createCourseContainer"
+  );
 
   // GETTING THE RESPONSE FROM THE SERVER IF THE REQUEST IS SUCCESSFUL
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
-    alert('Class Created Successfully')
-    backgroundOverlay.style.display = 'none'
-    classPopupOverlay.style.display = 'none'
-    createCourseContainer.style.display = 'none'
-    localStorage.setItem('createCourseContainerDisplay', 'none')
-    createClassForm.reset()
+    const data = await response.json();
+    console.log(data.message);
+    alert("Class Created Successfully");
+    backgroundOverlay.style.display = "none";
+    classPopupOverlay.style.display = "none";
+    createCourseContainer.style.display = "none";
+    localStorage.setItem("createCourseContainerDisplay", "none");
+    createClassForm.reset();
   } else {
-    const error = await response.json()
-    console.error(error.message)
-    alert('Error Creating Class')
-    backgroundOverlay.style.display = 'none'
-    classPopupOverlay.style.display = 'none'
-    createCourseContainer.style.display = 'none'
-    localStorage.setItem('createCourseContainerDisplay', 'none')
-    createClassForm.reset()
+    const error = await response.json();
+    console.error(error.message);
+    alert("Error Creating Class");
+    backgroundOverlay.style.display = "none";
+    classPopupOverlay.style.display = "none";
+    createCourseContainer.style.display = "none";
+    localStorage.setItem("createCourseContainerDisplay", "none");
+    createClassForm.reset();
   }
-}
+};
 
 // ==================== RETRIEVE COURSES ====================
 
 const retrieveCourse = async () => {
-  const userEmail = localStorage.getItem('userEmail')
+  const userEmail = localStorage.getItem("userEmail");
+
+  const displayTeachingContainer = document.getElementById(
+    "displayTeachingContainer"
+  );
 
   const response = await fetch(
     `http://localhost:5001/client/lms-home?userEmail=${userEmail}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.courses)
+    const data = await response.json();
+    console.log(data.courses);
 
     const createDisplayCourseContainer = document.getElementById(
-      'createDisplayCourseContainer'
-    )
+      "createDisplayCourseContainer"
+    );
 
     // CLEAN THE EXISTING CODE
-    createDisplayCourseContainer.innerHTML = ''
+    createDisplayCourseContainer.innerHTML = "";
+
+    if (data.courses.length > 0) {
+      displayTeachingContainer.innerHTML = "";
+    }
 
     // CREATE AN ARRAY TO STORE THE COURSE IDS
-    const courseIDs = []
+    const courseIDs = [];
 
     data.courses.forEach((course) => {
-      const className = course.className
-      const lecturerName = course.lecturerName
-      const classRoom = course.classRoom
-      const courseID = course._id
+      const className = course.className;
+      const lecturerName = course.lecturerName;
+      const classRoom = course.classRoom;
+      const courseID = course._id;
 
-      courseIDs.push(courseID)
+      courseIDs.push(courseID);
 
-      const courseDiv = document.createElement('div')
-      courseDiv.className = 'display__course__container'
-      courseDiv.dataset.courseId = course._id
+      // Create course div for navDisplayTeachingContainer
+      const courseDivNav = document.createElement("div");
+      courseDivNav.className = "display__teaching__courses";
+      courseDivNav.dataset.id = course.id;
+      courseDivNav.innerHTML = `
+      <div
+         class="class__room__teaching__details"
+         id="classRoomTeachingDetails"
+      >
+      <div class="class__profile__display">${className.charAt(0)}</div>
+        <div class="class__room__display">
+            <p>${className}</p>
+            <p>${classRoom}</p>
+        </div>
+      </div>
+      `;
+      displayTeachingContainer.appendChild(courseDivNav);
+
+      courseDivNav.addEventListener("click", (event) => {
+        const displayFunctionalityContainer = document.getElementById(
+          "displayFunctionalityContainer"
+        );
+        createDisplayCourseContainer.style.display = "block";
+        createDisplayCourseContainer.style.overflow = "hidden";
+        displayFunctionalityContainer.style.paddingLeft = "6rem";
+        displayFunctionalityContainer.style.paddingTop = "0rem";
+        displayFunctionalityContainer.style.paddingRight = "0rem";
+
+        createDisplayCourseContainer.innerHTML = `
+        
+        <div class="display__teaching__navigation__container">
+           <div class="display__teaching__navigation">
+              <div class="teaching__stream__nav" id="teachingStreamNav"><p>Stream</p></div>
+              <div class="teaching__stream__nav" id="teachingStreamNav"><p>Classwork</p></div>
+              <div class="teaching__stream__nav" id="teachingStreamNav"><p>People</p></div>
+              <div class="teaching__stream__nav" id="teachingStreamNav"><p>Grades</p></div>
+            </div>
+        </div>
+
+        <div class="display__teaching__stream__container">
+          <div class="display__teaching__stream">
+
+            <div class="display__teaching__title">
+                <p class="className">${className}</p>
+                <p class="classRoom">${classRoom}</p>
+            </div>
+
+            <div class="display__class__code__container"> 
+                <p class="classCodeTitle">Class Code:</p>
+                <p class="classCode">${courseID}</p>
+            </div>
+
+          </div>
+        </div>
+        `;
+
+        teachingStreamNav = document.querySelectorAll(".teaching__stream__nav");
+
+        teachingStreamNav.forEach((navItem) => {
+          navItem.addEventListener("click", (event) => {
+            // Remove underline from all items
+            teachingStreamNav.forEach((item) => {
+              item.style.borderBottom = "";
+            });
+
+            // Check if the event target is a paragraph
+            if (event.target.tagName === "P") {
+              // If it is, apply borderBottom to its parent node (the div container)
+              event.target.parentNode.style.borderBottom = "3px solid #1a73e8";
+            } else {
+              // If it's not, apply borderBottom to the event target itself
+              event.target.style.borderBottom = "2px solid #1a73e8";
+            }
+          });
+        });
+      });
+
+      const courseDiv = document.createElement("div");
+      courseDiv.className = "display__course__container";
+      courseDiv.dataset.courseId = course._id;
       courseDiv.innerHTML = `
       <div class="delete__background__overlay" id="backgroundOverlay"></div>
 
@@ -255,199 +340,199 @@ const retrieveCourse = async () => {
         <i class="bx bx-dots-vertical-rounded three-dots"></i>
       </div>
     </div>
-      `
-      createDisplayCourseContainer.appendChild(courseDiv)
+      `;
+      createDisplayCourseContainer.appendChild(courseDiv);
 
-      const deleteButton = courseDiv.querySelector('#deleteButton')
+      const deleteButton = courseDiv.querySelector("#deleteButton");
       const deleteConfirmatonContainer = courseDiv.querySelector(
-        '#displayDeleteConfirmationContainer'
-      )
+        "#displayDeleteConfirmationContainer"
+      );
       const backgroundOverlay = courseDiv.querySelector(
-        '.delete__background__overlay'
-      )
-      const cancelButton = courseDiv.querySelector('#cancelButton')
-      const deleteCourseButton = courseDiv.querySelector('#deleteCourseButton')
+        ".delete__background__overlay"
+      );
+      const cancelButton = courseDiv.querySelector("#cancelButton");
+      const deleteCourseButton = courseDiv.querySelector("#deleteCourseButton");
 
       // Add event listener to the delete button of the current course
-      deleteButton.addEventListener('click', (event) => {
-        event.stopPropagation()
+      deleteButton.addEventListener("click", (event) => {
+        event.stopPropagation();
         const emptyFunctionalityContainer = courseDiv.querySelector(
-          '.empty__functionality__container'
-        )
+          ".empty__functionality__container"
+        );
 
         // Hide the empty__functionality__container
-        emptyFunctionalityContainer.style.display = 'none'
-        deleteConfirmatonContainer.style.display = 'flex'
-        backgroundOverlay.style.display = 'flex'
-      })
+        emptyFunctionalityContainer.style.display = "none";
+        deleteConfirmatonContainer.style.display = "flex";
+        backgroundOverlay.style.display = "flex";
+      });
 
       // Add event listener to the cancel button of the current course
-      cancelButton.addEventListener('click', (event) => {
-        event.stopPropagation()
-        deleteConfirmatonContainer.style.display = 'none'
-        backgroundOverlay.style.display = 'none'
-      })
+      cancelButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        deleteConfirmatonContainer.style.display = "none";
+        backgroundOverlay.style.display = "none";
+      });
 
-      deleteCourseButton.addEventListener('click', (event) => {
-        deleteCourseButton.value = 'Deleting...'
-        event.stopPropagation()
-        deleteCourseButton.style.background = 'none'
-        deleteCourseButton.style.color = 'grey'
-        cancelButton.disabled = true
-        deleteCourseButton.style.boxShadow = 'none'
+      deleteCourseButton.addEventListener("click", (event) => {
+        deleteCourseButton.value = "Deleting...";
+        event.stopPropagation();
+        deleteCourseButton.style.background = "none";
+        deleteCourseButton.style.color = "grey";
+        cancelButton.disabled = true;
+        deleteCourseButton.style.boxShadow = "none";
 
         setTimeout(() => {
-          event.preventDefault()
-          console.log('Delete button clicked')
-          const courseId = event.target.dataset.courseId
-          deleteCourse(courseId)
-          deleteConfirmatonContainer.style.display = 'none'
-          backgroundOverlay.style.display = 'none'
-          deleteCourseButton.style.background = 'red'
-          deleteCourseButton.style.color = 'white'
-          alert('Delete Succesful')
-        }, 1000)
-      })
+          event.preventDefault();
+          console.log("Delete button clicked");
+          const courseId = event.target.dataset.courseId;
+          deleteCourse(courseId);
+          deleteConfirmatonContainer.style.display = "none";
+          backgroundOverlay.style.display = "none";
+          deleteCourseButton.style.background = "red";
+          deleteCourseButton.style.color = "white";
+          alert("Delete Succesful");
+        }, 1000);
+      });
 
       // Add event listener to the window outside of the loop
-      window.addEventListener('click', (event) => {
+      window.addEventListener("click", (event) => {
         // Get all deleteConfirmationContainer elements
         const deleteConfirmationContainers = document.querySelectorAll(
-          '.display__delete__confirmation__container'
-        )
+          ".display__delete__confirmation__container"
+        );
 
         // Loop through all deleteConfirmationContainer elements
         deleteConfirmationContainers.forEach((deleteConfirmationContainer) => {
           // If the click event is not within the current deleteConfirmationContainer, hide it
           if (!deleteConfirmationContainer.contains(event.target)) {
-            deleteConfirmationContainer.style.display = 'none'
+            deleteConfirmationContainer.style.display = "none";
           }
-        })
+        });
 
         // Get all backgroundOverlay elements
         const backgroundOverlays = document.querySelectorAll(
-          '.delete__background__overlay'
-        )
+          ".delete__background__overlay"
+        );
 
         // Hide all background overlays
         backgroundOverlays.forEach((overlay) => {
-          overlay.style.display = 'none'
-        })
+          overlay.style.display = "none";
+        });
 
         // Add event listener to the deleteConfirmationContainer of the current course
-        deleteConfirmatonContainer.addEventListener('click', (event) => {
-          event.stopPropagation()
-        })
-      })
+        deleteConfirmatonContainer.addEventListener("click", (event) => {
+          event.stopPropagation();
+        });
+      });
 
       // FUNCTION TO CLOSE ALL EMPTY__FUNCTIONALITY__CONTAINER ELEMENTS
-      function closeAllFunctionalityContainers () {
+      function closeAllFunctionalityContainers() {
         const functionalityContainers = document.querySelectorAll(
-          '.empty__functionality__container'
-        )
+          ".empty__functionality__container"
+        );
         functionalityContainers.forEach((container) => {
-          container.style.display = 'none'
-        })
+          container.style.display = "none";
+        });
       }
 
       // ADD EVENT LISTENER TO THE CREATEDISPLAYCOURSECONTAINER
-      courseDiv.addEventListener('click', function (event) {
+      courseDiv.addEventListener("click", function (event) {
         // CHECK IF THE CLICKED ELEMENT OR ITS PARENT IS A .DISPLAY__THREE__DOTS__CONTAINER
         const threeDotContainer = event.target.closest(
-          '.display__three__dots__container'
-        )
+          ".display__three__dots__container"
+        );
         if (threeDotContainer) {
           // PREVENT THE WINDOW CLICK EVENT FROM FIRING
-          event.stopPropagation()
+          event.stopPropagation();
 
           // GET THE EMPTY__FUNCTIONALITY__CONTAINER CORRESPONDING TO THE CLICKED DISPLAY__THREE__DOTS__CONTAINER
           const parentContainer = threeDotContainer.closest(
-            '.display__course__container'
-          )
+            ".display__course__container"
+          );
           const functionalityContainer = parentContainer.querySelector(
-            '.empty__functionality__container'
-          )
+            ".empty__functionality__container"
+          );
 
           // IF THE FUNCTIONALITYCONTAINER IS ALREADY OPEN, CLOSE IT; OTHERWISE, CLOSE ALL CONTAINERS AND OPEN IT
-          if (functionalityContainer.style.display === 'flex') {
-            functionalityContainer.style.display = 'none'
+          if (functionalityContainer.style.display === "flex") {
+            functionalityContainer.style.display = "none";
           } else {
-            closeAllFunctionalityContainers()
-            functionalityContainer.style.display = 'flex'
+            closeAllFunctionalityContainers();
+            functionalityContainer.style.display = "flex";
           }
         }
-      })
+      });
 
       // ADD EVENT LISTENER TO THE WINDOW THAT CLOSES THE EMPTY__FUNCTIONALITY__CONTAINER WHEN CLICKED
-      window.addEventListener('click', closeAllFunctionalityContainers)
-    })
+      window.addEventListener("click", closeAllFunctionalityContainers);
+    });
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-} // here ends
+}; // here ends
 
 // ADD EVENT LISTENER TO THE CREATE COURSE BUTTON
-createCourseButton.addEventListener('click', async (event) => {
-  await submitForm(event)
-  await retrieveCourse()
-})
+createCourseButton.addEventListener("click", async (event) => {
+  await submitForm(event);
+  await retrieveCourse();
+});
 
 // ENSURE THAT THE CREATE COURSE CONTAINER ONLY APPEAR AFTER THERE IS NO MORE COURSES
 window.onload = async function () {
   const createCourseContainer = document.getElementById(
-    'createCourseContainer'
-  )
+    "createCourseContainer"
+  );
   const createDisplayCourseContainer = document.getElementById(
-    'createDisplayCourseContainer'
-  )
+    "createDisplayCourseContainer"
+  );
 
   // RETRIEVE COURSES
-  await retrieveCourse()
+  await retrieveCourse();
 
   // CHECK IF THERE ARE ANY COURSES
   if (createDisplayCourseContainer.children.length === 0) {
     // IF THERE ARE NO COURSES, DISPLAY THE CREATECOURSECONTAINER
-    createCourseContainer.style.display = 'flex'
+    createCourseContainer.style.display = "flex";
   } else {
     // IF THERE ARE COURSES, HIDE THE CREATECOURSECONTAINER
-    createCourseContainer.style.display = 'none'
+    createCourseContainer.style.display = "none";
   }
-}
+};
 
 // ================================= DELETE =====================================
 
 const deleteCourse = async (courseId) => {
   const response = await fetch(`http://localhost:5001/client/lms/${courseId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-  })
+  });
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
+    const data = await response.json();
+    console.log(data.message);
     // AFTER SUCCESSFUL DELETION, REMOVE THE COURSE FROM THE DOM
     const courseDiv = document.querySelector(
       `div[data-course-id="${courseId}"]`
-    )
-    courseDiv.remove()
+    );
+    courseDiv.remove();
 
     // CHECK IF THERE ARE ANY COURSES LEFT
     const createDisplayCourseContainer = document.getElementById(
-      'createDisplayCourseContainer'
-    )
+      "createDisplayCourseContainer"
+    );
     if (createDisplayCourseContainer.children.length === 0) {
       // IF THERE ARE NO COURSES LEFT, DISPLAY THE CREATECOURSECONTAINER
       const createCourseContainer = document.getElementById(
-        'createCourseContainer'
-      )
-      createCourseContainer.style.display = 'flex'
-      localStorage.setItem('createCourseContainerDisplay', 'flex')
+        "createCourseContainer"
+      );
+      createCourseContainer.style.display = "flex";
+      localStorage.setItem("createCourseContainerDisplay", "flex");
     }
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-}
+};

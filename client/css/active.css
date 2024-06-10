@@ -8,6 +8,14 @@
   background-color: var(--BrightBlue);
 }
 
+.nav__teaching__container:active {
+  background-color: var(--BrightBlue);
+}
+
+.nav__enrolled__container:active {
+  background-color: var(--BrightBlue);
+}
+
 .join__class:active,
 .create__class:active {
   background: var(--Gold);

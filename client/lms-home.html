@@ -32,7 +32,7 @@
   <body>
     <!-- ============== HEADER NAVIGATION ============== -->
     <header>
-      <section class="header__main__container">
+      <section class="header__main__container" id="headerMainContainer">
         <div class="hamburger__container" id="hamburger__container">
           <div class="open__side__nav__container" id="openSideNav">
             <i class="bx bx-menu-alt-left open__nav" id="openSideNav"></i>
@@ -41,7 +41,7 @@
             <div class="lms__logo__container">
               <i class="bx bx-book-reader lms__logo"></i>
             </div>
-            <p>LMS</p>
+            <p id="lmsLogoTitle">LMS</p>
           </div>
         </div>
 
@@ -86,14 +86,61 @@
               <i class="bx bx-home"></i>
               <p id="sideLabel">Home</p>
             </a>
-            <a href="teaching.html" class="nav__function__container">
-              <i class="bx bx-chalkboard"></i>
-              <p id="sideLabel">Teaching</p>
-            </a>
-            <a href="enrolled.html" class="nav__function__container">
-              <i class="bx bx-book-content"></i>
-              <p id="sideLabel">Enrolled</p>
-            </a>
+
+            <hr />
+
+            <div
+              class="nav__teaching__main__container"
+              id="navTeachingMainContainer"
+            >
+              <div class="nav__teaching__container" id="navTeachingContainer">
+                <div class="teaching__icon__container">
+                  <i
+                    class="bx bxs-up-arrow teaching__arrow"
+                    id="teachingArrow"
+                  ></i>
+                  <i class="bx bx-chalkboard"></i>
+                </div>
+                <p id="sideLabel">Teaching</p>
+              </div>
+
+              <div
+                class="nav__display__teaching__container"
+                id="navDisplayTeachingContainer"
+              >
+                <div
+                  class="display__teaching__container"
+                  id="displayTeachingContainer"
+                ></div>
+              </div>
+            </div>
+
+            <hr />
+
+            <div class="nav__enrolled__main__container">
+              <div class="nav__enrolled__container" id="navEnrolledContainer">
+                <div class="enrolled__icon__container">
+                  <i
+                    class="bx bxs-up-arrow teaching__arrow"
+                    id="enrolledArrow"
+                  ></i>
+                  <i class="bx bx-book-content"></i>
+                </div>
+                <p id="sideLabel">Enrolled</p>
+              </div>
+              <div
+                class="nav__display__enrolled__container"
+                id="navDisplayEnrolledContainer"
+              >
+                <div
+                  class="display__enrolled__container"
+                  id="displayEnrolledContainer"
+                ></div>
+              </div>
+            </div>
+
+            <hr />
+
             <a href="calendar.html" class="nav__function__container">
               <i class="bx bx-calendar"></i>
               <p id="sideLabel">Calendar</p>
@@ -226,5 +273,6 @@
     <script src="js/createCourse.js"></script>
     <script src="js/deleteCourse.js"></script>
     <script src="js/retrieveCourse.js"></script>
+    <script src="js/teaching.js"></script>
   </body>
 </html>

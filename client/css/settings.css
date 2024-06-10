@@ -14,7 +14,8 @@
   padding: 1rem;
   width: 40rem;
   display: flex;
-  /* justify-content: center;   */
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .profile__title {
@@ -136,8 +137,27 @@
 }
 
 .logout__button__container {
-  /* position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%; */
+  border: 1px solid black;
+  height: 10rem;
+  padding: 1rem;
+}
+
+#logoutButton {
+  padding: 0.5rem;
+  background: red;
+  border: none;
+  cursor: pointer;
+  transition: 0.15s;
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  font-weight: var(--Raleway600);
+  color: white;
+}
+
+#logoutButton:hover {
+  transform: scale(1.05); 
+}
+
+#logoutButton:active {
+  background: darkred;
 }

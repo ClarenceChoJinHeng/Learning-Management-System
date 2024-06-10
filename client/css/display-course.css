@@ -1,8 +1,8 @@
 @import url("style.css");
 .lms__display__main__functionality__container {
-  padding: 1.5rem 1rem 1rem 8rem;
+  padding: 1rem 1rem 1rem 8rem;
   width: 100%;
-  height: 40rem;
+  height: 50rem;
   /* border: 1px solid black; */
   overflow-y: auto;
 }
