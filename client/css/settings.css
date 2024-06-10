@@ -57,6 +57,13 @@
   justify-content: center;
 }
 
+.profile__picture__display__section img {
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .user__account__display {
   font-size: 15rem;
 }

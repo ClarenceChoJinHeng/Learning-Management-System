@@ -39,39 +39,99 @@ cancelProfileUpload.addEventListener("click", () => {
   }
 });
 
-const uploadProfile = async (event) => {
-  event.preventDefault();
-  const chooseProfilePicture = document.getElementById("chooseProfilePicture")
-    .files[0];
-  const userEmail = localStorage.getItem("userEmail");
+document.addEventListener("DOMContentLoaded", () => {
+ // Get the form
+  const uploadForm = document.getElementById("upload-profile");
 
-  const formData = new FormData();
-  formData.append("profilePicture", chooseProfilePicture);
-  formData.append("userEmail", userEmail);
+  if (uploadForm) {
+    uploadForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-  const response = await fetch("/client/profile-picture", {
-    method: "PUT",
-    body: formData,
-  });
+      const file = uploadForm.querySelector('input[type="file"]').files[0]
 
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.message);
-    userProfilePicture.src = data.profilePicture;
-    backgroundSettingsOverlay.style.display = "none";
-    changeProfileOverlayContainer.style.display = "none";
-  } else {
-    const errorData = await response.json(); // Parse the error response as JSON
-    console.error(errorData.error); // Log the error message
-    console.error(`Error: ${response.status}`);
+      if (!file) {
+        alert("Please select a file to upload");
+        return;
+      }
 
-    alert(`Failed to upload profile picture: ${errorData.error}`);
+      const formData = new FormData(uploadForm);
+
+      const username = localStorage.getItem("username");
+      formData.append("username", username);
+
+      const response = await fetch("http://localhost:5001/client/profile-picture", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        pollForImage(data.file, 1000, 10)
+          .then(async (imageResponse) => {
+            // Create a blob URL from the image response
+            const imageBlob = await imageResponse.blob();
+            console.log(imageBlob);
+            const imageUrl = URL.createObjectURL(imageBlob);
+
+            // Display the image
+            const profilePicture = document.querySelectorAll(".user__account");
+
+            profilePicture.forEach((element) => {
+              // Hide the <i> element
+              element.style.display = 'none';
+
+              // Get the parent of profilePicture
+              const parent = element.parentElement;
+
+              // Remove the <img> element if it exists
+              const prevImg = parent.querySelector('img');
+              if (prevImg) {
+                prevImg.remove();
+              }
+
+              // Create a new <img> element
+              const img = document.createElement('img');
+              img.src = imageUrl;
+              img.classList.add("user__account__img");
+              img.alt = 'Profile Picture';
+
+              // Insert the new <img> element after the <i> element
+              element.parentNode.insertBefore(img, element.nextSibling);
+
+              // Remove this element
+              const changeProfileOverlayContainer = document.getElementById("changeProfileOverlayContainer");
+              const backgroundSettingsOverlay = document.getElementById("backgroundSettingsOverlay");
+
+              changeProfileOverlayContainer.style.display = "none";
+              backgroundSettingsOverlay.style.display = "none";
+            });
+          })
+      } else {
+        const data = await response.json();
+        console.error(data);
+      }
+    })
   }
-};
+});
 
-const uploadProfilePicture = document.getElementById("uploadProfilePicture");
+async function pollForImage(file, interval, maxAttempts) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    // Retrieve the image from the backend
+    const imageResponse = await fetch(
+      `http://localhost:5001/image/${file}`
+    );
 
-uploadProfilePicture.addEventListener("click", uploadProfile);
+    if (imageResponse.ok) {
+      console.log(imageResponse);
+      return imageResponse;
+    }
+
+    // Image not found, wait for the interval then try again
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  throw new Error("Image not found after maximum attempts");
+}
 
 window.addEventListener("click", (e) => {
   if (e.target === backgroundSettingsOverlay) {

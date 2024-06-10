@@ -35,7 +35,7 @@
       <section class="header__main__container">
         <div class="hamburger__container" id="hamburger__container">
           <div class="open__side__nav__container" id="openSideNav">
-            <i class="bx bx-menu-alt-left open__nav" id="openSideNav"></i>
+            <i class="bx bx-menu-alt-left open__nav"></i>
           </div>
           <div class="logo__container">
             <div class="lms__logo__container">
@@ -62,31 +62,31 @@
           <div class="lms__nav__container">
             <a href="lms-home.html" class="nav__function__container">
               <i class="bx bx-home"></i>
-              <p id="sideLabel">Home</p>
+              <p>Home</p>
             </a>
             <a href="teaching.html" class="nav__function__container">
               <i class="bx bx-chalkboard"></i>
-              <p id="sideLabel">Teaching</p>
+              <p>Teaching</p>
             </a>
             <a href="enrolled.html" class="nav__function__container">
               <i class="bx bx-book-content"></i>
-              <p id="sideLabel">Enrolled</p>
+              <p>Enrolled</p>
             </a>
             <a href="calendar.html" class="nav__function__container">
               <i class="bx bx-calendar"></i>
-              <p id="sideLabel">Calendar</p>
+              <p>Calendar</p>
             </a>
             <a href="group-study.html" class="nav__function__container">
               <i class="bx bx-group"></i>
-              <p id="sideLabel">Study Group</p>
+              <p>Study Group</p>
             </a>
             <a class="nav__function__container">
               <i class="bx bx-note"></i>
-              <p id="sideLabel">Note</p>
+              <p>Note</p>
             </a>
             <a href="settings.html" class="nav__function__container">
               <i class="bx bx-cog"></i>
-              <p id="sideLabel">Settings</p>
+              <p>Settings</p>
             </a>
           </div>
         </div>
@@ -131,9 +131,16 @@
             </div>
 
             <div class="cancel__upload__choose__container">
-              <input type="file" id="chooseProfilePicture" accept="Images/*" />
-              <button id="cancelProfileUpload">Cancel</button>
-              <button id="uploadProfilePicture">Upload</button>
+              <form id="upload-profile">
+                <input
+                    accept="image/*"
+                    id="file"
+                    name="image"
+                    type="file"
+                />
+                <button id="cancelProfileUpload">Cancel</button>
+                <button type="submit" id="uploadProfilePicture">Upload</button>
+              </form>
             </div>
           </div>
         </div>
@@ -151,5 +158,6 @@
     <script src="js/logout.js"></script>
     <script src="js/lms-nav.js"></script>
     <script src="js/settings.js"></script>
+    <script src="js/retrieveProfilePicture.js"></script>
   </body>
 </html>
