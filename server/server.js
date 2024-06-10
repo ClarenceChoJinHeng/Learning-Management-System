@@ -1,49 +1,28 @@
 /* =========================== MODULES =========================== */
 
 /* ========== CONNECTION MODULE ========== */
-import express from "express";
-import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
-import cors from "cors";
-import dotenv from "dotenv";
-import multer from "multer";
-import path from "path";
+import express from 'express'
+import { GridFSBucket, MongoClient, ObjectId, ServerApiVersion } from 'mongodb'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import fs from 'fs'
+import formidable from 'formidable'
 
 /* ========== SECURITY MODULE ========== */
-import bcrypt from "bcryptjs";
+import bcrypt from 'bcryptjs'
 
 /* ========== ENVIRONMENT VARIABLES ========== */
-dotenv.config();
+dotenv.config()
 
 /* ========== CONNECT EXPRESS, CORS ========== */
 /* ========== MIDDLEWARE ========== */
 
-const app = express(); // Initialize express
-app.use(cors()); // Enable CORS
-app.use(express.json()); // Enable JSON parsing
+const app = express() // Initialize express
+app.use(cors()) // Enable CORS
+app.use(express.json()) // Enable JSON parsing
 
-// Your multer configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "client/Image"));
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    const validImagesTypes = ["Images/gif", "Images/jpeg", "Images/png"];
-    if (validImagesTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only GIF, JPEG, and PNG are allowed."));
-    }
-  },
-});
 /* ========== EXTRACT KEYS FROM ENV FILE ========== */
-const uri = process.env.MONGODB_KEY;
+const uri = process.env.MONGODB_KEY
 
 /* ========== CONNECT TO MONGODB ========== */
 const client = new MongoClient(uri, {
@@ -52,43 +31,49 @@ const client = new MongoClient(uri, {
     strict: true,
     deprecationErrors: true,
   },
-});
+})
 
-async function initializeMongoClient() {
+let db, bucket;
+
+async function initializeMongoClient () {
   try {
-    await client.connect();
-    console.log("Connected to MongoDB");
+    await client.connect()
+    db = client.db('lms-management-system')
+    bucket = new GridFSBucket(db, { bucketName: 'uploads' })
+    console.log('Connected to MongoDB');
   } catch (error) {
-    console.error("Error Connecting To MongoDB: ", error);
+    console.error('Error Connecting To MongoDB: ', error)
   }
 }
 
-initializeMongoClient().catch(console.dir);
+initializeMongoClient().catch(console.dir)
 
 /* ========== GLOBAL VARIABLES FOR MONGODB DATABASE, COLLECTION  ========== */
-const database = client.db("lms-management-system");
-const userCollection = database.collection("Users");
-const courseCollection = database.collection("Courses");
-const Chat = database.collection("Chat");
-const groupChat = database.collection("GroupChat");
+const database = client.db('lms-management-system')
+const userCollection = database.collection('Users')
+const courseCollection = database.collection('Courses')
+const Chat = database.collection('Chat')
+const groupChat = database.collection('GroupChat')
+const uploadFiles = database.collection('uploads.files')
+const uploadChunks = database.collection('uploads.chunks')
 
 /* ========== EXPRESS SIGNUP CONFIGURATION ========== */
-app.post("/client/signup", async (req, res) => {
+app.post('/client/signup', async (req, res) => {
   try {
     // GET THE VALUES FROM THE CLIENT (JSON.stringify)
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role } = req.body
 
     // VALIDATE FORM DATA
     if (!username || !email || !password) {
-      return res.status(400).json({ message: "Invalid form data" });
-    } else if (role !== "user") {
-      return res.status(400).json({ message: "Invalid role" });
+      return res.status(400).json({ message: 'Invalid form data' })
+    } else if (role !== 'user') {
+      return res.status(400).json({ message: 'Invalid role' })
     }
     // HASH THE PASSWORD BEFORE SAVING TO DATABASE
-    const hashedPasword = await bcrypt.hash(password, 10);
+    const hashedPasword = await bcrypt.hash(password, 10)
 
     // CREATE UNIQUE INDEXES ON USERNAME AND EMAIL
-    await userCollection.createIndex({ email: 1 }, { unique: true });
+    await userCollection.createIndex({ email: 1 }, { unique: true })
 
     // INSERT THE USER INTO THE DATABASE
     const insert = await userCollection.insertOne({
@@ -96,73 +81,74 @@ app.post("/client/signup", async (req, res) => {
       email,
       password: hashedPasword,
       role,
-    });
+      profilePicture: '',
+    })
 
     // CHECK IF THE USER WAS INSERTED SUCCESSFULLY
     if (insert.acknowledged === true) {
-      return res.status(200).json({ message: "User created successfully" });
+      return res.status(200).json({ message: 'User created successfully' })
     } else {
-      res.status(500).json({ error: "Failed to insert data" });
+      res.status(500).json({ error: 'Failed to insert data' })
     }
   } catch (error) {
-    console.error("Error handling form submission:", error);
+    console.error('Error handling form submission:', error)
 
     // CHECK IF THE ERROR IS A DUPLICATE KEY ERROR IN OTHER TERMS TO CHECK IF THE USER ALREADY EXISTS
     if (error.code === 11000) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: 'User already exists' })
     } else {
-      console.error("Error handling form submission:", error);
-      res.status(500).send({ error: "Internal Server Error" });
+      console.error('Error handling form submission:', error)
+      res.status(500).send({ error: 'Internal Server Error' })
     }
   }
-});
+})
 
 // ================ LOGIN VALIDATION ==================
 
-app.post("/client/login", async (req, res) => {
+app.post('/client/login', async (req, res) => {
   try {
     // RETRIEVE THE DATA FROM THE DATABASE
     const user = await client
-      .db("lms-management-system")
-      .collection("Users")
-      .findOne({ email: req.body.email });
+      .db('lms-management-system')
+      .collection('Users')
+      .findOne({ email: req.body.email })
 
     if (user) {
       // COMPARE THE PASSWORD WITH STORED PASSWORD BY DECRYPTING THE STORED PASSWORD
       const passwordMatches = await bcrypt.compare(
         req.body.password,
         user.password
-      );
+      )
 
       if (passwordMatches) {
         // EXTRACT THE USERNAME FROM THE DATABASE
-        const username = user.username;
+        const username = user.username
 
         // PASSWORD IS CORRECT
         return res
           .status(200)
-          .json({ message: "Password Match", username: username });
+          .json({ message: 'Password Match', username: username })
       } else {
         // PASSWORD IS INCORRECT
-        res.status(401).json({ error: "Failed to insert data" });
+        res.status(401).json({ error: 'Failed to insert data' })
       }
     } else {
       // User not found
-      res.status(404).send("User does not exist");
+      res.status(404).send('User does not exist')
     }
   } catch (error) {
-    console.error("Error handling form submission:", error);
-    res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error handling form submission:', error)
+    res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================ CREATE CLASS VALIDATION ==================
 
-app.post("/client/lms-home", async (req, res) => {
+app.post('/client/lms-home', async (req, res) => {
   try {
     // GET THE VALUES FROM THE CLIENT (JSON.stringify)
     const { className, lecturerName, classSubject, classRoom, userEmail } =
-      req.body;
+      req.body
 
     if (
       !className ||
@@ -171,7 +157,7 @@ app.post("/client/lms-home", async (req, res) => {
       !classRoom ||
       !userEmail
     ) {
-      return res.status(400).json({ message: "Invalid form data" });
+      return res.status(400).json({ message: 'Invalid form data' })
     }
 
     // INSERT DATA INTO THE DATABASE
@@ -181,70 +167,70 @@ app.post("/client/lms-home", async (req, res) => {
       classSubject,
       classRoom,
       userEmail,
-    });
+    })
 
     if (insert.acknowledged === true) {
-      return res.status(200).json({ message: "Class Created Succesfully" });
+      return res.status(200).json({ message: 'Class Created Succesfully' })
     } else {
-      res.status(500).json({ error: "Failed to insert data" });
+      res.status(500).json({ error: 'Failed to insert data' })
     }
   } catch (error) {
-    console.error("Error handling form submission:", error);
+    console.error('Error handling form submission:', error)
 
     // CHECK IF THE ERROR IS A DUPLICATE KEY ERROR IN OTHER TERMS TO CHECK IF THE USER ALREADY EXISTS
     if (error.code === 11000) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: 'User already exists' })
     } else {
-      console.error("Error handling form submission:", error);
-      res.status(500).send({ error: "Internal Server Error" });
+      console.error('Error handling form submission:', error)
+      res.status(500).send({ error: 'Internal Server Error' })
     }
   }
-});
+})
 
 // ================ RETRIEVE CLASS VALIDATION ==================
-app.get("/client/lms-home", async (req, res) => {
+app.get('/client/lms-home', async (req, res) => {
   try {
-    const userEmail = req.query.userEmail; // Get the userEmail from the query parameters
+    const userEmail = req.query.userEmail // Get the userEmail from the query parameters
     if (!userEmail) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
-    const courses = await courseCollection.find({ userEmail }).toArray(); // Filter courses by userEmail
-    return res.status(200).json({ courses });
+    const courses = await courseCollection.find({ userEmail }).toArray() // Filter courses by userEmail
+    return res.status(200).json({ courses })
   } catch (error) {
-    console.error("Error retrieving courses:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error retrieving courses:', error)
+    return res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================ DELETE CLASS VALIDATION ==================
 
-app.delete("/client/lms/:courseId", async (req, res) => {
-  const { courseId } = req.params;
+app.delete('/client/lms/:courseId', async (req, res) => {
+  const { courseId } = req.params
 
   try {
     const result = await courseCollection.deleteOne({
       _id: new ObjectId(courseId),
-    });
+    })
     if (result.deletedCount === 1) {
-      res.json({ message: "Course deleted successfully" });
+      res.json({ message: 'Course deleted successfully' })
     } else {
-      res.status(404).json({ message: "Course not found" });
+      res.status(404).json({ message: 'Course not found' })
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message })
   }
-});
+})
 
 // ================ CREATE CHAT VALIDATION ==================
-app.post("/client/group-study", async (req, res) => {
+app.post('/client/group-study', async (req, res) => {
   try {
     const {
       senderName,
       senderUserEmail,
       receiverNameInput,
       receiverEmailInput,
-    } = req.body;
+    } = req.body
 
     if (
       !senderName ||
@@ -252,28 +238,28 @@ app.post("/client/group-study", async (req, res) => {
       !receiverNameInput ||
       !receiverEmailInput
     ) {
-      return res.status(400).json({ message: "Invalid form data" });
+      return res.status(400).json({ message: 'Invalid form data' })
     }
 
     // Check if userEmailInput exists in the userCollection
-    const user = await userCollection.findOne({ email: receiverEmailInput });
+    const user = await userCollection.findOne({ email: receiverEmailInput })
 
     if (!user) {
       return res
         .status(400)
-        .json({ message: `User ${receiverEmailInput} does not exist` });
+        .json({ message: `User ${receiverEmailInput} does not exist` })
     }
 
     // Check if userEmailInput already exists in the Chat collection
     const chatUser = await Chat.findOne({
       senderUserEmail,
       receiverEmailInput,
-    });
+    })
 
     if (chatUser) {
       return res.status(400).json({
         message: `User with email ${receiverEmailInput} already exists in the chat`,
-      });
+      })
     }
 
     const insert = await Chat.insertOne({
@@ -282,63 +268,63 @@ app.post("/client/group-study", async (req, res) => {
       receiverNameInput,
       receiverEmailInput,
       messages: [], // Initialize messages as an empty array
-    });
+    })
 
     if (insert.acknowledged === true) {
       return res
         .status(200)
-        .json({ message: `Succesfully Added ${receiverEmailInput}` });
+        .json({ message: `Succesfully Added ${receiverEmailInput}` })
     } else {
-      res.status(500).json({ error: `Failed to add ${receiverEmailInput}` });
+      res.status(500).json({ error: `Failed to add ${receiverEmailInput}` })
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message })
   }
-});
+})
 
 // ================ RETRIEVE THE CHAT ACCOUNT FROM DATABASE ================
-app.get("/client/group-study", async (req, res) => {
+app.get('/client/group-study', async (req, res) => {
   try {
-    const { userEmail } = req.query;
+    const { userEmail } = req.query
 
     // FILTER COURSE BASE ON EMAIL
     const userChat = await client
-      .db("lms-management-system")
-      .collection("Chat")
+      .db('lms-management-system')
+      .collection('Chat')
       .find({
         $or: [
           { senderUserEmail: userEmail },
           { receiverEmailInput: userEmail },
         ],
       })
-      .toArray();
+      .toArray()
 
     if (!userChat || userChat.length === 0) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
-    return res.status(200).json({ userChat: userChat });
+    return res.status(200).json({ userChat: userChat })
   } catch (error) {
-    console.error("Error retrieving user account:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error retrieving user account:', error)
+    return res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================= SEND MESSAGES =================
 
-app.put("/client/group-study", async (req, res) => {
+app.put('/client/group-study', async (req, res) => {
   try {
-    const { message, currentChatId } = req.body;
+    const { message, currentChatId } = req.body
 
     if (!currentChatId || !message) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
-    let objectId;
+    let objectId
     try {
-      objectId = new ObjectId(currentChatId);
+      objectId = new ObjectId(currentChatId)
     } catch (error) {
-      return res.status(400).json({ message: "Invalid ObjectId" });
+      return res.status(400).json({ message: 'Invalid ObjectId' })
     }
 
     const insert = await Chat.updateOne(
@@ -349,57 +335,57 @@ app.put("/client/group-study", async (req, res) => {
         },
       },
       { upsert: true }
-    );
+    )
 
-    console.log("Update result:", insert);
+    console.log('Update result:', insert)
   } catch (error) {
-    console.error("Error sending message:", error);
-    res.status(500).json({ message: error.message });
+    console.error('Error sending message:', error)
+    res.status(500).json({ message: error.message })
   }
-});
+})
 // ================ RETRIEVE THE MESSAGES FROM A SPECIFIC CHAT ================
-app.get("/client/group-study/api/chats/:chatId/messages", async (req, res) => {
+app.get('/client/group-study/api/chats/:chatId/messages', async (req, res) => {
   try {
-    const { chatId } = req.params;
+    const { chatId } = req.params
 
     // Fetch the chat from the database
     const chat = await client
-      .db("lms-management-system")
-      .collection("Chat")
-      .findOne({ _id: new ObjectId(chatId) });
+      .db('lms-management-system')
+      .collection('Chat')
+      .findOne({ _id: new ObjectId(chatId) })
 
     // If the chat doesn't exist, return a 404 error
     if (!chat) {
-      return res.status(404).json({ message: "Chat not found" });
+      return res.status(404).json({ message: 'Chat not found' })
     }
 
     // If the chat exists, return the messages
-    return res.status(200).json({ messages: chat.messages });
+    return res.status(200).json({ messages: chat.messages })
   } catch (error) {
-    console.error("Error retrieving messages:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error retrieving messages:', error)
+    return res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================ CREATE THE GROUP CHAT AND INSERT INTO DATABASE ================
 
-app.post("/client/group-study/group-chat", async (req, res) => {
+app.post('/client/group-study/group-chat', async (req, res) => {
   try {
-    const { userGroupNameInput, users } = req.body;
+    const { userGroupNameInput, users } = req.body
 
     if (!userGroupNameInput || !users) {
-      return res.status(400).json({ message: "Invalid form data" });
+      return res.status(400).json({ message: 'Invalid form data' })
     }
 
     // Loop through selectedUserEmail array and check if each user exists
     for (let user of users) {
-      const { email } = user;
-      const userInDb = await userCollection.findOne({ email: email });
+      const { email } = user
+      const userInDb = await userCollection.findOne({ email: email })
 
       if (!userInDb) {
         return res
           .status(400)
-          .json({ message: `User ${email} does not exist` });
+          .json({ message: `User ${email} does not exist` })
       }
     }
 
@@ -407,89 +393,218 @@ app.post("/client/group-study/group-chat", async (req, res) => {
       groupName: userGroupNameInput,
       emails: users,
       messages: [], // Initialize messages as an empty array
-    });
+    })
 
     if (insert) {
       return res
         .status(200)
-        .json({ message: "Group Chat Created Successfully" });
+        .json({ message: 'Group Chat Created Successfully' })
     }
   } catch (error) {
-    return res.status(500).json({ message: "Failed to create group chat" });
+    return res.status(500).json({ message: 'Failed to create group chat' })
   }
-});
+})
 
 // ================ RETRIEVE THE GROUP CHAT AND DISPLAY ================
 
-app.get("/client/group-study/group-chat-retrieval", async (req, res) => {
+app.get('/client/group-study/group-chat-retrieval', async (req, res) => {
   try {
-    const { userEmail } = req.query;
+    const { userEmail } = req.query
 
     // FILTER COURSE BASE ON EMAIL
     const userChat = await client
-      .db("lms-management-system")
-      .collection("Chat")
+      .db('lms-management-system')
+      .collection('Chat')
       .find({ emails: { $elemMatch: { email: userEmail } } })
-      .toArray();
+      .toArray()
 
     if (!userChat || userChat.length === 0) {
-      return res.status(400).json({ message: "Invalid request" });
+      return res.status(400).json({ message: 'Invalid request' })
     }
 
-    return res.status(200).json({ userChat: userChat });
+    return res.status(200).json({ userChat: userChat })
   } catch (error) {
-    console.error("Error retrieving user account:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
+    console.error('Error retrieving user account:', error)
+    return res.status(500).send({ error: 'Internal Server Error' })
   }
-});
+})
 
 // ================ UPLOAD PROFILE PICTURE ================
-app.put(
-  "/client/profile-picture",
-  upload.single("profilePicture"),
+app.post(
+  '/client/profile-picture',
   async (req, res) => {
     try {
-      const profilePicture = req.file;
-      const userEmail = req.body.userEmail;
+      const form = formidable({});
 
-      console.log(req.file);
+      // PARSE THE FORM DATA
+      form.parse(req, async (err, fields, files) => {
+        if (err) {
+          return res.status(400).json({ error: err.message })
+        }
 
-      if (!profilePicture) {
-        return res.status(400).json({ message: "Invalid form data" });
-      }
+        // EXTRACT THE USERNAME AND THE IMAGE FROM THE FORM DATA
+        const imageFilePath = files.image[0].filepath;
+        const username = fields.username[0];
+        const imageFileName = files.image[0].originalFilename;
+        const imageFileType = files.image[0].mimetype;
 
-      const update = await userCollection.updateOne(
-        { email: userEmail },
-        {
-          $set: {
-            profilePicture: profilePicture.path,
-            profilePictureType: profilePicture.mimetype,
-          },
-        } // Use $set instead of $push
-      );
+        // CHECKS IF THE FILE IS AN IMAGE
+        if (!imageFileType.startsWith("image")) {
+          return res.status(400).json({ message: "Please upload an image" });
+        }
 
-      console.log(update);
+        // FIND THE USER IN THE DATABASE
+        const user = await userCollection.findOne({ username });
 
-      if (update.result.nModified === 1) {
-        // Check nModified instead of n
-        return res.status(200).json({ message: "Profile Picture Uploaded" });
-      } else {
-        return res
-          .status(400)
-          .json({ message: "Failed to update profile picture" });
-      }
+        // IF THE USER IS NOT FOUND
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        // UPLOAD THE IMAGE TO THE DATABASE
+        const writestream = bucket.openUploadStream(imageFileName, {
+          chunkSizeBytes: 1048576,
+          contentType: imageFileType,
+        });
+
+        // READSTREAM
+        const readstream = fs.createReadStream(imageFilePath);
+
+        readstream.pipe(writestream);
+
+        writestream.on("error", (error) => {
+          console.error("Error uploading image:", error);
+          return res.status(500).json({ message: error.message });
+        })
+
+        writestream.on("finish", async () => {
+          // UPDATE THE USER COLLECTION WITH NEW IMAGE
+          if (user) {
+            await userCollection.updateOne(
+              { _id: user._id },
+              { $set: { profilePicture: imageFileName } }
+            )
+          }
+        });
+
+        // EXTRACT THE profilePicture FIELD FROM USER COLLECTION
+        const profilePictureFromUsersCollection = user.profilePicture;
+
+        if (profilePictureFromUsersCollection) {
+          // EXTRACT THE FILENAME FROM THE UPLOAD.FILES COLLECTION
+          const imageFileNameFromDB = await uploadFiles.findOne({
+            filename: profilePictureFromUsersCollection,
+          });
+
+          // EXTRACT THE profilePicture FIELD FROM UPLOAD.FILES COLLECTION
+          if (imageFileNameFromDB) {
+            const profilePictureFromUploadCollection =
+              imageFileNameFromDB.filename;
+
+            // COMPARE THE BOTH COLLECTIONS
+            if (
+              profilePictureFromUsersCollection ===
+              profilePictureFromUploadCollection
+            ) {
+              // EXTRACT THE _ID FROM THE UPLOAD.FILES COLLECTION
+              const id = imageFileNameFromDB._id;
+
+              // FIND ALL THE CHUNKS USING THE ID ABOVE
+              await uploadChunks.find({ files_id: id }).toArray();
+
+              // DELETE ALL THE CHUNKS THAT MATCHES THE ID
+              await uploadFiles.deleteOne({ _id: id });
+              await uploadChunks.deleteMany({ files_id: id });
+            }
+          }
+        }
+
+        res
+          .status(200)
+          .json({
+            message: "Image uploaded successfully",
+            file: imageFileName,
+          });
+      })
     } catch (error) {
-      console.error(error); // Log the error
-      return res.status(500).json({ error: error.message }); // Send a response in case of error
+      console.error(error) // Log the error
+      return res.status(500).json({ error: error.message }) // Send a response in case of error
     }
   }
-);
+)
+
+app.get("/image/:file", async (req, res) => {
+  try {
+    const file = req.params.file
+    const files = await bucket.find({ filename: file }).toArray();
+
+    if (!files || files.length === 0) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    if (files[0].contentType === "image/jpeg" ||
+    files[0].contentType === "image/png") {
+      res.set("Content-Type", files[0].contentType);
+      const readstream = bucket.openDownloadStreamByName(file);
+
+      readstream.pipe(res);
+    } else {
+      console.error("Not an image:", files[0].contentType);
+      res.status(404).json({ error: "Not an image" });
+    }
+  } catch (error) {
+    console.error("Error retrieving image:", error);
+    res.status(500).send("Error retrieving image");
+  }
+})
+
+// ================ RETRIEVE PROFILE PICTURE ================ //
+app.post("/client/retrieveProfilePicture", async (req, res) => {
+  try {
+    const username = req.body.username;
+
+    const user = await userCollection.findOne({ username });
+    const profilePicture = user.profilePicture;
+
+    if (profilePicture) {
+      const findImage = await uploadFiles.findOne({
+        filename: profilePicture,
+      });
+      const imageFileName = findImage.filename;
+
+      if (profilePicture === imageFileName) {
+        const files = await bucket
+          .find({ filename: imageFileName })
+          .toArray();
+
+        if (!files || files.length === 0) {
+          return res.status(404).json({ error: "File not found" });
+        }
+
+        if (
+          files[0].contentType === "image/jpeg" ||
+          files[0].contentType === "image/png"
+        ) {
+          res.set("Content-Type", files[0].contentType);
+          const readstream = bucket.openDownloadStreamByName(imageFileName);
+          readstream.pipe(res);
+        } else {
+          res.status(404).json({ error: "Not an image" });
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error retrieving image:", error);
+    res.status(500).send("Error retrieving image");
+  }
+})
+
 // ================ SERVER LISTENING PORT ==================
-app.listen(5001, () => console.log("Server started on http://localhost:5001"));
+app.listen(5001, () => console.log('Server started on http://localhost:5001'))
 
 app.use((req, res) => {
-  res.status(404).send({ error: `Not found: ${req.method} ${req.url}` });
-});
+  res.status(404).send({ error: `Not found: ${req.method} ${req.url}` })
+})
 // METHODS TO SEND BACK TO CLIENT
 // res.json({ message: "Signup route" });
 // res.status(200).json({ message: "Signup route" });
