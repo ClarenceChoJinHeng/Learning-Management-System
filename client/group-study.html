@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/active.css" />
     <link rel="stylesheet" href="css/group-study.css" />
     <link rel="stylesheet" href="css/display-course.css" />
+    <link rel="stylesheet" href="css/user__profile.css" />
 
     <!-- ========= LINK BOX ICONS ========= -->
 
@@ -66,26 +67,18 @@
             <i class="bx bx-home"></i>
             <p id="sideLabel">Home</p>
           </a>
-          <a href="teaching.html" class="nav__function__container">
-            <i class="bx bx-chalkboard"></i>
-            <p id="sideLabel">Teaching</p>
-          </a>
-          <a href="enrolled.html" class="nav__function__container">
-            <i class="bx bx-book-content"></i>
-            <p id="sideLabel">Enrolled</p>
-          </a>
           <a href="calendar.html" class="nav__function__container">
             <i class="bx bx-calendar"></i>
             <p id="sideLabel">Calendar</p>
           </a>
-          <a class="nav__function__container">
+          <a class="nav__function__container" href="group-study.html">
             <i class="bx bx-group"></i>
             <p id="sideLabel">Study Group</p>
           </a>
-          <a class="nav__function__container">
+          <!-- <a class="nav__function__container">
             <i class="bx bx-note"></i>
             <p id="sideLabel">Note</p>
-          </a>
+          </a> -->
           <a href="settings.html" class="nav__function__container">
             <i class="bx bx-cog"></i>
             <p id="sideLabel">Settings</p>
@@ -168,6 +161,9 @@
                         id="userGroupNameInput"
                         placeholder="Enter Group Name"
                       />
+                      <p class="group__name__warning" id="groupNameWarning">
+                        Group name cannot be empty
+                      </p>
                     </div>
 
                     <!-- =========== ENTER USER EMAIL =========== -->
@@ -180,6 +176,9 @@
                         class="user__email__checkbox__main__container"
                         id="userEmailCheckBoxMainContainer"
                       ></div>
+                      <p class="user__select__warning" id="userSelectWarning">
+                        No user was selected
+                      </p>
                     </div>
 
                     <!-- =========== ADD USER BUTTON =========== -->
@@ -199,22 +198,10 @@
             </div>
 
             <!-- =========== USER LIST =========== -->
-            <div class="display__user__container" id="displayUserContainer">
-              <!-- <div class="user__container">
-               
-
-                  <div class="user__message__name__container">
-                    <i class="bx bx-user-circle user__profile__picture"></i>
-                    <p class="user__message__name">${receiverNameInput}</p>
-                  </div>
-
-                  <div class="user__message__time__container">
-                    <p>Test</p>
-                  </div>
-
-                
-              </div> -->
-            </div>
+            <div
+              class="display__user__container"
+              id="displayUserContainer"
+            ></div>
           </div>
 
           <!-- ============== CHAT BOX ============== -->
@@ -259,27 +246,7 @@
               <div
                 class="chatbox__display__message__container"
                 id="chatBoxDisplayMessageContainer"
-              >
-                <!-- <div class="sender__container">
-            <p id="senderContainer">31231321</p>
-          </div>
-
-            <div class="receiver__container">
-              <p id="receiverContainer">313123</p>
-            </div>
-
-            <div class="sender__container">
-              <p id="senderContainer">31231321</p>
-            </div>
-
-            <div class="receiver__container">
-              <p id="receiverContainer">313123</p>
-            </div>
-
-            <div class="sender__container">
-              <p id="senderContainer">31231321</p>
-            </div> -->
-              </div>
+              ></div>
             </div>
 
             <!-- ============== CHAT BOX FOOTER ============== -->
@@ -305,7 +272,7 @@
     <script src="js/lms-nav.js"></script>
     <script src="js/single-chat.js"></script>
     <script src="js/lms-chat.js"></script>
-    <script src="js/lms-group-chat.js"></script>
+    <!-- <script src="js/lms-group-chat.js"></script> -->
     <script src="js/retrieveProfilePicture.js"></script>
   </body>
 </html>

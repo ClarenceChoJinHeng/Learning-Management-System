@@ -1,3 +1,4 @@
+let selectedUserEmail = []; // Array to store the selected user emails
 let currentChatId = "";
 let messageRetrievalInterval;
 // ============  EXPORTING ID INTO VARIABLE ============
@@ -5,6 +6,7 @@ const triggerAddUser = document.getElementById("triggerAddUser");
 const addUserContainer = document.getElementById("addUserContainer");
 const addUser = document.getElementById("addUser");
 const createGroup = document.getElementById("createGroup");
+const createGroupButton = document.getElementById("createGroupButton");
 const addUserForm = document.getElementById("addUserForm");
 const createGroupForm = document.getElementById("createGroupForm");
 const cancelUserButton = document.getElementById("cancelUserButton");
@@ -74,6 +76,8 @@ window.addEventListener("click", (event) => {
   }
 });
 
+// ============ VALIDATE EMPTY FORM IN GROUP CHAT ===============
+
 document.addEventListener("DOMContentLoaded", function () {
   // ============ RETRIEVE THE USER ACCOUNT DATABASE ============
   const displayUserContainer = document.getElementById("displayUserContainer");
@@ -99,6 +103,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ".chatbox__display__message__main__container"
   );
 
+  const userEmailCheckBoxMainContainer = document.getElementById(
+    "userEmailCheckBoxMainContainer"
+  );
+
   // ============  ADD USER ACCOUNT ============
   const submitForm = async (event) => {
     event.preventDefault();
@@ -108,18 +116,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const receiverEmailInput = document.getElementById("userEmailInput").value;
 
     //============  MAKE A REQUEST TO THE SERVER ============
-    const response = await fetch("http://localhost:5001/client/group-study", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        senderName,
-        senderUserEmail,
-        receiverNameInput,
-        receiverEmailInput,
-      }),
-    });
+    const response = await fetch(
+      "http://localhost:5001/client/single-chat-creation",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          senderName,
+          senderUserEmail,
+          receiverNameInput,
+          receiverEmailInput,
+        }),
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();
@@ -138,32 +149,27 @@ document.addEventListener("DOMContentLoaded", function () {
     let userEmail = localStorage.getItem("userEmail");
 
     const individualChatsResponse = await fetch(
-      `http://localhost:5001/client/group-study/?userEmail=${userEmail}`
+      `http://localhost:5001/client/single-chat-retrieval/?userEmail=${userEmail}`
     );
 
-    const groupChatsResponse = await fetch(
-      `http://localhost:5001/client/group-study/group-chat-retrieval/?userEmail=${userEmail}`
-    );
-
-    if (individualChatsResponse.ok && groupChatsResponse.ok) {
+    if (individualChatsResponse.ok) {
       const individualChatsData = await individualChatsResponse.json();
-      const groupChatsData = await groupChatsResponse.json();
 
       // ============  CLEAN THE EXISTING CODE ============
+
       displayUserContainer.innerHTML = "";
 
       // ============  CREATE AN ARRAY TO STORE THE COURSE IDS ============
       let chatIDs = [];
-
       individualChatsData.userChat.forEach((chat) => {
         const senderName = chat.senderName;
         const senderUserEmail = chat.senderUserEmail;
         const receiverNameInput = chat.receiverNameInput;
         const receiverEmailInput = chat.receiverEmailInput;
+        const receiverSideSenderName = chat.receiverSideSenderName;
         const chatID = chat._id;
 
         chatIDs.push(chatID);
-
         // ============ MAKING HTML AND APPLY DATA INTO IT `============
 
         if (senderUserEmail === userEmail) {
@@ -214,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="user__profile__picture">
             <i class="bx bx-user-circle user__profile__picture"></i>
           </div>
-            <p class="user__message__name">${senderName}</p>
+            <p class="user__message__name">${receiverSideSenderName}</p>
           </div>
 
           <div class="user__message__time__container">
@@ -226,66 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
-            receiverName.innerHTML = senderName;
-            currentChatId = chat._id;
-            sendMessage.dataset.chatId = chat._id;
-            retrieveMessages(currentChatId);
-            if (
-              chatBoxNoUserContainer.style.display === "flex" ||
-              chatBoxNoUserContainer.style.display === ""
-            ) {
-              chatBoxNoUserContainer.style.display = "none";
-              chatBoxHeader.style.display = "flex";
-              chatBoxDisplayMessageMainContainer.style.display = "flex";
-              chatBoxDisplayMessageContainer.style.display = "flex";
-              chatBoxEnterMessageContainer.style.display = "flex";
-              enterMessageContainer.style.display = "flex";
-            }
-          });
-        }
-      });
-
-      let displayedChatIDs = new Set();
-
-      groupChatsData.userChat.forEach((chat) => {
-        const groupName = chat.groupName;
-        const chatID = chat._id;
-
-        if (displayedChatIDs.has(chatID)) {
-          return;
-        }
-
-        chatIDs.push(chatID);
-        displayedChatIDs.add(chatID);
-
-        const emailObject = chat.emails.find(
-          (emailObject) => emailObject.email === userEmail
-        );
-
-        // ============ MAKING HTML AND APPLY DATA INTO IT `============
-
-        if (emailObject) {
-          const chatDiv = document.createElement("div");
-          chatDiv.className = "user__container";
-          chatDiv.dataset.chatId = chat._id;
-          chatDiv.innerHTML = `
-     
-          <div class="user__message__name__container">
-          <div class="user__profile__picture">
-            <i class="bx bx-user-circle user__profile__picture"></i>
-          </div>
-            <p class="user__message__name">${groupName}</p>
-          </div>
-
-          <div class="user__message__time__container">
-            <p>Test</p>
-          </div>
-    `;
-
-          displayUserContainer.appendChild(chatDiv);
-          chatDiv.addEventListener("click", async (event) => {
-            event.preventDefault();
-            receiverName.innerHTML = groupName;
+            receiverName.innerHTML = receiverSideSenderName;
             currentChatId = chat._id;
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
@@ -305,9 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     } else {
       const individualChatsError = await individualChatsResponse.json();
-      const groupChatsError = await groupChatsResponse.json();
       console.log(individualChatsError.message);
-      console.log(groupChatsError.message);
     }
   };
 
@@ -318,13 +263,6 @@ document.addEventListener("DOMContentLoaded", function () {
     await retrieveChatForm();
     receiverNameInput.value = "";
     receiverEmailInput.value = "";
-  });
-
-  const createGroupButtonConfirm = document.getElementById("createGroupButton");
-
-  createGroupButtonConfirm.addEventListener("click", async (event) => {
-    await createGroupChat(event);
-    await retrieveChatForm();
   });
 });
 
@@ -347,16 +285,19 @@ const sendMessages = async (currentChatId) => {
     text: messageText,
   };
 
-  const response = await fetch("http://localhost:5001/client/group-study", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message,
-      currentChatId,
-    }),
-  });
+  const response = await fetch(
+    "http://localhost:5001/client/single-chat-send-message",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message,
+        currentChatId,
+      }),
+    }
+  );
 
   if (response.ok) {
     const data = await response.json();
@@ -370,16 +311,10 @@ const sendMessages = async (currentChatId) => {
 
 //  =================  RETRIEVE MESSAGES  =================
 const retrieveMessages = async (currentChatId) => {
-  // Check if currentChatId is defined
-  // if (!currentChatId) {
-  //   console.error("currentChatId is undefined", currentChatId);
-  //   return;
-  // }
-
   let userEmail = localStorage.getItem("userEmail");
 
   // Form the fetch URL
-  const fetchUrl = `http://localhost:5001/client/group-study/api/chats/${currentChatId}/messages`;
+  const fetchUrl = `http://localhost:5001/client/single-chat-message-retrieval/api/chats/${currentChatId}/messages`;
 
   // Make the fetch request
   const response = await fetch(fetchUrl);
@@ -439,7 +374,7 @@ window.onload = () => {
   clearInterval(messageRetrievalInterval);
   messageRetrievalInterval = setInterval(
     () => retrieveMessages(currentChatId),
-    100000
+    1000
   );
 };
 
@@ -451,7 +386,7 @@ async function handleSendMessage(event) {
   clearInterval(messageRetrievalInterval);
   messageRetrievalInterval = setInterval(
     () => retrieveMessages(currentChatId),
-    100000
+    1000
   );
 }
 
@@ -465,3 +400,176 @@ enterMessage.addEventListener("keydown", (event) => {
 });
 
 // =================== GROUP CHAT ===================
+
+// ============== RETRIEVE USER EMAIL FOR GROUP CHAT ================
+
+const userEmailCheckBoxMainContainer = document.getElementById(
+  "userEmailCheckBoxMainContainer"
+);
+
+const retrieveUserChat = async () => {
+  userEmailCheckBoxMainContainer.innerHTML = "";
+  selectedUserEmail = [];
+  const userEmail = localStorage.getItem("userEmail");
+
+  if (!selectedUserEmail.includes(userEmail)) {
+    selectedUserEmail.push(userEmail);
+  }
+
+  const response = await fetch(
+    `http://localhost:5001/client/single-chat-retrieval/?userEmail=${userEmail}`
+  );
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data.userChat);
+
+    // ============  CREATE AN ARRAY TO STORE THE COURSE IDS ============
+    let chatIDs = [];
+
+    data.userChat.forEach((chat) => {
+      const senderUserEmail = chat.senderUserEmail;
+      const receiverEmailInput = chat.receiverEmailInput;
+      const chatID = chat._id;
+
+      chatIDs.push(chatID);
+
+      // ============ MAKING HTML AND APPLY DATA INTO IT `============
+
+      if (senderUserEmail === userEmail) {
+        const emailDiv = document.createElement("div");
+        emailDiv.className = "user__email__checkbox__container";
+        emailDiv.dataset.chatId = chat._id;
+        emailDiv.innerHTML = `
+     
+        <p class="user__email__contacts">
+          ${receiverEmailInput}                          
+        </p>
+
+        <input
+          type="checkbox"
+          name="userEmail"
+          id="userEmailSelect"
+          value="${receiverEmailInput}"
+        />
+    `;
+        userEmailCheckBoxMainContainer.appendChild(emailDiv);
+        const userEmailSelect = emailDiv.querySelector(
+          "input[type='checkbox']"
+        );
+
+        userEmailSelect.addEventListener("click", async (event) => {
+          const selectedEmail = event.target.value;
+
+          if (event.target.checked) {
+            selectedUserEmail.push(selectedEmail);
+          } else {
+            selectedUserEmail = selectedUserEmail.filter(
+              (email) => email !== selectedEmail
+            );
+          }
+          console.log(selectedUserEmail);
+        });
+      } else if (receiverEmailInput === userEmail) {
+        const emailDiv = document.createElement("div");
+        emailDiv.className = "user__email__checkbox__container";
+        emailDiv.dataset.chatId = chat._id;
+        emailDiv.innerHTML = `
+     
+        <p class="user__email__contacts">
+          ${senderUserEmail}                          
+        </p>
+
+        <input
+          type="checkbox"
+          name="userEmail"
+          id="userEmailSelect"
+          value="${senderUserEmail}"
+        />
+    `;
+
+        userEmailCheckBoxMainContainer.appendChild(emailDiv);
+
+        const userEmailSelect = emailDiv.querySelector(
+          "input[type='checkbox']"
+        );
+        userEmailSelect.addEventListener("click", async (event) => {
+          const selectedEmail = event.target.value;
+
+          if (event.target.checked) {
+            selectedUserEmail.push(selectedEmail);
+          } else {
+            selectedUserEmail = selectedUserEmail.filter(
+              (email) => email !== selectedEmail
+            );
+          }
+          console.log(selectedUserEmail);
+        });
+      }
+    });
+  }
+};
+
+createGroup.addEventListener("click", async (event) => {
+  await retrieveUserChat(event);
+});
+
+// ============  CREATE GROUP CHAT ============
+
+const createGroupChat = async () => {
+  const userEmail = localStorage.getItem("userEmail");
+  const userGroupNameInput =
+    document.getElementById("userGroupNameInput").value;
+
+  const userSelectWarning = document.getElementById("userSelectWarning");
+  const groupNameWarning = document.getElementById("groupNameWarning");
+
+  // Client-side validation
+  if (!userGroupNameInput.trim()) {
+    groupNameWarning.style.display = "flex";
+  } else if (userGroupNameInput.trim()) {
+    groupNameWarning.style.display = "none";
+  }
+
+  if (selectedUserEmail.length <= 1) {
+    userSelectWarning.style.display = "flex";
+    return;
+  } else {
+    userSelectWarning.style.display = "none";
+  }
+
+  const users = selectedUserEmail.map((email) => ({
+    email,
+    role: email === userEmail ? "owner" : "member",
+  }));
+
+  const response = await fetch(
+    "http://localhost:5001/client/group-study/group-chat-creation",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userGroupNameInput,
+        users,
+      }),
+    }
+  );
+
+  console.log("userGroupNameInput:", userGroupNameInput);
+  console.log("selectedUserEmail:", selectedUserEmail);
+
+  if (response.ok) {
+    const data = await response.json();
+    alert(data.message);
+    createGroupForm.style.display = "none";
+  } else {
+    const error = await response.json();
+    console.log(error.message);
+  }
+};
+
+createGroupButton.addEventListener("click", async (event) => {
+  await createGroupChat(event);
+});

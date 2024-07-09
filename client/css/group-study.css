@@ -180,7 +180,7 @@ main {
 }
 
 .user__profile__picture {
-  display:flex;
+  display: flex;
   align-items: center;
   font-size: 2rem;
   border: 1px solid black;
@@ -205,7 +205,6 @@ main {
 .user__group__email__container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .user__email__checkbox__main__container {
@@ -357,6 +356,14 @@ main {
   align-items: center;
   padding: 0.5rem;
   border-top: 1px solid grey;
+}
+
+.group__name__warning,
+.user__select__warning {
+  display: none;
+  font-size: 0.8rem;
+  font-weight: var(--Raleway500);
+  color: red;
 }
 
 /* ================ RESPONSIVE CSS ================ */

@@ -9,16 +9,6 @@
   cursor: pointer;
 }
 
-.nav__teaching__container:hover {
-  background-color: var(--BrightBlue);
-  cursor: pointer;
-}
-
-.nav__enrolled__container:hover {
-  background-color: var(--BrightBlue);
-  cursor: pointer;
-}
-
 .open__nav:hover {
   background-color: var(--BrightBlue);
 }

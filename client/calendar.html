@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ========= LINK CSS ========= -->
+
+    <link rel="stylesheet" href="css/lms-home.css" />
+    <link rel="stylesheet" href="css/lms-nav.css" />
+    <link rel="stylesheet" href="css/hover.css" />
+    <link rel="stylesheet" href="css/active.css" />
+    <link rel="stylesheet" href="css/display-course.css" />
+    <link rel="stylesheet" href="css/user__profile.css" />
+
+    <!-- ========= LINK BOX ICONS ========= -->
+
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- ======== FONT AWESOME ======== -->
+    <script
+      src="https://kit.fontawesome.com/21bf2f8b90.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- ======== FAVICON ========  -->
+    <link rel="icon" href="Images/book-reader-regular-24(2).png" />
+    <title>Home</title>
+  </head>
+  <body>
+    <!-- ============== HEADER NAVIGATION ============== -->
+    <header>
+      <section class="header__main__container" id="headerMainContainer">
+        <div class="hamburger__container" id="hamburger__container">
+          <div class="open__side__nav__container" id="openSideNav">
+            <i class="bx bx-menu-alt-left open__nav" id="openSideNav"></i>
+          </div>
+          <div class="logo__container">
+            <div class="lms__logo__container">
+              <i class="bx bx-book-reader lms__logo"></i>
+            </div>
+            <p id="lmsLogoTitle">LMS - Calendar</p>
+          </div>
+        </div>
+
+        <!-- ============== ADD / JOIN AND ACCOUNT CONTAINER ============== -->
+        <div class="top__right__function__container">
+          <div class="user__account__container">
+            <i class="bx bx-user-circle user__account"></i>
+            <p class="userName"></p>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="lms__main__container">
+        <!-- ============== FUNCTIONALITY NAVIGATION ============== -->
+        <div class="nav__main__container" id="navMainContainer">
+          <div class="lms__nav__container">
+            <a href="lms-home.html" class="nav__function__container">
+              <i class="bx bx-home"></i>
+              <p id="sideLabel">Home</p>
+            </a>
+            <a href="calendar.html" class="nav__function__container">
+              <i class="bx bx-calendar"></i>
+              <p id="sideLabel">Calendar</p>
+            </a>
+            <a class="nav__function__container" href="group-study.html">
+              <i class="bx bx-group"></i>
+              <p id="sideLabel">Study Group</p>
+            </a>
+            <!-- <a class="nav__function__container">
+              <i class="bx bx-note"></i>
+              <p id="sideLabel">Note</p>
+            </a> -->
+            <a href="settings.html" class="nav__function__container">
+              <i class="bx bx-cog"></i>
+              <p id="sideLabel">Settings</p>
+            </a>
+          </div>
+        </div>
+        <!-- ============== DISPLAY FUNCTIONALITY ============== -->
+
+        <div
+          class="lms__display__main__functionality__container"
+          id="displayFunctionalityContainer"
+        >
+          <!-- ============== DISPLAY COURSE CONTAINER ============== -->
+
+          <!-- =============== DISPLAY TEACHING CLASS ROOM FUNCTIONALITY ============== -->
+
+          <div
+            class="display__teaching__navigation__main__container"
+            id="displayTeachingNavigationMainContainer"
+          >
+            <div
+              class="display__teaching__navigation__container"
+              id="displayTeachingNavigationContainer"
+            >
+              <div class="display__teaching__navigation">
+                <div class="teaching__nav" id="teachingStreamNav">
+                  <p>Stream</p>
+                </div>
+                <div class="teaching__nav" id="teachingClassWorkNav">
+                  <p>Classwork</p>
+                </div>
+                <div class="teaching__nav" id="teachingPeopleNav">
+                  <p>People</p>
+                </div>
+                <div class="teaching__nav" id="teachingGradesNav">
+                  <p>Grades</p>
+                </div>
+                <div class="teaching__nav" id="teachingNoteNav">
+                  <p>Notes</p>
+                </div>
+              </div>
+              <div class="back__button">
+                <i class="bx bx-arrow-back arrow-back" id="arrowBack"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== DISPLAY TEACHING DETAILS ============ -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ========= LINK JS ========= -->
+    <script src="js/authMiddleware.js"></script>
+    <script src="js/lms-home.js"></script>
+    <script src="js/lms-nav.js"></script>
+    <script src="js/courses.js"></script>
+    <script src="js/retrieveProfilePicture.js"></script>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/calendar.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <title>Calendar</title>
+</head>
+<body>
+    <div class="calendar">
+        <div class="header">
+            <button id="prevBtn">
+                <ion-icon name="caret-back-outline"></ion-icon>
+            </button>
+            <div class="monthYear" id="monthYear"></div>
+            <button id="nextBtn">
+                <ion-icon name="caret-forward-outline"></ion-icon>
+            </button>
+        </div>
+        <div class="days">
+            <div class="day">Mon</div>
+            <div class="day">Tue</div>
+            <div class="day">Wed</div>
+            <div class="day">Thu</div>
+            <div class="day">Fri</div>
+            <div class="day">Sat</div>
+            <div class="day">Sun</div>
+        </div>
+        <div class="dates" id="dates"></div>
+    </div>
+</body>
+    <script src="js/calendar.js"></script>
+</html> -->

@@ -17,6 +17,9 @@ main {
 }
 
 /* ============== DISPLAY FUNCTIONALITY CONTAINER STYLES ==============  */
+.sort__courses__container {
+  display: none;
+}
 
 .create__course__container {
   display: none;

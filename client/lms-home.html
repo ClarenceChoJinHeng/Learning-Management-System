@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/hover.css" />
     <link rel="stylesheet" href="css/active.css" />
     <link rel="stylesheet" href="css/display-course.css" />
+    <link rel="stylesheet" href="css/user__profile.css" />
 
     <!-- ========= LINK BOX ICONS ========= -->
 
@@ -86,73 +87,18 @@
               <i class="bx bx-home"></i>
               <p id="sideLabel">Home</p>
             </a>
-
-            <hr />
-
-            <div
-              class="nav__teaching__main__container"
-              id="navTeachingMainContainer"
-            >
-              <div class="nav__teaching__container" id="navTeachingContainer">
-                <div class="teaching__icon__container">
-                  <i
-                    class="bx bxs-up-arrow teaching__arrow"
-                    id="teachingArrow"
-                  ></i>
-                  <i class="bx bx-chalkboard"></i>
-                </div>
-                <p id="sideLabel">Teaching</p>
-              </div>
-
-              <div
-                class="nav__display__teaching__container"
-                id="navDisplayTeachingContainer"
-              >
-                <div
-                  class="display__teaching__container"
-                  id="displayTeachingContainer"
-                ></div>
-              </div>
-            </div>
-
-            <hr />
-
-            <div class="nav__enrolled__main__container">
-              <div class="nav__enrolled__container" id="navEnrolledContainer">
-                <div class="enrolled__icon__container">
-                  <i
-                    class="bx bxs-up-arrow teaching__arrow"
-                    id="enrolledArrow"
-                  ></i>
-                  <i class="bx bx-book-content"></i>
-                </div>
-                <p id="sideLabel">Enrolled</p>
-              </div>
-              <div
-                class="nav__display__enrolled__container"
-                id="navDisplayEnrolledContainer"
-              >
-                <div
-                  class="display__enrolled__container"
-                  id="displayEnrolledContainer"
-                ></div>
-              </div>
-            </div>
-
-            <hr />
-
             <a href="calendar.html" class="nav__function__container">
               <i class="bx bx-calendar"></i>
               <p id="sideLabel">Calendar</p>
             </a>
-            <a href="group-study.html" class="nav__function__container">
+            <a class="nav__function__container" href="group-study.html">
               <i class="bx bx-group"></i>
               <p id="sideLabel">Study Group</p>
             </a>
-            <a class="nav__function__container">
+            <!-- <a class="nav__function__container">
               <i class="bx bx-note"></i>
               <p id="sideLabel">Note</p>
-            </a>
+            </a> -->
             <a href="settings.html" class="nav__function__container">
               <i class="bx bx-cog"></i>
               <p id="sideLabel">Settings</p>
@@ -167,6 +113,268 @@
         >
           <!-- ============== DISPLAY COURSE CONTAINER ============== -->
 
+          <div class="sort__courses__container" id="sortCoursesContainer">
+            <button class="all__course__button">All</button>
+
+            <button class="teaching__course__button" id="teachingCourseButton">
+              Teaching
+            </button>
+
+            <button class="join__course__button">Join</button>
+          </div>
+
+          <!-- =============== DISPLAY TEACHING CLASS ROOM FUNCTIONALITY ============== -->
+
+          <div
+            class="display__teaching__navigation__main__container"
+            id="displayTeachingNavigationMainContainer"
+          >
+            <div
+              class="display__teaching__navigation__container"
+              id="displayTeachingNavigationContainer"
+            >
+              <div class="display__teaching__navigation">
+                <div class="teaching__nav" id="teachingStreamNav">
+                  <p>Stream</p>
+                </div>
+                <div class="teaching__nav" id="teachingClassWorkNav">
+                  <p>Classwork</p>
+                </div>
+                <div class="teaching__nav" id="teachingPeopleNav">
+                  <p>People</p>
+                </div>
+                <div class="teaching__nav" id="teachingGradesNav">
+                  <p>Grades</p>
+                </div>
+                <div class="teaching__nav" id="teachingNoteNav">
+                  <p>Notes</p>
+                </div>
+              </div>
+              <div class="back__button">
+                <i class="bx bx-arrow-back arrow-back" id="arrowBack"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- ========== DISPLAY TEACHING DETAILS ============ -->
+
+          <div
+            class="display__teaching__details__main__container"
+            id="displayTeachingDetailsMainContainer"
+          >
+            <div
+              class="display__teaching__stream__container"
+              id="displayTeachingStreamContainer"
+            >
+              <div class="display__teaching__stream" id="displayTeachingStream">
+                <div class="display__teaching__title" id="displayTeachingTitle">
+                  <p class="class__name" id="classNameId"></p>
+                  <p class="class__room" id="classRoomId"></p>
+                </div>
+                <div
+                  class="display__class__code__container"
+                  id="displayClassCodeContainer"
+                >
+                  <p class="class__code__title">Class Code:</p>
+                  <p class="classCode" id="classCodeId"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============== DISPLAY CLASSWORK FUNCTIONALITY ============== -->
+          <div
+            class="display__classwork__details__main__container"
+            id="displayClassworkDetailsMainContainer"
+          >
+            <div
+              class="display__classwork__details__container"
+              id="displayClassworkDetailsContainer"
+            >
+              <div class="create__coursework__button__container">
+                <button class="create__work__button" id="createWorkButton">
+                  <p class="plus__icon">+</p>
+                  Create
+                </button>
+                <hr />
+              </div>
+
+              <div
+                class="display__boxicon__coursework__container"
+                id="displayBoxIconCourseworkContainer"
+              >
+                <i class="bx bxs-book coursework__icon"></i>
+
+                <div class="coursework__paragraph">
+                  <p class="coursework__ptitle">
+                    This is where you'll assign work
+                  </p>
+                  <p class="coursework__pdetails">
+                    You can add assignment and other work for the class, then
+                    organize it into topics
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============== DISPLAY PEOPLE FUNCTIONALITY ============== -->
+          <div
+            class="display__people__details__main__container"
+            id="displayPeopleDetailsMainContainer"
+          >
+            <div
+              class="display__people__details__container"
+              id="displayPeopleDetailsContainer"
+            >
+              <!-- =========== DISPLAY TEACHERS IN CLASS ============ -->
+              <div class="display__teachers__container">
+                <div class="display__teachers__title">
+                  <p class="teachers__title">Teachers</p>
+                  <i class="bx bx-user-plus add__teacher"></i>
+                </div>
+
+                <hr />
+                <div
+                  class="display__teachers__in__class__container"
+                  id="displayTeacherInClassContainer"
+                ></div>
+              </div>
+
+              <!-- ============ DISPLAY STUDENTS IN CLASS ============ -->
+              <div class="display__students__container">
+                <div class="display__students__title">
+                  <p class="students__title">Students</p>
+                  <i class="bx bx-user-plus add__student"></i>
+                </div>
+
+                <hr />
+                <div
+                  class="display__students__in__class__container"
+                  id="displayStudentsInClassContainer"
+                ></div>
+                <!-- ============ DISPLAY STUDENTS DETAIL CONTAINER ============ -->
+
+                <div
+                  class="display__students__details__container"
+                  id="displayStudentsDetailsContainer"
+                >
+                  <i class="bx bx-body students__boxicon"></i>
+
+                  <p class="students__boxicon__title">
+                    Add Student to this class
+                  </p>
+                  <button class="invite__students__button" id="inviteStudents">
+                    <i class="bx bx-user-plus add__student"></i>
+                    <p>Invite Students</p>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ DISPLAY GRADES CONTAINER ============ -->
+          <div
+            class="display__grades__details__main__container"
+            id="displayGradesDetailsMainContainer"
+          >
+            <div
+              class="display__grades__details__container"
+              id="displayGradesDetailsContainer"
+            >
+              <i class="bx bx-poll grades__boxicon"></i>
+              <p>This is where you'll view and manage grades</p>
+
+              <button class="invite__students__button" id="inviteStudents">
+                <i class="bx bx-user-plus add__student"></i>
+                <p>Invite Students</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- ================== TAKING CLASS NOTES CONTAINER ================== -->
+          <div
+            class="display__notes__details__main__container"
+            id="displayNotesDetailsMainContainer"
+          >
+            <div class="display__notes__details__container">
+              <div class="display__notes__title__container">
+                <p class="notes__title">Notes</p>
+                <div>
+                  <i class="bx bx-edit create__file" id="addFile"></i>
+                  <i
+                    class="bx bx-folder-plus create__folder"
+                    id="createFolder"
+                  ></i>
+                </div>
+              </div>
+
+              <div class="search__notes__file__folder__container">
+                <input
+                  type="text"
+                  class="search__notes__file__folder"
+                  placeholder="Search Notes"
+                />
+              </div>
+
+              <div
+                class="display__notes__files__container"
+                id="displayNotesFilesContainer"
+              ></div>
+            </div>
+
+            <!-- ============== DISPLAY NOTES DETAILS CONTAINER ============== -->
+
+            <div class="display__selected__notes__main__container">
+              <div
+                class="display__selected__notes__container"
+                id="displaySelectedNotesContainer"
+              >
+                <!-- ================ TITLE SECTION ==================== -->
+
+                <div
+                  class="display__selected__notes__title__container"
+                  id="notesFilesContainer"
+                  draggable="true"
+                >
+                  <input
+                    type="text"
+                    class="display__selected__notes__title"
+                    id="noteTitleNameSecond"
+                    value="Untitled"
+                    placeholder="Untitled/Change Title Here"
+                  />
+                </div>
+
+                <!-- ============ TEXT SECTION ============= -->
+
+                <div
+                  class="selected__writing__notes__space__container"
+                  id="selectedWritingNotesSpaceContainer"
+                >
+                  <div class="selected__writing__notes__space__title">
+                    <input
+                      type="text"
+                      id="notePageTitle"
+                      placeholder="Title"
+                      value=""
+                      class="notes__space__title"
+                    />
+                  </div>
+
+                  <textarea
+                    id="selectedWritingNotesSpace"
+                    cols="30"
+                    rows="10"
+                    class="selected__writing__notes__space"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =========== DISPLAY MULTIPLE COURSES IN THE EMPTY DIV ============ -->
+
           <div
             class="display__course__main__container"
             id="createDisplayCourseContainer"
@@ -174,7 +382,7 @@
           ></div>
 
           <div class="create__course__container" id="createCourseContainer">
-            <!-- ============== BACKGROUND Images CONTAINER ============== -->
+            <!-- ============== BACKGROUND IMAGES CONTAINER ============== -->
             <div class="background__Images__container">
               <img
                 src="Images/8132244.png"
@@ -270,13 +478,7 @@
     <script src="js/authMiddleware.js"></script>
     <script src="js/lms-home.js"></script>
     <script src="js/lms-nav.js"></script>
-    <script src="js/createCourse.js"></script>
-    <script src="js/deleteCourse.js"></script>
-    <script src="js/retrieveCourse.js"></script>
-<<<<<<< HEAD
-    <script src="js/teaching.js"></script>
-=======
+    <script src="js/courses.js"></script>
     <script src="js/retrieveProfilePicture.js"></script>
->>>>>>> 089766c69408cca319f1840339014b2b487f81a8
   </body>
 </html>

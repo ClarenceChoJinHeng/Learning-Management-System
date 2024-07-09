@@ -11,6 +11,7 @@
     <link href="css/hover.css" rel="stylesheet" />
     <link href="css/active.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/lms-nav.css" />
+    <link rel="stylesheet" href="css/user__profile.css" />
 
     <!-- ========= LINK BOX ICONS ========= -->
 
@@ -62,31 +63,23 @@
           <div class="lms__nav__container">
             <a href="lms-home.html" class="nav__function__container">
               <i class="bx bx-home"></i>
-              <p>Home</p>
-            </a>
-            <a href="teaching.html" class="nav__function__container">
-              <i class="bx bx-chalkboard"></i>
-              <p>Teaching</p>
-            </a>
-            <a href="enrolled.html" class="nav__function__container">
-              <i class="bx bx-book-content"></i>
-              <p>Enrolled</p>
+              <p id="sideLabel">Home</p>
             </a>
             <a href="calendar.html" class="nav__function__container">
               <i class="bx bx-calendar"></i>
-              <p>Calendar</p>
+              <p id="sideLabel">Calendar</p>
             </a>
-            <a href="group-study.html" class="nav__function__container">
+            <a class="nav__function__container" href="group-study.html">
               <i class="bx bx-group"></i>
-              <p>Study Group</p>
+              <p id="sideLabel">Study Group</p>
             </a>
-            <a class="nav__function__container">
+            <!-- <a class="nav__function__container">
               <i class="bx bx-note"></i>
-              <p>Note</p>
-            </a>
+              <p id="sideLabel">Note</p>
+            </a> -->
             <a href="settings.html" class="nav__function__container">
               <i class="bx bx-cog"></i>
-              <p>Settings</p>
+              <p id="sideLabel">Settings</p>
             </a>
           </div>
         </div>
@@ -103,7 +96,6 @@
               </button>
             </div>
           </div>
-
 
           <div class="logout__button__container">
             <button id="logoutButton">Logout</button>
@@ -132,12 +124,7 @@
 
             <div class="cancel__upload__choose__container">
               <form id="upload-profile">
-                <input
-                    accept="image/*"
-                    id="file"
-                    name="image"
-                    type="file"
-                />
+                <input accept="image/*" id="file" name="image" type="file" />
                 <button id="cancelProfileUpload">Cancel</button>
                 <button type="submit" id="uploadProfilePicture">Upload</button>
               </form>
