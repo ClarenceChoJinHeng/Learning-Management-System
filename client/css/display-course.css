@@ -369,11 +369,11 @@
   user-select: none;
   border: none;
   background: none;
-  color:black;
+  color: black;
   box-shadow: none;
   resize: none;
-  appearance: none; 
-  -webkit-appearance: none; 
+  appearance: none;
+  -webkit-appearance: none;
   -moz-appearance: none;
 }
 
@@ -416,8 +416,8 @@
   background: none;
   box-shadow: none;
   resize: none;
-  appearance: none; 
-  -webkit-appearance: none; 
+  appearance: none;
+  -webkit-appearance: none;
   -moz-appearance: none;
 }
 
@@ -917,4 +917,17 @@
 
 .bx-note {
   font-size: 1.5rem;
+}
+
+.folder__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.folder__title {
+  width: 10rem;
 }

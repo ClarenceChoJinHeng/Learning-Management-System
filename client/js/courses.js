@@ -496,7 +496,7 @@ const retrieveCourse = async () => {
         displayPeopleDetailsMainContainer.style.display = "none";
         displayGradesDetailsMainContainer.style.display = "none";
         displayNotesDetailsMainContainer.style.display = "flex";
-        await retrieveCreateCourseNotes(currentCourseId);
+        // await retrieveCreateCourseNotes(currentCourseId);
       });
 
       // =================== TEACHING STREAM UNDERLINE ===================
@@ -608,68 +608,70 @@ const deleteCourse = async (courseId) => {
 };
 
 // =============== CREATING NOTES FOR COURSES ================
+document
+  .getElementById("teachingNoteNav")
+  .addEventListener("click", function () {
+    const createCoursesNotes = async (currentCourseId) => {
+      const courseNotes = {
+        noteTitle: "",
+        notePageTitle: "",
+        noteContent: "",
+      };
 
-const createCoursesNotes = async (currentCourseId) => {
-  const courseNotes = {
-    noteTitle: "",
-    notePageTitle: "",
-    noteContent: "",
-  };
+      const response = await fetch("http://localhost:5001/client/lms-notes", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currentCourseId,
+          courseNotes,
+        }),
+      });
 
-  const response = await fetch("http://localhost:5001/client/lms-notes", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      currentCourseId,
-      courseNotes,
-    }),
-  });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+      } else {
+        const error = await response.json();
+        console.error(error.message);
+      }
+    };
 
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.message);
-  } else {
-    const error = await response.json();
-    console.error(error.message);
-  }
-};
+    const addFile = document.getElementById("addFile");
 
-const addFile = document.getElementById("addFile");
+    const displayNotesFilesContainer = document.getElementById(
+      "displayNotesFilesContainer"
+    );
 
-const displayNotesFilesContainer = document.getElementById(
-  "displayNotesFilesContainer"
-);
+    // ============== RETRIEVE COURSE NOTES FOR DISPLAY ===============
 
-// ============== RETRIEVE COURSE NOTES FOR DISPLAY ===============
+    const retrieveCreateCourseNotes = async (currentCourseId) => {
+      const response = await fetch(
+        `http://localhost:5001/client/lms-retrieve-notes?currentCourseId=${currentCourseId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-const retrieveCreateCourseNotes = async (currentCourseId) => {
-  const response = await fetch(
-    `http://localhost:5001/client/lms-retrieve-notes?currentCourseId=${currentCourseId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.courseNotes); // Changed from data.notes to data.courseNotes
+        displayNotesFilesContainer.innerHTML = "";
 
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.courseNotes); // Changed from data.notes to data.courseNotes
-    displayNotesFilesContainer.innerHTML = "";
-
-    data.courseNotes.forEach((note) => {
-      // Changed from data.notes to data.courseNotes
-      const noteTitle = note.noteTitle;
-      const id = note._id;
-      const noteContainerDiv = document.createElement("div");
-      noteContainerDiv.className = "notes__files__container";
-      noteContainerDiv.id = "notesFiles";
-      noteContainerDiv.dataset.noteId = id;
-      noteContainerDiv.draggable = true;
-      noteContainerDiv.innerHTML = `
+        data.courseNotes.forEach((note) => {
+          // Changed from data.notes to data.courseNotes
+          const noteTitle = note.noteTitle;
+          const id = note._id;
+          const noteContainerDiv = document.createElement("div");
+          noteContainerDiv.className = "notes__files__container";
+          noteContainerDiv.id = "notesFiles";
+          noteContainerDiv.dataset.noteId = id;
+          noteContainerDiv.draggable = true;
+          noteContainerDiv.innerHTML = `
       <input type='text' id='noteTitleName' class='notes__files__title' placeholder='Untitled' value=${noteTitle}  >
 
       <div class="notes__files__functionality__container" id="notesFilesFunctionalityContainer">
@@ -679,45 +681,118 @@ const retrieveCreateCourseNotes = async (currentCourseId) => {
 
       `;
 
-      noteContainerDiv.addEventListener("contextmenu", function (event) {
-        event.preventDefault();
-      });
+          noteContainerDiv.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+          });
 
-      noteContainerDiv.addEventListener("click", async (event) => {
-        clickedNoteId = event.currentTarget.dataset.noteId;
-        console.log(clickedNoteId, "1");
-        retrieveCourseNotes(clickedNoteId);
-      });
+          noteContainerDiv.addEventListener("click", async (event) => {
+            clickedNoteId = event.currentTarget.dataset.noteId;
+            console.log(clickedNoteId, "1");
+            retrieveCourseNotes(clickedNoteId);
+          });
 
-      // RIGHT CLICK FUNCTIONALITY
+          // RIGHT CLICK FUNCTIONALITY
 
-      noteContainerDiv.addEventListener("mousedown", function (event) {
-        if (event.button === 2) {
-          event.preventDefault();
-          notesFilesFunctionalityContainer.style.display = "flex";
-        }
-      });
+          noteContainerDiv.addEventListener("mousedown", function (event) {
+            if (event.button === 2) {
+              event.preventDefault();
+              notesFilesFunctionalityContainer.style.display = "flex";
+            }
+          });
 
-      window.onclick = function (event) {
-        notesFilesFunctionalityContainer.style.display = "none";
+          window.onclick = function (event) {
+            notesFilesFunctionalityContainer.style.display = "none";
+          };
+
+          displayNotesFilesContainer.appendChild(noteContainerDiv);
+        });
+      } else {
+        const error = await response.json();
+        console.error(error.message);
+      }
+    };
+
+    retrieveCreateCourseNotes(currentCourseId);
+
+    addFile.addEventListener("click", async (event) => {
+      event.preventDefault();
+      await createCoursesNotes(currentCourseId);
+      await retrieveCreateCourseNotes(currentCourseId);
+    });
+
+    // ======================= MAKING A FOLDER =======================
+    const createFolder = document.getElementById("createFolder");
+
+    const createNoteFolder = async (currentCourseId) => {
+      const courseFolder = {
+        noteTitle: "",
       };
 
-      displayNotesFilesContainer.appendChild(noteContainerDiv);
+      const response = await fetch(
+        "http://localhost:5001/client/lms-notes-folder",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentCourseId,
+            courseFolder,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+      } else {
+        const error = await response.json();
+        console.error(error.message);
+      }
+    };
+
+    // ==================== RETRIEVE COURSE NOTES FOR DISPLAY ====================
+
+    const retrieveNotesFolder = async (currentCourseId) => {
+      // Response
+      const response = await fetch(
+        `http://localhost:5001/client/lms-retrieve-notes-folder?currentCourseId=${currentCourseId}`
+      );
+
+      displayNotesFilesContainer.innerHTML = "";
+
+      // Check response
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+
+        data.courseFolder.forEach((notes) => {
+          const id = notes._id;
+          console.log(id, "shake");
+          // CREATING A DIV
+          const folderDiv = document.createElement("div");
+          folderDiv.className = "folder__main__container";
+          folderDiv.innerHTML = `
+      <div class="folder__container" id="folderContainer">
+      <p>></p><input type="text" class="folder__title" id="folderTitle" placeholder="Untitled">
+      </div>
+      `;
+          displayNotesFilesContainer.appendChild(folderDiv);
+        });
+      } else {
+        const error = await response.json();
+        console.log(error.message);
+      }
+    };
+
+    retrieveNotesFolder(currentCourseId);
+
+    createFolder.addEventListener("click", async (event) => {
+      event.preventDefault();
+      await createNoteFolder(currentCourseId);
+      await retrieveNotesFolder(currentCourseId);
     });
-  } else {
-    const error = await response.json();
-    console.error(error.message);
-  }
-};
-
-retrieveCreateCourseNotes(currentCourseId);
-
-addFile.addEventListener("click", async (event) => {
-  event.preventDefault();
-  await createCoursesNotes(currentCourseId);
-  await retrieveCreateCourseNotes(currentCourseId);
-});
-
+  });
 // ============== RETRIEVE COURSE NOTES FOR WRITING AND DISPLAY ===============
 
 const retrieveCourseNotes = async (clickedNoteId) => {
@@ -887,46 +962,3 @@ noteTitleNameSecond.addEventListener("input", (event) => {
   event.preventDefault();
   updateNotesTitle(clickedNoteId);
 });
-
-// ======================= MAKING A FOLDER =======================
-const makeFolder = document.getElementById("makeFolder");
-
-const createFolder = document.getElementById("createFolder");
-
-const createNoteFolder = async (currentCourseId) => {
-  const courseFolder = {
-    noteTitle: "",
-  };
-
-  const response = await fetch(
-    "http://localhost:5001/client/lms-notes-folder",
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        currentCourseId,
-        courseFolder,
-      }),
-    }
-  );
-
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.message);
-  } else {
-    const error = await response.json();
-    console.error(error.message);
-  }
-};
-
-createFolder.addEventListener("click", async (event) => {
-  event.preventDefault();
-  await createNoteFolder(currentCourseId);
-  await retrieveNotesFolder(currentCourseId);
-});
-
-// ==================== RETRIEVE COURSE NOTES FOR DISPLAY ====================
-
-

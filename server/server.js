@@ -615,7 +615,7 @@ app.put("/client/lms-notes", async (req, res) => {
     let objectId;
     try {
       // @ts-expect-error
-      objectId = new ObjectId(currentCourseId.toString());
+      objectId = new ObjectId(currentCourseId);
     } catch (error) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
@@ -644,7 +644,7 @@ app.get("/client/lms-retrieve-notes", async (req, res) => {
     let objectId;
     try {
       // @ts-expect-error
-      objectId = new ObjectId(currentCourseId.toString());
+      objectId = new ObjectId(currentCourseId);
     } catch (error) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
@@ -679,7 +679,7 @@ app.get("/client/lms-specific-retrieve-notes", async (req, res) => {
     let objectId;
     try {
       // @ts-expect-error
-      objectId = new ObjectId(clickedNoteId.toString());
+      objectId = new ObjectId(clickedNoteId);
     } catch (error) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
@@ -705,7 +705,7 @@ app.put("/client/lms-update-notes-page-title", async (req, res) => {
     let objectId;
     try {
       // @ts-expect-error
-      objectId = new ObjectId(clickedNoteId.toString());
+      objectId = new ObjectId(clickedNoteId);
     } catch (error) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
@@ -739,7 +739,7 @@ app.put("/client/lms-update-notes", async (req, res) => {
     let objectId;
     try {
       // @ts-expect-error
-      objectId = new ObjectId(clickedNoteId.toString());
+      objectId = new ObjectId(clickedNoteId);
     } catch (error) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
@@ -772,7 +772,7 @@ app.put("/client/lms-update-notes-title", async (req, res) => {
     let objectId;
     try {
       // @ts-expect-error
-      objectId = new ObjectId(clickedNoteId.toString());
+      objectId = new ObjectId(clickedNoteId);
     } catch (error) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
@@ -806,7 +806,7 @@ app.put("/client/lms-notes-folder", async (req, res) => {
     let objectId;
     try {
       // @ts-expect-error
-      objectId = new ObjectId(currentCourseId.toString());
+      objectId = new ObjectId(currentCourseId);
     } catch (error) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
@@ -827,6 +827,34 @@ app.put("/client/lms-notes-folder", async (req, res) => {
   }
 });
 
+// ==================== RETRIEVE COURSE NOTES FOR DISPLAY ====================
+app.get("/client/lms-retrieve-notes-folder", async (req, res) => {
+  try {
+    // Retrieve data
+    const { currentCourseId } = req.query;
+
+    // Convert string id to object id
+    let objectId;
+    try {
+      objectId = new ObjectId(currentCourseId);
+    } catch (err) {
+      return res.status(400).json({ message: "Invalid ObjectId" });
+    }
+
+    const course = await courseCollection.findOne({ _id: objectId });
+
+    // If it succeed we response the data back to the client
+    if (course) {
+      return res
+        .status(200)
+        .json({ courseFolder: course.courseFolder });
+    } else {
+      return res.status(200).json({ message: "Course not found" });
+    }
+  } catch (err) {
+    return res.status(200).json({message: "An error occured", err});
+  }
+});
 
 
 // ================ SERVER LISTENING PORT ==================
