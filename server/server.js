@@ -830,27 +830,35 @@ app.put("/client/lms-notes-folder", async (req, res) => {
 // ==================== RETRIEVE COURSE NOTES FOR DISPLAY ====================
 app.get("/client/lms-retrieve-notes-folder", async (req, res) => {
   try {
-    // Retrieve data
-    const { currentCourseId } = req.query;
+    // Retrieve data from client (id)
+    let objectId = req.query.currentCourseId;
 
-    // Convert string id to object id
-    let objectId;
-    try {
-      objectId = new ObjectId(currentCourseId);
-    } catch (err) {
+
+    if (!objectId || objectId.length !== 24 || !/^[0-9a-fA-F]+$/.test(objectId)) {
       return res.status(400).json({ message: "Invalid ObjectId" });
     }
 
-    const course = await courseCollection.findOne({ _id: objectId });
+    const course = await courseCollection.findOne({ _id: new ObjectId(objectId) });
 
-    // If it succeed we response the data back to the client
-    if (course) {
-      return res
-        .status(200)
-        .json({ courseFolder: course.courseFolder });
-    } else {
-      return res.status(200).json({ message: "Course not found" });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
     }
+
+    // Retrieve Folder and File together
+    const courseFolder = course.courseFolder; // Array of folders
+    const courseNotes = course.courseNotes; // Array of notes
+
+    // Map courseFolder and courseNotes to get the folder and file
+    const folder = courseFolder.map((folder) => {
+      const notes = courseNotes.filter((note) => note.folderId === folder._id.toString());
+      return { ...folder, notes };
+    });
+
+    // Find files that are not inside the folder
+    const notesWithoutFolder = courseNotes.filter((note) => !note.folderId);
+
+    return res.status(200).json({ courseFolder: folder, notesWithoutFolder });
+
   } catch (err) {
     return res.status(200).json({message: "An error occured", err});
   }
