@@ -1,217 +1,294 @@
+:root {
+  --primary-clr: #b38add;
+  --less-white: #e2e1dc;
+  --dark--purple: #373c4f;
+  --light--pink: #878895;
+  --border--color: #f5f5f5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  /* border: 1px solid black; */
+  /* overflow-y: auto; */
+}
+
 .calendar__main__container {
   display: flex;
-  /* align-items: center; */
-  /* justify-content: center; */
+  align-items: center;
+  justify-content: center;
   /* border: 1px solid black; */
-  margin-left: 6rem;
+  /* margin-left: 6rem; */
   width: 100%;
-  height: 55rem;
+  min-height: 80vh;
+  /* background-color: #e2e1dc; */
+}
+
+
+
+.container {
+  position: relative;
+  width: 80%;
+  min-height: 700px;
+  /* margin: 0 auto; */
+  /* padding: 5px; */
+  color: white;
+  display: flex;
+  /* border-radius: 10px; */
+  background-color: #373c4f;
+  /* margin-left: 2rem; */
+}
+
+.left {
+  width: 60%;
+  /* padding: 20px; */
 }
 
 .calendar {
-  width: 70%; /* width of div can arrange */
-  height: 99%;
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  /* padding: 10px; */
-  padding-top: 0;
-  background-color: #fff; /* color container*/
-  /* border: 1px solid black; */
+  flex-wrap: wrap;
+  /* justify-content: space-between; */
+  color: #878895;
+  /* border-radius: 5px; */
+  background-color: white;
 }
 
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-bottom: none;
-  border-top: none;
-}
-
-.monthYear {
-  text-align: center;
-  font-weight: 600;
-  width: 150px;
-}
-
-.header button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 50%;
-  background-color: #fff;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-}
-
-.days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  border: 1px solid #ddd;
-}
-
-.day {
-  text-align: center;
-  padding: 5px;
-  color: #999fa6;
-  font-weight: 500;
-  position: relative;
-}
-
-.day:not(:last-child)::after {
+/* =========== BEFORE AND AFTER WHICH IS NOT NECCESARY =========== */
+/* .calendar::before,
+.calendar::after {
   content: "";
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background-color: #ddd;
-}
-
-.dates {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  width: 100%;
-  height: 100%;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-}
-
-.date {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  width: 100%;
-  font-size: 1.2rem;
-  height: 100%;
-  position: relative;
-  border-bottom: 1px solid #ddd; /* Border between rows */
-}
-
-.date:not(:nth-child(7n)) {
-  border-right: 1px solid #ddd; /* Border between columns */
-}
-
-.date:hover {
-  background: grey;
-  color: #fff;
-}
-
-.date.active {
-  border: none;
-  background: #b38add;
-  color: #fff;
-}
-
-.date.inactive {
-  color: #d2d2d2;
-}
-
-.date.inactive:hover {
-  color: #fff;
-}
-
-.popup__set__task__reminder__main__container {
-  position: absolute;
-  transform: translate(-50%, -50%);
   top: 50%;
-  left: 50%;
-  border: 1px solid black;
-  height: 10rem;
-  display: none;
-  width: 20rem;
-  padding: 1rem;
+  left: 100%;
+  width: 12px;
+  height: 97%;
+  border-radius: 0 5px 5px 0;
+  background-color: #d3d5d6d7;
+  transform: translateY(-50%);
 }
 
-.adding__event__reminder__container {
-  display: flex;
-  flex-direction: column;
-  width: 40%;
-  height: 100%;
-}
+.calendar::before {
+  height: 94%;
+  left: calc(100% + 12px);
+  background-color: rgb(153, 153, 153);
+} */
 
-.calendar__curent__date__container {
+.calendar .month {
+  width: 100%;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-inline: 3rem;
-  border-bottom: 1px solid black;
+  padding: 0 50px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
-.day__container {
-  font-size: 3rem;
+.calendar .month .prev,
+.calendar .month .next {
+  cursor: pointer;
 }
 
-.event__reminder__container__display {
-  display: flex;
-  align-items: center;
-  /* justify-content: center; */
-  flex-direction: column;
-  height: 50rem;
+.calendar .month .prev:hover,
+.calendar .month .next:hover {
+  color: var(--primary-clr);
+}
+
+.calendar .weekdays {
   width: 100%;
-  position: relative;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
-.no__event__reminder__container {
+.calendar .weekdays div {
+  width: 14.28%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 45rem;
-  width: 80%;
-  position: relative;
 }
 
-.plus__icon__container {
-  border: 1px solid grey;
-  border-radius: 3rem;
-  padding: 0.4rem;
+.calendar .days {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: space-between; */
+  padding: 0 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  /* margin-bottom: 20px; */
+}
+
+.calendar .days .day {
+  width: 14.28%;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 95%;
-  left: 86%;
   cursor: pointer;
+  color: var(--primary-clr);
+  border: 0.5px solid lightgrey;
 }
 
-.plus__icon__functionality {
+/* ============== HOVER EFFECT FOR PREV AND NEXT DATE OF A CALENDAR =============== */
+
+.calendar .day:not(.prev-date, .next-date):hover {
+  color: white;
+  background-color: var(--primary-clr);
+}
+
+.calendar .days .prev-date,
+.calendar .days .next-date {
+  color: #b3b3b3;
+}
+
+/* ============= TODAYS DAY CSS ============= */
+
+.calendar .days .active {
+  position: relative;
+  font-size: 2rem;
+  color: white;
+  background-color: var(--primary-clr);
+}
+
+.calendar .days .active::before {
+  content: "";
   position: absolute;
-  transform: translate(-50%, -50%);
-  top: 85%;
-  left: 75%;
-  border: 1px solid lightgrey;
-  /* padding:1rem; */
-  background:white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 10px 2px var(--primary-clr);
 }
 
-.add__event {
-  padding: 1rem;
-  width: 8rem;
-  font-weight: var(--Raleway500);
-  background: none;
+.calendar .days .today {
+  font-size: 2rem;
+}
+
+/* ============ CALENDAR WITH NOTE EVENT ============ */
+
+.calendar .days .event {
+  position: relative;
+}
+
+.calendar .days .event::after {
+  content: "";
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  width: 75px;
+  height: 6px;
+  border-radius: 30px;
+  transform: translateX(-50%);
+  background-color: var(--primary-clr);
+}
+
+.calendar .event:hover::after {
+  background-color: white;
+}
+
+.calendar .active.event::after {
+  background-color: white;
+  bottom: 20%;
+}
+
+.calendar .active.event {
+  padding-bottom: 10px;
+}
+
+.calendar .goto-today {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  color: var(--primary-clr);
+}
+
+.calendar .goto-today .goto {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px var(--primary-clr) solid;
+}
+
+.calendar .goto-today .goto input {
+  width: 100%;
+  height: 30px;
+  outline: none;
   border: none;
+  border-radius: 5px;
+  padding: 0 20px;
+  color: var(--primary-clr);
+  border-radius: 5px;
+}
+
+.calendar .goto-today button {
+  padding: 5px 10px;
+  border: 1px solid var(--primary-clr);
+  border-radius: 5px;
+  background-color: transparent;
   cursor: pointer;
+  color: var(--primary-clr);
 }
 
-.add__event:hover {
-  background: lightblue;
+.calendar .goto-today button:hover {
+  background-color: var(--primary-clr);
+  color: white;
 }
 
-.plus__icon__container:hover {
-  background: lightblue;
+.calendar .goto-today .goto button {
+  border: none;
+  border-left: 1px solid var(--primary-clr);
+  border-radius: 0;
 }
 
-.no__event__reminder__container > p {
-  font-size: 1.5rem;
-  opacity: 0.5;
-  font-weight: var(--Raleway600);
+/* =============== RIGHT SIDE CSS ===============  */
+.container .right {
+  position: relative;
+  width: 40%;
+  min-height: 100%;
+  padding: 10px 0;
+}
+
+.right .today-date {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  padding-left: 70px;
+  /* margin-top: 50px; */
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+.today-date .event-day {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.today-date .event-date {
+  font-size: 1.2rem;
+  font-weight: 500;
 }
