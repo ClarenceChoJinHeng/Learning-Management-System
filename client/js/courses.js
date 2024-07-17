@@ -1,130 +1,132 @@
-let currentCourseId = ''
-let clickedNoteId = ''
+let currentCourseId = "";
+let clickedNoteId = "";
 
 // DISPLAY CREATE CLASS POPUP
-const createClassButton = document.getElementById('createClassButton')
-const backgroundOverlay = document.getElementById('backgroundOverlay')
-const classPopupOverlay = document.getElementById('classPopupOverlay')
-const cancelCreateButton = document.getElementById('cancelCreateButton')
-const createCourseButton = document.getElementById('createCourseButton')
+const createClassButton = document.getElementById("createClassButton");
+const backgroundOverlay = document.getElementById("backgroundOverlay");
+const classPopupOverlay = document.getElementById("classPopupOverlay");
+const cancelCreateButton = document.getElementById("cancelCreateButton");
+const createCourseButton = document.getElementById("createCourseButton");
 
 // FUNCTION TO SHOW THE POPUP
-createClassButton.addEventListener('click', (event) => {
-  event.stopPropagation()
-  showPopup()
-})
+createClassButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  showPopup();
+});
 
-function showPopup () {
-  backgroundOverlay.style.display = 'flex'
-  classPopupOverlay.style.display = 'block'
+function showPopup() {
+  backgroundOverlay.style.display = "flex";
+  classPopupOverlay.style.display = "block";
 }
 
 //  ================= FUNCTION TO HIDE THE POPUP AND RESET THE FORM =================
-function hidePopupAndResetForm () {
-  backgroundOverlay.style.display = 'none'
-  classPopupOverlay.style.display = 'none'
-  createClassForm.reset()
+function hidePopupAndResetForm() {
+  backgroundOverlay.style.display = "none";
+  classPopupOverlay.style.display = "none";
+  createClassForm.reset();
 }
 
 // ================= ADD EVENT LISTENERS TO THE CANCEL BUTTON AND THE BACKGROUND OVERLAY =================
-cancelCreateButton.addEventListener('click', hidePopupAndResetForm)
-backgroundOverlay.addEventListener('click', hidePopupAndResetForm)
-document.addEventListener('click', hidePopupAndResetForm)
+cancelCreateButton.addEventListener("click", hidePopupAndResetForm);
+backgroundOverlay.addEventListener("click", hidePopupAndResetForm);
+document.addEventListener("click", hidePopupAndResetForm);
 
 // ================= PREVENT THE POPUP FROM CLOSING WHEN CLICKING ON THE POPUP ITSELF =================
-classPopupOverlay.addEventListener('click', (event) => {
-  event.stopPropagation()
-})
+classPopupOverlay.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
 
 // ================= RETRIGGER CREATE JOIN POPUP =================
-const retriggerPopupIcon = document.getElementById('retriggerPopupIcon')
+const retriggerPopupIcon = document.getElementById("retriggerPopupIcon");
 const retriggerCreateJoinContainer = document.getElementById(
-  'retriggerCreateJoinContainer'
-)
+  "retriggerCreateJoinContainer"
+);
 
-const retriggerCreate = document.getElementById('retriggerCreate')
+const retriggerCreate = document.getElementById("retriggerCreate");
 
 // ================= ADD EVENT LISTENERS TO THE CREATE CLASS BUTTON AND THE RETRIGGER BUTTON =================
-retriggerPopupIcon.addEventListener('click', (event) => {
-  event.stopPropagation()
-  if (retriggerCreateJoinContainer.style.display === 'flex') {
-    hideRetriggerPopupContainer()
+retriggerPopupIcon.addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (retriggerCreateJoinContainer.style.display === "flex") {
+    hideRetriggerPopupContainer();
   } else {
-    showCreateJoin()
+    showCreateJoin();
   }
-})
+});
 
-retriggerCreate.addEventListener('click', (event) => {
-  event.stopPropagation()
-  hideRetriggerPopupContainer()
-  showPopup()
-})
+retriggerCreate.addEventListener("click", (event) => {
+  event.stopPropagation();
+  hideRetriggerPopupContainer();
+  showPopup();
+});
 
-function showCreateJoin () {
-  retriggerCreateJoinContainer.style.display = 'flex'
+function showCreateJoin() {
+  retriggerCreateJoinContainer.style.display = "flex";
 }
 
-function hideRetriggerPopupContainer () {
-  retriggerCreateJoinContainer.style.display = 'none'
+function hideRetriggerPopupContainer() {
+  retriggerCreateJoinContainer.style.display = "none";
 }
 
-document.addEventListener('click', hideRetriggerPopupContainer)
+document.addEventListener("click", hideRetriggerPopupContainer);
 
 // ================= PREVENT THE POPUP FROM CLOSING WHEN CLICKNG ON THE POPUP ITSELF =================
-retriggerCreateJoinContainer.addEventListener('click', (event) => {
-  event.stopPropagation()
-})
+retriggerCreateJoinContainer.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
 
-const inputFields = document.querySelectorAll('.input__fields')
+const inputFields = document.querySelectorAll(".input__fields");
 
 // ================= CHECK IF ALL INPUT FIELDS ARE FILLED OUT =================
-function checkFields () {
+function checkFields() {
   for (let i = 0; i < inputFields.length; i++) {
-    if (inputFields[i].value.trim() === '') {
-      return false
+    if (inputFields[i].value.trim() === "") {
+      return false;
     }
   }
-  return true
+  return true;
 }
 
 // ================= UPDATE THE COLOR AND DISABLED STATE OF THE CREATE COURSE BUTTON =================
-function updateButtonColor () {
+function updateButtonColor() {
   if (checkFields()) {
-    createCourseButton.style.color = 'black'
-    createCourseButton.disabled = false
+    createCourseButton.style.color = "black";
+    createCourseButton.disabled = false;
   } else {
-    createCourseButton.style.color = ''
-    createCourseButton.disabled = true
+    createCourseButton.style.color = "";
+    createCourseButton.disabled = true;
   }
 }
 
-createCourseButton.disabled = true
+createCourseButton.disabled = true;
 
 for (let i = 0; i < inputFields.length; i++) {
-  inputFields[i].addEventListener('input', updateButtonColor)
+  inputFields[i].addEventListener("input", updateButtonColor);
 }
 
 // ==================== CREATE A NEW COURSE ====================
 
-const createClassForm = document.getElementById('createClassForm')
-const sortCoursesContainer = document.getElementById('sortCoursesContainer')
+const createClassForm = document.getElementById("createClassForm");
+const sortCoursesContainer = document.getElementById("sortCoursesContainer");
 
 const submitForm = async (event) => {
-  event.preventDefault()
+  event.preventDefault();
 
-  const className = document.getElementById('className').value
-  const lecturerName = document.getElementById('lecturerName').value
-  const classSubject = document.getElementById('classSubject').value
-  const classRoom = document.getElementById('classRoom').value
+  const className = document.getElementById("className").value;
+  const lecturerName = document.getElementById("lecturerName").value;
+  const classSubject = document.getElementById("classSubject").value;
+  const classRoom = document.getElementById("classRoom").value;
+  const courseNotes = [];
+  const courseFolder = [];
 
-  const userEmail = localStorage.getItem('userEmail')
+  const userEmail = localStorage.getItem("userEmail");
 
-  const students = []
+  const students = [];
   // ================= MAKE A REQUEST TO THE SERVER =================
-  const response = await fetch('http://localhost:5001/client/lms-home', {
-    method: 'POST',
+  const response = await fetch("http://localhost:5001/client/lms-home", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       className,
@@ -133,83 +135,85 @@ const submitForm = async (event) => {
       classRoom,
       userEmail,
       students,
+      courseNotes,
+      courseFolder,
     }),
-  })
+  });
 
   const createCourseContainer = document.getElementById(
-    'createCourseContainer'
-  )
+    "createCourseContainer"
+  );
 
   // ================= GETTING THE RESPONSE FROM THE SERVER IF THE REQUEST IS SUCCESSFUL =================
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
-    alert('Class Created Successfully')
-    updateDisplayProperties()
+    const data = await response.json();
+    console.log(data.message);
+    alert("Class Created Successfully");
+    updateDisplayProperties();
 
-    backgroundOverlay.style.display = 'none'
-    classPopupOverlay.style.display = 'none'
-    createCourseContainer.style.display = 'none'
-    sortCoursesContainer.style.display = 'flex'
-    localStorage.setItem('createCourseContainerDisplay', 'none')
-    createClassForm.reset()
+    backgroundOverlay.style.display = "none";
+    classPopupOverlay.style.display = "none";
+    createCourseContainer.style.display = "none";
+    sortCoursesContainer.style.display = "flex";
+    localStorage.setItem("createCourseContainerDisplay", "none");
+    createClassForm.reset();
   } else {
-    const error = await response.json()
-    console.error(error.message)
-    alert('Error Creating Class')
-    updateDisplayProperties()
+    const error = await response.json();
+    console.error(error.message);
+    alert("Error Creating Class");
+    updateDisplayProperties();
 
-    backgroundOverlay.style.display = 'none'
-    classPopupOverlay.style.display = 'none'
-    sortCoursesContainer.style.display = 'none'
-    createCourseContainer.style.display = 'none'
-    localStorage.setItem('createCourseContainerDisplay', 'none')
-    createClassForm.reset()
+    backgroundOverlay.style.display = "none";
+    classPopupOverlay.style.display = "none";
+    sortCoursesContainer.style.display = "none";
+    createCourseContainer.style.display = "none";
+    localStorage.setItem("createCourseContainerDisplay", "none");
+    createClassForm.reset();
   }
-}
+};
 
 // ==================== RETRIEVE COURSES ====================
 
 const retrieveCourse = async () => {
-  const userEmail = localStorage.getItem('userEmail')
+  const userEmail = localStorage.getItem("userEmail");
 
   const response = await fetch(
     `http://localhost:5001/client/lms-home?userEmail=${userEmail}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.courses)
+    const data = await response.json();
+    console.log(data.courses);
 
     const createDisplayCourseContainer = document.getElementById(
-      'createDisplayCourseContainer'
-    )
+      "createDisplayCourseContainer"
+    );
 
     // CLEAN THE EXISTING CODE
-    createDisplayCourseContainer.innerHTML = ''
+    createDisplayCourseContainer.innerHTML = "";
 
     // CREATE AN ARRAY TO STORE THE COURSE IDS
-    const courseIDs = []
+    const courseIDs = [];
 
     data.courses.forEach((course) => {
-      const className = course.className
-      const lecturerName = course.lecturerName
-      const classRoom = course.classRoom
-      const courseID = course._id
+      const className = course.className;
+      const lecturerName = course.lecturerName;
+      const classRoom = course.classRoom;
+      const courseID = course._id;
       // console.log(currentCourseId);
 
-      courseIDs.push(courseID)
+      courseIDs.push(courseID);
 
-      const courseDiv = document.createElement('div')
-      courseDiv.className = 'display__course__container'
-      courseDiv.dataset.courseId = course._id
-      courseDiv.id = 'displayCourseContainer'
+      const courseDiv = document.createElement("div");
+      courseDiv.className = "display__course__container";
+      courseDiv.dataset.courseId = course._id;
+      courseDiv.id = "displayCourseContainer";
       courseDiv.innerHTML = `
       <div class="delete__background__overlay" id="backgroundOverlay"></div>
 
@@ -245,401 +249,401 @@ const retrieveCourse = async () => {
               <i class="bx bx-dots-vertical-rounded three-dots"></i>
           </div>
       </div>
-        `
+        `;
 
-      createDisplayCourseContainer.appendChild(courseDiv)
+      createDisplayCourseContainer.appendChild(courseDiv);
 
       // ============== DISPLAYING COURSES DURING CLICK ON COURSES ==============
-      const deleteButton = courseDiv.querySelector('#deleteButton')
+      const deleteButton = courseDiv.querySelector("#deleteButton");
       const deleteConfirmatonContainer = courseDiv.querySelector(
-        '#displayDeleteConfirmationContainer'
-      )
+        "#displayDeleteConfirmationContainer"
+      );
       const backgroundOverlay = courseDiv.querySelector(
-        '.delete__background__overlay'
-      )
-      const cancelButton = courseDiv.querySelector('#cancelButton')
-      const deleteCourseButton = courseDiv.querySelector('#deleteCourseButton')
+        ".delete__background__overlay"
+      );
+      const cancelButton = courseDiv.querySelector("#cancelButton");
+      const deleteCourseButton = courseDiv.querySelector("#deleteCourseButton");
 
       // =================== ADD EVENT LISTENER TO THE DELETE BUTTON OF THE CURRENT COURSE ===================
-      deleteButton.addEventListener('click', (event) => {
-        event.stopPropagation()
+      deleteButton.addEventListener("click", (event) => {
+        event.stopPropagation();
         const emptyFunctionalityContainer = courseDiv.querySelector(
-          '.empty__functionality__container'
-        )
+          ".empty__functionality__container"
+        );
 
-        emptyFunctionalityContainer.style.display = 'none'
-        deleteConfirmatonContainer.style.display = 'flex'
-        backgroundOverlay.style.display = 'flex'
-      })
+        emptyFunctionalityContainer.style.display = "none";
+        deleteConfirmatonContainer.style.display = "flex";
+        backgroundOverlay.style.display = "flex";
+      });
 
       // =================== ADD EVENT LISTENER TO THE CANCEL BUTTON OF THE CURRENT COURSE ===================
-      cancelButton.addEventListener('click', (event) => {
-        event.stopPropagation()
-        deleteConfirmatonContainer.style.display = 'none'
-        backgroundOverlay.style.display = 'none'
-      })
+      cancelButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        deleteConfirmatonContainer.style.display = "none";
+        backgroundOverlay.style.display = "none";
+      });
 
-      deleteCourseButton.addEventListener('click', (event) => {
-        deleteCourseButton.value = 'Deleting...'
-        event.stopPropagation()
-        deleteCourseButton.style.background = 'none'
-        deleteCourseButton.style.color = 'grey'
-        cancelButton.disabled = true
-        deleteCourseButton.style.boxShadow = 'none'
+      deleteCourseButton.addEventListener("click", (event) => {
+        deleteCourseButton.value = "Deleting...";
+        event.stopPropagation();
+        deleteCourseButton.style.background = "none";
+        deleteCourseButton.style.color = "grey";
+        cancelButton.disabled = true;
+        deleteCourseButton.style.boxShadow = "none";
 
         setTimeout(() => {
-          event.preventDefault()
-          console.log('Delete button clicked')
-          const courseId = event.target.dataset.courseId
-          deleteCourse(courseId)
-          deleteConfirmatonContainer.style.display = 'none'
-          backgroundOverlay.style.display = 'none'
-          deleteCourseButton.style.background = 'red'
-          deleteCourseButton.style.color = 'white'
-          alert('Delete Succesful')
-        }, 1000)
-      })
+          event.preventDefault();
+          console.log("Delete button clicked");
+          const courseId = event.target.dataset.courseId;
+          deleteCourse(courseId);
+          deleteConfirmatonContainer.style.display = "none";
+          backgroundOverlay.style.display = "none";
+          deleteCourseButton.style.background = "red";
+          deleteCourseButton.style.color = "white";
+          alert("Delete Succesful");
+        }, 1000);
+      });
 
       // =============== ADD EVENT LISTENER TO THE WINDOW OUTSIDE OF THE LOOP ===============
 
-      deleteConfirmatonContainer.addEventListener('click', (event) => {
-        event.stopPropagation()
-      })
+      deleteConfirmatonContainer.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
 
-      window.addEventListener('click', (event) => {
+      window.addEventListener("click", (event) => {
         const deleteConfirmationContainers = document.querySelectorAll(
-          '.display__delete__confirmation__container'
-        )
+          ".display__delete__confirmation__container"
+        );
 
         deleteConfirmationContainers.forEach((deleteConfirmationContainer) => {
           if (!deleteConfirmationContainer.contains(event.target)) {
-            deleteConfirmationContainer.style.display = 'none'
+            deleteConfirmationContainer.style.display = "none";
           }
-        })
+        });
 
         const backgroundOverlays = document.querySelectorAll(
-          '.delete__background__overlay'
-        )
+          ".delete__background__overlay"
+        );
 
         backgroundOverlays.forEach((overlay) => {
-          overlay.style.display = 'none'
-        })
-      })
+          overlay.style.display = "none";
+        });
+      });
 
-      function closeAllFunctionalityContainers () {
+      function closeAllFunctionalityContainers() {
         const functionalityContainers = document.querySelectorAll(
-          '.empty__functionality__container'
-        )
+          ".empty__functionality__container"
+        );
         functionalityContainers.forEach((container) => {
-          container.style.display = 'none'
-        })
+          container.style.display = "none";
+        });
       }
 
       // ADD EVENT LISTENER TO THE CREATEDISPLAYCOURSECONTAINER
-      courseDiv.addEventListener('click', function (event) {
+      courseDiv.addEventListener("click", function (event) {
         // CHECK IF THE CLICKED ELEMENT OR ITS PARENT IS A .DISPLAY__THREE__DOTS__CONTAINER
-        currentCourseId = courseID
-        console.log(currentCourseId)
+        currentCourseId = courseID;
+        console.log(currentCourseId);
 
         const threeDotContainer = event.target.closest(
-          '.display__three__dots__container'
-        )
+          ".display__three__dots__container"
+        );
         if (threeDotContainer) {
           // PREVENT THE WINDOW CLICK EVENT FROM FIRING
 
-          event.preventDefault()
-          event.stopPropagation()
+          event.preventDefault();
+          event.stopPropagation();
 
           // GET THE EMPTY__FUNCTIONALITY__CONTAINER CORRESPONDING TO THE CLICKED DISPLAY__THREE__DOTS__CONTAINER
           const parentContainer = threeDotContainer.closest(
-            '.display__course__container'
-          )
+            ".display__course__container"
+          );
           const functionalityContainer = parentContainer.querySelector(
-            '.empty__functionality__container'
-          )
+            ".empty__functionality__container"
+          );
 
           // IF THE FUNCTIONALITYCONTAINER IS ALREADY OPEN, CLOSE IT; OTHERWISE, CLOSE ALL CONTAINERS AND OPEN IT
-          if (functionalityContainer.style.display === 'flex') {
-            functionalityContainer.style.display = 'none'
+          if (functionalityContainer.style.display === "flex") {
+            functionalityContainer.style.display = "none";
           } else {
-            closeAllFunctionalityContainers()
-            functionalityContainer.style.display = 'flex'
+            closeAllFunctionalityContainers();
+            functionalityContainer.style.display = "flex";
           }
         }
-      })
+      });
 
       // ADD EVENT LISTENER TO THE WINDOW THAT CLOSES THE EMPTY__FUNCTIONALITY__CONTAINER WHEN CLICKED
-      window.addEventListener('click', closeAllFunctionalityContainers)
+      window.addEventListener("click", closeAllFunctionalityContainers);
 
       const displayTeachingNavigationMainContainer = document.getElementById(
-        'displayTeachingNavigationMainContainer'
-      )
+        "displayTeachingNavigationMainContainer"
+      );
       const displayTeachingDetailsMainContainer = document.getElementById(
-        'displayTeachingDetailsMainContainer'
-      )
+        "displayTeachingDetailsMainContainer"
+      );
 
-      courseDiv.addEventListener('click', async (event) => {
+      courseDiv.addEventListener("click", async (event) => {
         if (
-          Array.from(document.querySelectorAll('.three-dots')).some(
+          Array.from(document.querySelectorAll(".three-dots")).some(
             (dot) => dot.outerHTML === event.target.outerHTML
           ) ||
           Array.from(
-            document.querySelectorAll('.delete__background__overlay')
+            document.querySelectorAll(".delete__background__overlay")
           ).some((dot) => dot.outerHTML === event.target.outerHTML) ||
-          Array.from(document.querySelectorAll('.edit__course__button')).some(
+          Array.from(document.querySelectorAll(".edit__course__button")).some(
             (dot) => dot.outerHTML === event.target.outerHTML
           )
         ) {
-          return
+          return;
         }
 
-        const classNameId = document.getElementById('classNameId')
-        const classRoomId = document.getElementById('classRoomId')
-        const classCodeId = document.getElementById('classCodeId')
-        createDisplayCourseContainer.style.display = 'none'
-        displayTeachingDetailsMainContainer.style.display = 'flex'
-        displayTeachingNavigationMainContainer.style.display = 'flex'
-        sortCoursesContainer.style.display = 'none'
+        const classNameId = document.getElementById("classNameId");
+        const classRoomId = document.getElementById("classRoomId");
+        const classCodeId = document.getElementById("classCodeId");
+        createDisplayCourseContainer.style.display = "none";
+        displayTeachingDetailsMainContainer.style.display = "flex";
+        displayTeachingNavigationMainContainer.style.display = "flex";
+        sortCoursesContainer.style.display = "none";
 
-        classNameId.textContent = className
-        classRoomId.textContent = classRoom
-        classCodeId.textContent = courseID
-      })
+        classNameId.textContent = className;
+        classRoomId.textContent = classRoom;
+        classCodeId.textContent = courseID;
+      });
 
       // =========== TEACHING STREAM NAV ============
 
-      const teachingStreamNavId = document.getElementById('teachingStreamNav')
+      const teachingStreamNavId = document.getElementById("teachingStreamNav");
 
-      teachingStreamNavId.addEventListener('click', async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
+      teachingStreamNavId.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-        displayClassworkDetailsMainContainer.style.display = 'none'
-        displayPeopleDetailsMainContainer.style.display = 'none'
-        displayGradesDetailsMainContainer.style.display = 'none'
-        displayNotesDetailsMainContainer.style.display = 'none'
-        displayTeachingDetailsMainContainer.style.display = 'flex'
-      })
+        displayClassworkDetailsMainContainer.style.display = "none";
+        displayPeopleDetailsMainContainer.style.display = "none";
+        displayGradesDetailsMainContainer.style.display = "none";
+        displayNotesDetailsMainContainer.style.display = "none";
+        displayTeachingDetailsMainContainer.style.display = "flex";
+      });
 
       // =========== TEACHING CLASSWORK NAV ============
 
       const teachingClassWorkNav = document.getElementById(
-        'teachingClassWorkNav'
-      )
+        "teachingClassWorkNav"
+      );
 
       const displayClassworkDetailsMainContainer = document.getElementById(
-        'displayClassworkDetailsMainContainer'
-      )
+        "displayClassworkDetailsMainContainer"
+      );
 
-      teachingClassWorkNav.addEventListener('click', async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
+      teachingClassWorkNav.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-        displayGradesDetailsMainContainer.style.display = 'none'
-        displayTeachingDetailsMainContainer.style.display = 'none'
-        displayPeopleDetailsMainContainer.style.display = 'none'
-        displayNotesDetailsMainContainer.style.display = 'none'
-        displayClassworkDetailsMainContainer.style.display = 'flex'
-      })
+        displayGradesDetailsMainContainer.style.display = "none";
+        displayTeachingDetailsMainContainer.style.display = "none";
+        displayPeopleDetailsMainContainer.style.display = "none";
+        displayNotesDetailsMainContainer.style.display = "none";
+        displayClassworkDetailsMainContainer.style.display = "flex";
+      });
 
-      arrowBack.addEventListener('click', async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        window.location.href = 'lms-home.html'
-      })
+      arrowBack.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        window.location.href = "lms-home.html";
+      });
 
       // ============== PEOPLE STREAM NAV ===============
 
-      const teachingPeopleNav = document.getElementById('teachingPeopleNav')
+      const teachingPeopleNav = document.getElementById("teachingPeopleNav");
       const displayPeopleDetailsMainContainer = document.getElementById(
-        'displayPeopleDetailsMainContainer'
-      )
+        "displayPeopleDetailsMainContainer"
+      );
 
-      teachingPeopleNav.addEventListener('click', async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
+      teachingPeopleNav.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-        displayTeachingDetailsMainContainer.style.display = 'none'
-        displayGradesDetailsMainContainer.style.display = 'none'
-        displayNotesDetailsMainContainer.style.display = 'none'
-        displayClassworkDetailsMainContainer.style.display = 'none'
-        displayPeopleDetailsMainContainer.style.display = 'flex'
-      })
+        displayTeachingDetailsMainContainer.style.display = "none";
+        displayGradesDetailsMainContainer.style.display = "none";
+        displayNotesDetailsMainContainer.style.display = "none";
+        displayClassworkDetailsMainContainer.style.display = "none";
+        displayPeopleDetailsMainContainer.style.display = "flex";
+      });
 
       // ========== TEACHING GRADES NAV ============
 
-      const teachingGradesNav = document.getElementById('teachingGradesNav')
+      const teachingGradesNav = document.getElementById("teachingGradesNav");
       const displayGradesDetailsMainContainer = document.getElementById(
-        'displayGradesDetailsMainContainer'
-      )
-      teachingGradesNav.addEventListener('click', async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
+        "displayGradesDetailsMainContainer"
+      );
+      teachingGradesNav.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-        displayTeachingDetailsMainContainer.style.display = 'none'
-        displayClassworkDetailsMainContainer.style.display = 'none'
-        displayNotesDetailsMainContainer.style.display = 'none'
-        displayPeopleDetailsMainContainer.style.display = 'none'
-        displayGradesDetailsMainContainer.style.display = 'flex'
-      })
+        displayTeachingDetailsMainContainer.style.display = "none";
+        displayClassworkDetailsMainContainer.style.display = "none";
+        displayNotesDetailsMainContainer.style.display = "none";
+        displayPeopleDetailsMainContainer.style.display = "none";
+        displayGradesDetailsMainContainer.style.display = "flex";
+      });
 
       // ============== TEACHING NOTES NAV ===============
-      const teachingNoteNav = document.getElementById('teachingNoteNav')
+      const teachingNoteNav = document.getElementById("teachingNoteNav");
       const displayNotesDetailsMainContainer = document.getElementById(
-        'displayNotesDetailsMainContainer'
-      )
-      teachingNoteNav.addEventListener('click', async (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        displayTeachingDetailsMainContainer.style.display = 'none'
-        displayClassworkDetailsMainContainer.style.display = 'none'
-        displayPeopleDetailsMainContainer.style.display = 'none'
-        displayGradesDetailsMainContainer.style.display = 'none'
-        displayNotesDetailsMainContainer.style.display = 'flex'
-        await retrieveNotesFolder(currentCourseId)
-      })
+        "displayNotesDetailsMainContainer"
+      );
+      teachingNoteNav.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        displayTeachingDetailsMainContainer.style.display = "none";
+        displayClassworkDetailsMainContainer.style.display = "none";
+        displayPeopleDetailsMainContainer.style.display = "none";
+        displayGradesDetailsMainContainer.style.display = "none";
+        displayNotesDetailsMainContainer.style.display = "flex";
+        await retrieveNotesFolder(currentCourseId);
+      });
 
       // =================== TEACHING STREAM UNDERLINE ===================
-      const teachingStream = document.querySelectorAll('.teaching__nav')
-      const teachingStreamNav = document.querySelectorAll('.teaching__nav')
+      const teachingStream = document.querySelectorAll(".teaching__nav");
+      const teachingStreamNav = document.querySelectorAll(".teaching__nav");
       if (teachingStreamNav[0]) {
-        teachingStreamNav[0].style.borderBottom = '3px solid red'
+        teachingStreamNav[0].style.borderBottom = "3px solid red";
       }
       // ================ ADD EVENT LISTENER TO THE TEACHING STREAM NAV ================
       teachingStream.forEach((navItem) => {
-        navItem.addEventListener('click', (event) => {
+        navItem.addEventListener("click", (event) => {
           teachingStream.forEach((item) => {
-            item.style.borderBottom = ''
-          })
+            item.style.borderBottom = "";
+          });
 
-          if (event.target.tagName === 'P') {
-            event.target.parentNode.style.borderBottom = '3px solid red'
+          if (event.target.tagName === "P") {
+            event.target.parentNode.style.borderBottom = "3px solid red";
           } else {
-            event.target.style.borderBottom = '3px solid red'
+            event.target.style.borderBottom = "3px solid red";
           }
-        })
-      })
-    })
+        });
+      });
+    });
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-}
+};
 
 // ADD EVENT LISTENER TO THE CREATE COURSE BUTTON
-createCourseButton.addEventListener('click', async (event) => {
-  await submitForm(event)
-  await retrieveCourse()
-})
+createCourseButton.addEventListener("click", async (event) => {
+  await submitForm(event);
+  await retrieveCourse();
+});
 
-const teachingCourseButton = document.getElementById('teachingCourseButton')
+const teachingCourseButton = document.getElementById("teachingCourseButton");
 
-teachingCourseButton.addEventListener('click', async (event) => {
-  await retrieveCourse()
-})
+teachingCourseButton.addEventListener("click", async (event) => {
+  await retrieveCourse();
+});
 
 //  ================= ENSURE THAT THE CREATE COURSE CONTAINER ONLY APPEAR AFTER THERE IS NO MORE COURSES ==================
 
 // Function to update the display properties
-function updateDisplayProperties () {
+function updateDisplayProperties() {
   const createDisplayCourseContainer = document.getElementById(
-    'createDisplayCourseContainer'
-  )
+    "createDisplayCourseContainer"
+  );
   const createCourseContainer = document.getElementById(
-    'createCourseContainer'
-  )
-  const sortCoursesContainer = document.getElementById('sortCoursesContainer')
+    "createCourseContainer"
+  );
+  const sortCoursesContainer = document.getElementById("sortCoursesContainer");
 
   if (createDisplayCourseContainer.children.length === 0) {
     // IF THERE ARE NO COURSES, DISPLAY THE CREATECOURSECONTAINER
-    createCourseContainer.style.display = 'flex'
-    sortCoursesContainer.style.display = 'none'
+    createCourseContainer.style.display = "flex";
+    sortCoursesContainer.style.display = "none";
   } else {
     // IF THERE ARE COURSES, HIDE THE CREATECOURSECONTAINER
-    createCourseContainer.style.display = 'none'
-    sortCoursesContainer.style.display = 'flex'
+    createCourseContainer.style.display = "none";
+    sortCoursesContainer.style.display = "flex";
   }
 }
 
 window.onload = async function () {
-  await retrieveCourse()
-  updateDisplayProperties()
-}
+  await retrieveCourse();
+  updateDisplayProperties();
+};
 
 // ================================= DELETE =====================================
 
 const deleteCourse = async (courseId) => {
   const response = await fetch(`http://localhost:5001/client/lms/${courseId}`, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-  })
+  });
 
   if (response.ok) {
-    const data = await response.json()
+    const data = await response.json();
 
-    console.log(data.message)
+    console.log(data.message);
     // AFTER SUCCESSFUL DELETION, REMOVE THE COURSE FROM THE DOM
     const courseDiv = document.querySelector(
       `div[data-course-id="${courseId}"]`
-    )
-    courseDiv.remove()
+    );
+    courseDiv.remove();
 
     // CHECK IF THERE ARE ANY COURSES LEFT
     const createDisplayCourseContainer = document.getElementById(
-      'createDisplayCourseContainer'
-    )
+      "createDisplayCourseContainer"
+    );
     if (createDisplayCourseContainer.children.length === 0) {
       // IF THERE ARE NO COURSES LEFT, DISPLAY THE CREATECOURSECONTAINER
       const createCourseContainer = document.getElementById(
-        'createCourseContainer'
-      )
-      createCourseContainer.style.display = 'flex'
-      localStorage.setItem('createCourseContainerDisplay', 'flex')
+        "createCourseContainer"
+      );
+      createCourseContainer.style.display = "flex";
+      localStorage.setItem("createCourseContainerDisplay", "flex");
     }
-    await retrieveCourse()
+    await retrieveCourse();
 
-    updateDisplayProperties()
+    updateDisplayProperties();
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-}
+};
 
 // =============== CREATING NOTES FOR COURSES ================
 const createCoursesNotes = async (currentCourseId) => {
   const courseNotes = {
-    noteTitle: '',
-    notePageTitle: '',
-    noteContent: '',
-  }
+    noteTitle: "",
+    notePageTitle: "",
+    noteContent: "",
+  };
 
-  const response = await fetch('http://localhost:5001/client/lms-notes', {
-    method: 'PUT',
+  const response = await fetch("http://localhost:5001/client/lms-notes", {
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       currentCourseId,
       courseNotes,
     }),
-  })
+  });
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
+    const data = await response.json();
+    console.log(data.message);
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-}
+};
 
-const addFile = document.getElementById('addFile')
+const addFile = document.getElementById("addFile");
 
 const displayNotesFilesContainer = document.getElementById(
-  'displayNotesFilesContainer'
-)
+  "displayNotesFilesContainer"
+);
 
 // ============== RETRIEVE COURSE NOTES FOR DISPLAY ===============
 
@@ -647,27 +651,27 @@ const retrieveCreateCourseNotes = async (currentCourseId) => {
   const response = await fetch(
     `http://localhost:5001/client/lms-retrieve-notes?currentCourseId=${currentCourseId}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.courseNotes) // Changed from data.notes to data.courseNotes
-    displayNotesFilesContainer.innerHTML = ''
+    const data = await response.json();
+    console.log(data.courseNotes); // Changed from data.notes to data.courseNotes
+    displayNotesFilesContainer.innerHTML = "";
 
-    data.courseNotes.forEach((note) => {
+    data.notesWithoutFolder.forEach((note) => {
       // Changed from data.notes to data.courseNotes
-      const noteTitle = note.noteTitle
-      const id = note._id
-      const noteContainerDiv = document.createElement('div')
-      noteContainerDiv.className = 'notes__files__container'
-      noteContainerDiv.id = 'notesFiles'
-      noteContainerDiv.dataset.noteId = id
-      noteContainerDiv.draggable = true
+      const noteTitle = note.noteTitle;
+      const id = note._id;
+      const noteContainerDiv = document.createElement("div");
+      noteContainerDiv.className = "notes__files__container";
+      noteContainerDiv.id = "notesFiles";
+      noteContainerDiv.dataset.noteId = id;
+      noteContainerDiv.draggable = true;
       noteContainerDiv.innerHTML = `
       <input type='text' id='noteTitleName' class='notes__files__title' placeholder='Untitled' value=${noteTitle}  >
 
@@ -676,77 +680,90 @@ const retrieveCreateCourseNotes = async (currentCourseId) => {
           <input type="submit" name="Delete" value="Delete" id="deleteNoteButton" class="delete__note__button"/>
       </div>
 
-      `
+      `;
 
-      noteContainerDiv.addEventListener('contextmenu', function (event) {
-        event.preventDefault()
-      })
+      noteContainerDiv.addEventListener("contextmenu", function (event) {
+        event.preventDefault();
+      });
 
-      noteContainerDiv.addEventListener('click', async (event) => {
-        clickedNoteId = event.currentTarget.dataset.noteId
-        console.log(clickedNoteId, '1')
-        retrieveCourseNotes(clickedNoteId)
-      })
+      noteContainerDiv.addEventListener("click", async (event) => {
+        clickedNoteId = event.currentTarget.dataset.noteId;
+        console.log(clickedNoteId, "1");
+        retrieveCourseNotes(clickedNoteId);
+      });
 
       // RIGHT CLICK FUNCTIONALITY
 
-      noteContainerDiv.addEventListener('mousedown', function (event) {
+      noteContainerDiv.addEventListener("mousedown", function (event) {
         if (event.button === 2) {
-          event.preventDefault()
-          notesFilesFunctionalityContainer.style.display = 'flex'
+          event.preventDefault();
+          notesFilesFunctionalityContainer.style.display = "flex";
         }
-      })
+      });
 
       window.onclick = function (event) {
-        notesFilesFunctionalityContainer.style.display = 'none'
-      }
+        notesFilesFunctionalityContainer.style.display = "none";
+      };
 
-      displayNotesFilesContainer.appendChild(noteContainerDiv)
-    })
+      displayNotesFilesContainer.appendChild(noteContainerDiv);
+    });
+
+    data.courseFolder.forEach((notes) => {
+      const id = notes._id;
+      // CREATING A DIV
+      const folderDiv = document.createElement("div");
+      folderDiv.className = "folder__main__container";
+      folderDiv.innerHTML = `
+      <div class="folder__container" id="folderContainer">
+      <p>></p><input type="text" class="folder__title" id="folderTitle" placeholder="Untitled">
+      </div>
+      `;
+      displayNotesFilesContainer.appendChild(folderDiv);
+    });
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-}
+};
 
-retrieveCreateCourseNotes(currentCourseId)
+retrieveCreateCourseNotes(currentCourseId);
 
-addFile.addEventListener('click', async (event) => {
-  event.preventDefault()
-  await createCoursesNotes(currentCourseId)
-  await retrieveCreateCourseNotes(currentCourseId)
-})
+addFile.addEventListener("click", async (event) => {
+  event.preventDefault();
+  await createCoursesNotes(currentCourseId);
+  await retrieveCreateCourseNotes(currentCourseId);
+});
 
 // ======================= MAKING A FOLDER =======================
-const createFolder = document.getElementById('createFolder')
+const createFolder = document.getElementById("createFolder");
 
 const createNoteFolder = async (currentCourseId) => {
   const courseFolder = {
-    noteTitle: '',
-  }
+    noteTitle: "",
+  };
 
   const response = await fetch(
-    'http://localhost:5001/client/lms-notes-folder',
+    "http://localhost:5001/client/lms-notes-folder",
     {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         currentCourseId,
         courseFolder,
       }),
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
+    const data = await response.json();
+    console.log(data.message);
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-}
+};
 
 // ==================== RETRIEVE COURSE FOLDER FOR DISPLAY ====================
 
@@ -754,220 +771,220 @@ const retrieveNotesFolder = async (currentCourseId) => {
   // Response
   const response = await fetch(
     `http://localhost:5001/client/lms-retrieve-notes-folder?currentCourseId=${currentCourseId}`
-  )
+  );
 
-  displayNotesFilesContainer.innerHTML = ''
+  displayNotesFilesContainer.innerHTML = "";
 
   // Check response
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.courseFolder)
-    console.log(data.notesWithoutFolder)
+    const data = await response.json();
+    console.log(data.courseFolder);
+    console.log(data.notesWithoutFolder);
 
     data.courseFolder.forEach((notes) => {
-      const id = notes._id
+      const id = notes._id;
       // CREATING A DIV
-      const folderDiv = document.createElement('div')
-      folderDiv.className = 'folder__main__container'
+      const folderDiv = document.createElement("div");
+      folderDiv.className = "folder__main__container";
       folderDiv.innerHTML = `
       <div class="folder__container" id="folderContainer">
       <p>></p><input type="text" class="folder__title" id="folderTitle" placeholder="Untitled">
       </div>
-      `
-      displayNotesFilesContainer.appendChild(folderDiv)
-    })
+      `;
+      displayNotesFilesContainer.appendChild(folderDiv);
+    });
 
     data.notesWithoutFolder.forEach((note) => {
-      const noteTitle = note.noteTitle
-      const id = note._id
-      const noteContainerDiv = document.createElement('div')
-      noteContainerDiv.className = 'notes__files__container'
-      noteContainerDiv.id = 'notesFiles'
-      noteContainerDiv.dataset.noteId = id
-      noteContainerDiv.draggable = true
+      const noteTitle = note.noteTitle;
+      const id = note._id;
+      const noteContainerDiv = document.createElement("div");
+      noteContainerDiv.className = "notes__files__container";
+      noteContainerDiv.id = "notesFiles";
+      noteContainerDiv.dataset.noteId = id;
+      noteContainerDiv.draggable = true;
       noteContainerDiv.innerHTML = `
-      <input type='text' id='noteTitleName' class='notes__files__title' placeholder='Untitled' value=${noteTitle}  > `
-      displayNotesFilesContainer.appendChild(noteContainerDiv)
-    })
+      <input type='text' id='noteTitleName' class='notes__files__title' placeholder='Untitled' value=${noteTitle}  > `;
+      displayNotesFilesContainer.appendChild(noteContainerDiv);
+    });
   } else {
-    const error = await response.json()
-    console.log(error.message)
+    const error = await response.json();
+    console.log(error.message);
   }
-}
+};
 
-retrieveNotesFolder(currentCourseId)
+retrieveNotesFolder(currentCourseId);
 
-createFolder.addEventListener('click', async (event) => {
-  event.preventDefault()
-  await createNoteFolder(currentCourseId)
-  await retrieveNotesFolder(currentCourseId)
-})
+createFolder.addEventListener("click", async (event) => {
+  event.preventDefault();
+  await createNoteFolder(currentCourseId);
+  await retrieveNotesFolder(currentCourseId);
+});
 // ============== RETRIEVE COURSE NOTES FOR WRITING AND DISPLAY ===============
 
 const retrieveCourseNotes = async (clickedNoteId) => {
   const response = await fetch(
     `http://localhost:5001/client/lms-specific-retrieve-notes?clickedNoteId=${clickedNoteId}`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    const note = data.courseNotes.find((note) => note._id === clickedNoteId)
+    const data = await response.json();
+    const note = data.courseNotes.find((note) => note._id === clickedNoteId);
 
-    const id = note._id
+    const id = note._id;
 
     const selectedWritingNotesSpaceContainer = document.getElementById(
-      'selectedWritingNotesSpaceContainer'
-    )
+      "selectedWritingNotesSpaceContainer"
+    );
 
-    selectedWritingNotesSpaceContainer.style.display = 'flex'
-    notesFilesContainer.style.display = 'flex'
-    const noteTitleNameSecond = document.getElementById('noteTitleNameSecond')
+    selectedWritingNotesSpaceContainer.style.display = "flex";
+    notesFilesContainer.style.display = "flex";
+    const noteTitleNameSecond = document.getElementById("noteTitleNameSecond");
 
     const selectedWritingNotesSpace = document.getElementById(
-      'selectedWritingNotesSpace'
-    )
+      "selectedWritingNotesSpace"
+    );
 
-    const notePageTitle = document.getElementById('notePageTitle')
+    const notePageTitle = document.getElementById("notePageTitle");
     // noteTitleNameSecond.innerHTML = note.noteTitle;
-    selectedWritingNotesSpace.value = note.noteContent
-    notePageTitle.value = note.notePageTitle
-    noteTitleNameSecond.value = note.noteTitle
+    selectedWritingNotesSpace.value = note.noteContent;
+    notePageTitle.value = note.notePageTitle;
+    noteTitleNameSecond.value = note.noteTitle;
 
     if (note) {
-      console.log(note)
+      console.log(note);
     } else {
-      console.error('Note not found.')
+      console.error("Note not found.");
     }
   } else {
-    const error = await response.json()
-    console.error(error.message)
+    const error = await response.json();
+    console.error(error.message);
   }
-}
+};
 
 // ================== UPDATING THE NOTES PAGE TITLE ==================
 
 const updateNotesPageTitle = async (clickedNoteId) => {
-  const notePageTitle = document.getElementById('notePageTitle').value
+  const notePageTitle = document.getElementById("notePageTitle").value;
 
   const response = await fetch(
-    'http://localhost:5001/client/lms-update-notes-page-title',
+    "http://localhost:5001/client/lms-update-notes-page-title",
     {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         clickedNoteId,
         notePageTitle,
       }),
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
-    console.log('Note Title Updated Successfully')
+    const data = await response.json();
+    console.log(data.message);
+    console.log("Note Title Updated Successfully");
   } else {
-    const error = await response.json()
-    console.error(error.message)
-    alert('Error Updating Note')
+    const error = await response.json();
+    console.error(error.message);
+    alert("Error Updating Note");
   }
-}
+};
 
-const notePageTitle = document.getElementById('notePageTitle')
+const notePageTitle = document.getElementById("notePageTitle");
 
-notePageTitle.addEventListener('input', (event) => {
-  event.preventDefault()
-  updateNotesPageTitle(clickedNoteId)
-})
+notePageTitle.addEventListener("input", (event) => {
+  event.preventDefault();
+  updateNotesPageTitle(clickedNoteId);
+});
 
 // ================== UPDATING THE NOTES DATA ==================
 
 const updateNotes = async (clickedNoteId) => {
   const noteContent = document.getElementById(
-    'selectedWritingNotesSpace'
-  ).value
+    "selectedWritingNotesSpace"
+  ).value;
 
   const response = await fetch(
-    'http://localhost:5001/client/lms-update-notes',
+    "http://localhost:5001/client/lms-update-notes",
     {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         clickedNoteId,
         noteContent,
       }),
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
-    console.log('Note Updated Successfully')
+    const data = await response.json();
+    console.log(data.message);
+    console.log("Note Updated Successfully");
   } else {
-    const error = await response.json()
-    console.error(error.message)
-    alert('Error Updating Note')
+    const error = await response.json();
+    console.error(error.message);
+    alert("Error Updating Note");
   }
-}
+};
 
 const selectedWritingNotesSpace = document.getElementById(
-  'selectedWritingNotesSpace'
-)
+  "selectedWritingNotesSpace"
+);
 
-selectedWritingNotesSpace.addEventListener('input', function (event) {
-  event.preventDefault()
-  console.log('updateNotes called with id:', clickedNoteId)
-  updateNotes(clickedNoteId)
-})
+selectedWritingNotesSpace.addEventListener("input", function (event) {
+  event.preventDefault();
+  console.log("updateNotes called with id:", clickedNoteId);
+  updateNotes(clickedNoteId);
+});
 
 // ================== UPDATING THE NOTES TITLE ==================
 
 const updateNotesTitle = async (clickedNoteId) => {
   const noteTitleNameSecond = document.getElementById(
-    'noteTitleNameSecond'
-  ).value
+    "noteTitleNameSecond"
+  ).value;
 
   const response = await fetch(
-    'http://localhost:5001/client/lms-update-notes-title',
+    "http://localhost:5001/client/lms-update-notes-title",
     {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         clickedNoteId,
         noteTitleNameSecond,
       }),
     }
-  )
+  );
 
   if (response.ok) {
-    const data = await response.json()
-    console.log(data.message)
-    console.log('Note Title Updated Successfully')
+    const data = await response.json();
+    console.log(data.message);
+    console.log("Note Title Updated Successfully");
     if (clickedNoteId === clickedNoteId) {
-      const noteTitleName = document.querySelectorAll('notes__files__title')
-      noteTitleName.textContent = noteTitleNameSecond
+      const noteTitleName = document.querySelectorAll("notes__files__title");
+      noteTitleName.textContent = noteTitleNameSecond;
     }
   } else {
-    const error = await response.json()
-    console.error(error.message)
-    alert('Error Updating Note')
+    const error = await response.json();
+    console.error(error.message);
+    alert("Error Updating Note");
   }
-}
+};
 
-const noteTitleNameSecond = document.getElementById('noteTitleNameSecond')
+const noteTitleNameSecond = document.getElementById("noteTitleNameSecond");
 
-noteTitleNameSecond.addEventListener('input', (event) => {
-  event.preventDefault()
-  updateNotesTitle(clickedNoteId)
-})
+noteTitleNameSecond.addEventListener("input", (event) => {
+  event.preventDefault();
+  updateNotesTitle(clickedNoteId);
+});

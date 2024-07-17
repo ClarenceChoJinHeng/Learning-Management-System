@@ -50,3 +50,10 @@ nextBtn.addEventListener('click', () => {
 })
 
 updateCalendar();
+
+// ============== POP UP FOR CALENDAR =================
+
+const plusIconContainer = document.getElementById('plusIconContainer'); 
+const plusIconFunctionality = document.getElementById('plusIconFunctionality');
+const addEvent =  document.getElementById('addEvent');
+    

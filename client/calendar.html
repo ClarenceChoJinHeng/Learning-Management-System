@@ -12,9 +12,17 @@
     <link rel="stylesheet" href="css/active.css" />
     <link rel="stylesheet" href="css/display-course.css" />
     <link rel="stylesheet" href="css/user__profile.css" />
+    <link rel="stylesheet" href="css/calendar.css" />
 
     <!-- ========= LINK BOX ICONS ========= -->
-
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -73,10 +81,6 @@
               <i class="bx bx-group"></i>
               <p id="sideLabel">Study Group</p>
             </a>
-            <!-- <a class="nav__function__container">
-              <i class="bx bx-note"></i>
-              <p id="sideLabel">Note</p>
-            </a> -->
             <a href="settings.html" class="nav__function__container">
               <i class="bx bx-cog"></i>
               <p id="sideLabel">Settings</p>
@@ -85,49 +89,64 @@
         </div>
         <!-- ============== DISPLAY FUNCTIONALITY ============== -->
 
-        <div
-          class="lms__display__main__functionality__container"
-          id="displayFunctionalityContainer"
-        >
-          <!-- ============== DISPLAY COURSE CONTAINER ============== -->
-
-          <!-- =============== DISPLAY TEACHING CLASS ROOM FUNCTIONALITY ============== -->
-
-          <div
-            class="display__teaching__navigation__main__container"
-            id="displayTeachingNavigationMainContainer"
-          >
+        <div class="calendar__main__container" id="calendarMainContainer">
+          <!-- ========== CALENDAR BODY ============ -->
+          <div class="calendar">
+            <div class="header">
+              <button id="prevBtn">
+                <ion-icon name="caret-back-outline"></ion-icon>
+              </button>
+              <div class="monthYear" id="monthYear"></div>
+              <button id="nextBtn">
+                <ion-icon name="caret-forward-outline"></ion-icon>
+              </button>
+            </div>
+            <div class="days">
+              <div class="day">Mon</div>
+              <div class="day">Tue</div>
+              <div class="day">Wed</div>
+              <div class="day">Thu</div>
+              <div class="day">Fri</div>
+              <div class="day">Sat</div>
+              <div class="day">Sun</div>
+            </div>
+            <div class="dates" id="dates"></div>
             <div
-              class="display__teaching__navigation__container"
-              id="displayTeachingNavigationContainer"
+              class="popup__set__task__reminder__main__container"
+              id="popupSetTaskReminderMainContainer"
+            ></div>
+          </div>
+
+          <div class="adding__event__reminder__container">
+            <div class="calendar__curent__date__container">
+              <p class="day__container" id="dayContainer">Thurs</p>
+              <p class="date__container" id="dayContainer">17 July 2024</p>
+            </div>
+
+            <div
+              class="event__reminder__container__display"
+              id="eventReminderContainerDisplay"
             >
-              <div class="display__teaching__navigation">
-                <div class="teaching__nav" id="teachingStreamNav">
-                  <p>Stream</p>
-                </div>
-                <div class="teaching__nav" id="teachingClassWorkNav">
-                  <p>Classwork</p>
-                </div>
-                <div class="teaching__nav" id="teachingPeopleNav">
-                  <p>People</p>
-                </div>
-                <div class="teaching__nav" id="teachingGradesNav">
-                  <p>Grades</p>
-                </div>
-                <div class="teaching__nav" id="teachingNoteNav">
-                  <p>Notes</p>
-                </div>
+              <div class="no__event__reminder__container">
+                <p>No Events Reminder</p>
               </div>
-              <div class="back__button">
-                <i class="bx bx-arrow-back arrow-back" id="arrowBack"></i>
+
+              <div class="plus__icon__functionality" id="plusIconFunctionality">
+                <button class="add__event" id="addEvent">add Event</button>
+              </div>
+
+              <div class="plus__icon__container" id="plusIconContainer">
+                <i class="bx bx-plus"></i>
               </div>
             </div>
           </div>
-
-          <!-- ========== DISPLAY TEACHING DETAILS ============ -->
         </div>
       </section>
     </main>
+
+    <!-- <div class="popup__set__task__reminder__inner__container">
+                <input type="text" name="" id="taskTitle" placeholder="Add Title">
+              </div> -->
 
     <!-- ========= LINK JS ========= -->
     <script src="js/authMiddleware.js"></script>
@@ -135,41 +154,6 @@
     <script src="js/lms-nav.js"></script>
     <script src="js/courses.js"></script>
     <script src="js/retrieveProfilePicture.js"></script>
+    <script src="js/calendar.js"></script>
   </body>
 </html>
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/calendar.css">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <title>Calendar</title>
-</head>
-<body>
-    <div class="calendar">
-        <div class="header">
-            <button id="prevBtn">
-                <ion-icon name="caret-back-outline"></ion-icon>
-            </button>
-            <div class="monthYear" id="monthYear"></div>
-            <button id="nextBtn">
-                <ion-icon name="caret-forward-outline"></ion-icon>
-            </button>
-        </div>
-        <div class="days">
-            <div class="day">Mon</div>
-            <div class="day">Tue</div>
-            <div class="day">Wed</div>
-            <div class="day">Thu</div>
-            <div class="day">Fri</div>
-            <div class="day">Sat</div>
-            <div class="day">Sun</div>
-        </div>
-        <div class="dates" id="dates"></div>
-    </div>
-</body>
-    <script src="js/calendar.js"></script>
-</html> -->
