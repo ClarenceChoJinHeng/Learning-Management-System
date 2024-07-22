@@ -10,40 +10,32 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-  /* border: 1px solid black; */
-  /* overflow-y: auto; */
 }
 
 .calendar__main__container {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* border: 1px solid black; */
-  /* margin-left: 6rem; */
   width: 100%;
-  min-height: 80vh;
-  /* background-color: #e2e1dc; */
+  min-height: 40rem;
+  /* border: 1px solid black; */
 }
-
-
 
 .container {
   position: relative;
-  width: 80%;
-  min-height: 700px;
-  /* margin: 0 auto; */
-  /* padding: 5px; */
-  color: white;
+  width: 85%;
+  max-height: 60rem;
+  padding: 5px;
   display: flex;
-  /* border-radius: 10px; */
-  background-color: #373c4f;
-  /* margin-left: 2rem; */
+  /* border: 1px solid black; */
 }
 
 .left {
-  width: 60%;
-  /* padding: 20px; */
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 50rem;
+  /* border: 1px solid black; */
 }
 
 .calendar {
@@ -53,35 +45,14 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  /* justify-content: space-between; */
-  color: #878895;
-  /* border-radius: 5px; */
   background-color: white;
 }
 
 /* =========== BEFORE AND AFTER WHICH IS NOT NECCESARY =========== */
-/* .calendar::before,
-.calendar::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  width: 12px;
-  height: 97%;
-  border-radius: 0 5px 5px 0;
-  background-color: #d3d5d6d7;
-  transform: translateY(-50%);
-}
-
-.calendar::before {
-  height: 94%;
-  left: calc(100% + 12px);
-  background-color: rgb(153, 153, 153);
-} */
 
 .calendar .month {
   width: 100%;
-  height: 70px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -103,7 +74,7 @@
 
 .calendar .weekdays {
   width: 100%;
-  height: 70px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -115,7 +86,7 @@
 
 .calendar .weekdays div {
   width: 14.28%;
-  height: 100%;
+  height: 60%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,21 +96,20 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: space-between; */
   padding: 0 20px;
   font-size: 1rem;
   font-weight: 500;
-  /* margin-bottom: 20px; */
+  /* border: 1px solid black; */
+  margin: 1px;
 }
 
 .calendar .days .day {
   width: 14.28%;
-  height: 90px;
+  height: 6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--primary-clr);
   border: 0.5px solid lightgrey;
 }
 
@@ -147,21 +117,17 @@
 
 .calendar .day:not(.prev-date, .next-date):hover {
   color: white;
-  background-color: var(--primary-clr);
-}
-
-.calendar .days .prev-date,
-.calendar .days .next-date {
-  color: #b3b3b3;
+  background-color: var(--light--pink);
 }
 
 /* ============= TODAYS DAY CSS ============= */
+/* TODAY ACTIVE DAY EFFECT  */
 
 .calendar .days .active {
   position: relative;
   font-size: 2rem;
   color: white;
-  background-color: var(--primary-clr);
+  background-color: var(--light--pink);
 }
 
 .calendar .days .active::before {
@@ -171,7 +137,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  box-shadow: 0 0 10px 2px var(--primary-clr);
+  box-shadow: 0 0 10px var(--light--pink);
 }
 
 .calendar .days .today {
@@ -184,6 +150,7 @@
   position: relative;
 }
 
+/* undelrine effect */
 .calendar .days .event::after {
   content: "";
   position: absolute;
@@ -193,7 +160,7 @@
   height: 6px;
   border-radius: 30px;
   transform: translateX(-50%);
-  background-color: var(--primary-clr);
+  background-color: black;
 }
 
 .calendar .event:hover::after {
@@ -218,7 +185,11 @@
   gap: 5px;
   padding: 0 20px;
   margin-bottom: 20px;
-  color: var(--primary-clr);
+}
+
+.calendar .days .prev-date,
+.calendar .days .next-date {
+  color: grey;
 }
 
 .calendar .goto-today .goto {
@@ -226,7 +197,7 @@
   align-items: center;
   border-radius: 5px;
   overflow: hidden;
-  border: 1px var(--primary-clr) solid;
+  border: 1px solid black;
 }
 
 .calendar .goto-today .goto input {
@@ -236,50 +207,59 @@
   border: none;
   border-radius: 5px;
   padding: 0 20px;
-  color: var(--primary-clr);
+  color: black;
   border-radius: 5px;
 }
 
 .calendar .goto-today button {
   padding: 5px 10px;
-  border: 1px solid var(--primary-clr);
+  border: 1px solid black;
   border-radius: 5px;
   background-color: transparent;
   cursor: pointer;
-  color: var(--primary-clr);
+  color: black;
 }
 
 .calendar .goto-today button:hover {
-  background-color: var(--primary-clr);
-  color: white;
+  background-color: lightgrey;
+  color: black;
 }
 
 .calendar .goto-today .goto button {
   border: none;
-  border-left: 1px solid var(--primary-clr);
+  border-left: 1px solid black;
   border-radius: 0;
 }
 
 /* =============== RIGHT SIDE CSS ===============  */
 .container .right {
   position: relative;
-  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 50%;
+  height: 52rem;
   min-height: 100%;
-  padding: 10px 0;
+  padding: 15px 0;
+  border: 1px solid black;
+}
+
+.right .today-date-container {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid black;
+  padding: 0.5rem;
 }
 
 .right .today-date {
-  width: 100%;
-  height: 50px;
+  width: 80%;
+  height: max-content;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
-  padding-left: 70px;
-  /* margin-top: 50px; */
-  margin-bottom: 20px;
+  padding: 0 20px;
+  padding-left: 20px;
   text-transform: capitalize;
 }
 
@@ -291,4 +271,404 @@
 .today-date .event-date {
   font-size: 1.2rem;
   font-weight: 500;
+}
+
+.events {
+  width: 100%;
+  height: 95%;
+  max-height: 680px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 4px;
+  gap: 1rem;
+}
+
+@media screen and (max-height: 768px) {
+  .events {
+    height: 95%;
+  }
+
+  .calendar .days .day {
+    height: 5rem;
+  }
+
+  .add-event-wrapper.active {
+    position: absolute;
+    transform: translate(-50%, -55%);
+  }
+
+  .container .right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 50%;
+    height: 39rem;
+    /* min-height: 50%; */
+    padding: 15px 0;
+    border: 1px solid black;
+  }
+}
+
+.events .event-container {
+  position: relative;
+  width: 95%;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 0 20px;
+  cursor: pointer;
+  border: 1px solid black;
+  transition: background-color 0.5s all;
+}
+
+.events .event-container:hover {
+  box-shadow: 0 0 10px var(--less-white);
+  transform: translateY(-1px);
+  transform: scale(1.01);
+}
+
+.events .event-container:active {
+  background-color: lightgrey;
+  box-shadow: 0 0 10px var(--less-white);
+  transform: translateY(1px);
+}
+
+.events .event-container .title {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.events .event-container .title .event-title {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-left: 20px;
+  pointer-events: none;
+  max-width: 30rem;
+  width: 18rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.events .event-container .event-time {
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-left: 15px;
+  pointer-events: none;
+}
+
+/* ============== TICK EFFECT CAN BE DELETE =============== */
+
+.events .event-container:hover::after {
+  display: flex;
+}
+
+.events .no-event {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #878787;
+}
+/* ============== ADD EVENT WRAPPER ==============  */
+
+.add-event-wrapper {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 90%;
+  overflow: hidden;
+  max-height: 0;
+  border-radius: 5px;
+  background-color: white;
+  transform: translate(-50%, -50%);
+  transition: max-height 0.5s;
+  box-shadow: 0 0 10px var(--light--pink);
+}
+
+.add-event-wrapper.active {
+  max-height: 45rem;
+}
+
+.add-event-header {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #373c4f;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.add-event-header .close {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.add-event-header .close:hover {
+  color: var(--primary-clr);
+}
+
+.add-event-header .title {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.add-event-body {
+  width: 100%;
+  height: 22rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.add-event-body .add-event-input {
+  width: 100%;
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.add-event-body .add-event-input input {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: none;
+  border: 1px solid black;
+  padding: 0 20px;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #373c4f;
+}
+
+.add-event-body .add-event-input input::placeholder {
+  color: black;
+}
+
+.add-event-body .add-event-input input::focus {
+  border-color: var(--primary-clr);
+}
+
+.add-event-body .add-event-input .event-description {
+  outline: none;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 10px 20px;
+  border: 1px solid black;
+  color: black;
+  width: 35rem;
+}
+
+.add-event-body .add-event-input .event-description::placeholder {
+  color: black;
+}
+
+.event-description {
+  height: 10rem;
+  resize: none;
+}
+
+.add-event-footer {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 20px;
+}
+
+.add-event-btn {
+  height: 40px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  background-color: var(--primary-clr);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid var(--primary-clr);
+  outline: none;
+}
+
+.add-event-btn:hover {
+  background-color: transparent;
+  color: var(--primary-clr);
+}
+
+.add-event {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 8rem;
+  height: 3rem;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--primary-clr);
+  border: none;
+  border-radius: 0.2rem;
+}
+
+.add-event:hover {
+  background: var(--primary-clr);
+  box-shadow: 0 0 10px var(--primary-clr);
+}
+
+.add-event:active {
+  background: var(--primary-clr);
+  box-shadow: 0 0 10px var(--primary-clr);
+  transform: scale(0.99);
+}
+
+.add-event i {
+  color: white;
+  pointer-events: none;
+}
+
+.delete-event {
+  font-size: 1.5rem;
+}
+
+.delete-event:hover {
+  color: var(--primary-clr);
+}
+
+.delete-event:active {
+  color: var(--primary-clr);
+  transform: scale(0.99);
+}
+
+.background__overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  backdrop-filter: blur(5px);
+}
+
+.display-calendar-data-container {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 30rem;
+  width: 30rem;
+  overflow: hidden;
+  border-radius: 5px;
+  background-color: white;
+  transform: translate(-50%, -50%);
+  transition: max-height 0.5s;
+  box-shadow: 0 0 10px var(--light--pink);
+  z-index: 11;
+  display: none;
+}
+
+.display-calendar-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.2rem;
+}
+
+.event-logo-container {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  border-bottom: 2px solid black;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+}
+
+.event-logo {
+  align-items: center;
+  display: flex;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.close-event-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.event-logo::before {
+  content: "\f073";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 2rem;
+  margin-right: 0.5rem;
+  color: var(--primary-clr);
+}
+
+.event-info-display {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.title-event,
+.from-event,
+.to-event,
+.description-event {
+  border-bottom: 2px solid LightSalmon;
+}
+
+.event-title,
+.event-from,
+.event-to {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  width: 100%;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.event-description {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  width: 100%;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+}
+
+.fa-times {
+  cursor: pointer;
+  transition: color 0.5s all;
+}
+
+.fa-times:hover {
+  color: var(--primary-clr);
+}
+
+.fa-times:active {
+  transform: scale(0.9);
 }

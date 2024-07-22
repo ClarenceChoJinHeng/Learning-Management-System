@@ -54,6 +54,7 @@ const userCollection = database.collection("Users");
 const courseCollection = database.collection("Courses");
 const Chat = database.collection("Chat");
 const groupChat = database.collection("GroupChat");
+const calendarCollection = database.collection("Calendar");
 const uploadFiles = database.collection("uploads.files");
 const uploadChunks = database.collection("uploads.chunks");
 
@@ -181,6 +182,7 @@ app.post("/client/lms-home", async (req, res) => {
       students: " ",
       courseNotes,
       courseFolder,
+      git,
     });
 
     if (insert.acknowledged === true) {
@@ -236,61 +238,64 @@ app.delete("/client/lms/:courseId", async (req, res) => {
   }
 });
 
-// ================ CREATE CHAT VALIDATION ==================
+// ================ CREATE SINGLE CHAT VALIDATION ==================
 app.post("/client/single-chat-creation", async (req, res) => {
   try {
-    const {
-      senderName,
-      senderUserEmail,
-      receiverNameInput,
-      receiverEmailInput,
-    } = req.body;
+    const { senderName, receiverName, emails, receiverEmail, senderEmail } =
+      req.body;
 
     if (
       !senderName ||
-      !senderUserEmail ||
-      !receiverNameInput ||
-      !receiverEmailInput
+      !receiverName ||
+      !emails ||
+      !receiverEmail ||
+      !senderEmail
     ) {
       return res.status(400).json({ message: "Invalid form data" });
     }
 
-    // Check if userEmailInput exists in the userCollection
-    const user = await userCollection.findOne({ email: receiverEmailInput });
+    let errors = [];
 
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: `User ${receiverEmailInput} does not exist` });
+    for (let emailObject of emails) {
+      const { email } = emailObject;
+      const user = await userCollection.findOne({ email: email });
+
+      // ============== CHECK FOR USER'S EXISTENCE IN THE DATABASE ==============
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: `User ${email} does not exist` });
+        continue;
+      }
+
+      // ============== CHECK FOR USER'S EXISTENCE IN THE CHAT ==============
+      const chatUser = await Chat.findOne({
+        "emails.email": receiverEmail,
+      });
+
+      if (chatUser) {
+        errors.push(`User with email ${email} already exists in the chat`);
+      }
     }
 
-    // Check if userEmailInput already exists in the Chat collection
-    const chatUser = await Chat.findOne({
-      senderUserEmail,
-      receiverEmailInput,
-    });
-
-    if (chatUser) {
-      return res.status(400).json({
-        message: `User with email ${receiverEmailInput} already exists in the chat`,
-      });
+    if (errors.length > 0) {
+      return res.status(400).json({ message: errors.join(", ") });
     }
 
     const insert = await Chat.insertOne({
       senderName,
-      senderUserEmail,
-      receiverNameInput,
-      receiverEmailInput,
-      receiverSideSenderName: senderUserEmail,
+      receiverName,
+      emails,
       messages: [], // Initialize messages as an empty array
     });
 
     if (insert.acknowledged === true) {
       return res
         .status(200)
-        .json({ message: `Succesfully Added ${receiverEmailInput}` });
+        .json({ message: `Succesfully Added ${receiverEmail}` });
     } else {
-      res.status(500).json({ error: `Failed to add ${receiverEmailInput}` });
+      res.status(500).json({ error: `Failed to add ${receiverEmail}` });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -298,21 +303,14 @@ app.post("/client/single-chat-creation", async (req, res) => {
 });
 
 // ================ RETRIEVE THE CHAT ACCOUNT FROM DATABASE ================
-app.get("/client/single-chat-retrieval", async (req, res) => {
+app.get("/client/chat-retrieval", async (req, res) => {
   try {
     const { userEmail } = req.query;
 
     // FILTER COURSE BASE ON EMAIL
-    const userChat = await client
-      .db("lms-management-system")
-      .collection("Chat")
-      .find({
-        $or: [
-          { senderUserEmail: userEmail },
-          { receiverEmailInput: userEmail },
-        ],
-      })
-      .toArray();
+    const userChat = await Chat.find({
+      "emails.email": userEmail,
+    }).toArray();
 
     if (!userChat || userChat.length === 0) {
       return res.status(400).json({ message: "Invalid request" });
@@ -425,27 +423,32 @@ app.post("/client/group-study/group-chat-creation", async (req, res) => {
 
 // ================ RETRIEVE THE GROUP CHAT AND DISPLAY ================
 
-app.get("/client/group-chat-retrieval", async (req, res) => {
-  try {
-    const { userEmail } = req.query;
+// app.get("/client/group-chat-retrieval", async (req, res) => {
+//   try {
+//     const { userEmail } = req.query;
 
-    // FILTER COURSE BASE ON EMAIL
-    const userChat = await client
-      .db("lms-management-system")
-      .collection("Chat")
-      .find({ emails: { $elemMatch: { email: userEmail } } })
-      .toArray();
+//     // FILTER CHAT BASE ON //     const chats = await client
+//       .db("lms-management-system")
+//       .collection("Chat")
+//       .find({
+//         $or: [
+//           { emails: { $elemMatch: { email: userEmail } } },
+//           { senderUserEmail: userEmail },
+//           { receiverEmailInput: userEmail },
+//         ],
+//       })
+//       .toArray();
 
-    if (!userChat || userChat.length === 0) {
-      return res.status(400).json({ message: "Invalid request" });
-    }
+//     if (!chats || chats.length === 0) {
+//       return res.status(400).json({ message: "Invalid request" });
+//     }
 
-    return res.status(200).json({ userChat: userChat });
-  } catch (error) {
-    console.error("Error retrieving user account:", error);
-    return res.status(500).send({ error: "Internal Server Error" });
-  }
-});
+//     return res.status(200).json({ chats: chats });
+//   } catch (error) {
+//     console.error("Error retrieving user account:", error);
+//     return res.status(500).send({ error: "Internal Server Error" });
+//   }
+// });
 
 // ================ UPLOAD PROFILE PICTURE ================
 app.post("/client/profile-picture", async (req, res) => {
@@ -888,6 +891,56 @@ app.put("/client/lms-update-notes-title", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: "An error occurred.", error: err });
+  }
+});
+
+// ================== SENDING CALENDAR DATA TO THE DATABASE ==================
+app.post("/client/calendar", async (req, res) => {
+  try {
+    const { userEmail, newEvent } = req.body;
+
+    // VALIDATION
+    if (!userEmail || !newEvent) {
+      return res.status(400).json({ message: "Invalid form data" });
+    }
+
+    // INSERT DATA INTO THE DATABASE
+    const insert = await calendarCollection.insertOne({
+      userEmail,
+      newEvent,
+    });
+
+    if (insert.acknowledged === true) {
+      return res.status(200).json({ message: "Event Created Successfully" });
+    } else {
+      res.status(500).json({ error: "Failed to insert data" });
+    }
+  } catch (error) {
+    console.error("Error handling form submission:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ================== RETRIEVE CALENDAR DATA FROM THE DATABASE ==================
+
+app.get("/client/retrieve-calendar", async (req, res) => {
+  try {
+    const { userEmail } = req.query;
+
+    const retrieveCalendar = await calendarCollection
+      .find({ userEmail: userEmail })
+      .toArray();
+
+    if (retrieveCalendar.length > 0) {
+      // Map the array of documents to an array of newEvent objects
+      const events = retrieveCalendar.map((doc) => doc.newEvent);
+      return res.status(200).json({ retrieveCalendar: events });
+    } else {
+      return res.status(404).json({ message: "No event found" });
+    }
+  } catch (error) {
+    console.error("Error retrieving calendar:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

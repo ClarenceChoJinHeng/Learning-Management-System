@@ -7,10 +7,40 @@ const addUserContainer = document.getElementById("addUserContainer");
 const addUser = document.getElementById("addUser");
 const createGroup = document.getElementById("createGroup");
 const createGroupButton = document.getElementById("createGroupButton");
+const cancelGroupButton = document.getElementById("cancelGroupButton");
 const addUserForm = document.getElementById("addUserForm");
 const createGroupForm = document.getElementById("createGroupForm");
 const cancelUserButton = document.getElementById("cancelUserButton");
 const receiverNameInput = document.getElementById("receiverNameInput");
+const receiverEmailInput = document.getElementById("receiverEmailInput");
+const userNameInput = document.getElementById("userNameInput");
+const userEmailInput = document.getElementById("userEmailInput");
+// ============ RETRIEVE THE USER ACCOUNT DATABASE ============
+const displayUserContainer = document.getElementById("displayUserContainer");
+const addUserButton = document.getElementById("addUserButton");
+
+const chatBoxNoUserContainer = document.getElementById(
+  "chatBoxNoUserContainer"
+);
+const chatBoxHeader = document.querySelector(".chatbox__header");
+const chatBoxDisplayMessageContainer = document.querySelector(
+  ".chatbox__display__message__container"
+);
+const chatBoxEnterMessageContainer = document.querySelector(
+  ".chatbox__enter__message__container"
+);
+const enterMessageContainer = document.querySelector(
+  ".enter__message__container"
+);
+const receiverNameLabel = document.getElementById("receiverName");
+
+const chatBoxDisplayMessageMainContainer = document.querySelector(
+  ".chatbox__display__message__main__container"
+);
+
+const userEmailCheckBoxMainContainer = document.getElementById(
+  "userEmailCheckBoxMainContainer"
+);
 
 // ============  TRIGGER ADD USER CONTAINER ============
 triggerAddUser.addEventListener("click", (event) => {
@@ -79,41 +109,29 @@ window.addEventListener("click", (event) => {
 // ============ VALIDATE EMPTY FORM IN GROUP CHAT ===============
 
 document.addEventListener("DOMContentLoaded", function () {
-  // ============ RETRIEVE THE USER ACCOUNT DATABASE ============
-  const displayUserContainer = document.getElementById("displayUserContainer");
-  const addUserButton = document.getElementById("addUserButton");
-
-  const chatBoxNoUserContainer = document.getElementById(
-    "chatBoxNoUserContainer"
-  );
-  const chatBoxHeader = document.querySelector(".chatbox__header");
-
-  const chatBoxDisplayMessageContainer = document.querySelector(
-    ".chatbox__display__message__container"
-  );
-  const chatBoxEnterMessageContainer = document.querySelector(
-    ".chatbox__enter__message__container"
-  );
-  const enterMessageContainer = document.querySelector(
-    ".enter__message__container"
-  );
-  const receiverName = document.getElementById("receiverName");
-
-  const chatBoxDisplayMessageMainContainer = document.querySelector(
-    ".chatbox__display__message__main__container"
-  );
-
-  const userEmailCheckBoxMainContainer = document.getElementById(
-    "userEmailCheckBoxMainContainer"
-  );
-
   // ============  ADD USER ACCOUNT ============
   const submitForm = async (event) => {
     event.preventDefault();
     const senderName = localStorage.getItem("username");
-    const senderUserEmail = localStorage.getItem("userEmail");
-    const receiverNameInput = document.getElementById("userNameInput").value;
-    const receiverEmailInput = document.getElementById("userEmailInput").value;
+    const senderEmail = localStorage.getItem("userEmail");
+    const receiverName = document.getElementById("userNameInput").value;
+    const receiverEmail = document.getElementById("userEmailInput").value;
+
+    if (receiverEmail === senderEmail) {
+      alert("You cannot add yourself to a chat");
+      return;
+    }
+
+    const emails = [
+      {
+        email: senderEmail,
+        role: "sender",
+      },
+      {
+        email: receiverEmail,
+        role: "receiver",
+      },
+    ];
 
     //============  MAKE A REQUEST TO THE SERVER ============
     const response = await fetch(
@@ -125,9 +143,10 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         body: JSON.stringify({
           senderName,
-          senderUserEmail,
-          receiverNameInput,
-          receiverEmailInput,
+          receiverName,
+          emails,
+          receiverEmail,
+          senderEmail,
         }),
       }
     );
@@ -145,11 +164,68 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  // ============  CREATE GROUP CHAT ============
+
+  const createGroupChat = async () => {
+    const userEmail = localStorage.getItem("userEmail");
+    const userGroupNameInput =
+      document.getElementById("userGroupNameInput").value;
+
+    const userSelectWarning = document.getElementById("userSelectWarning");
+    const groupNameWarning = document.getElementById("groupNameWarning");
+
+    // Client-side validation
+    if (!userGroupNameInput.trim()) {
+      groupNameWarning.style.display = "flex";
+    } else if (userGroupNameInput.trim()) {
+      groupNameWarning.style.display = "none";
+    }
+
+    if (selectedUserEmail.length <= 1) {
+      userSelectWarning.style.display = "flex";
+      return;
+    } else {
+      userSelectWarning.style.display = "none";
+    }
+
+    const users = selectedUserEmail.map((email) => ({
+      email,
+      role: email === userEmail ? "owner" : "member",
+    }));
+
+    const response = await fetch(
+      "http://localhost:5001/client/group-study/group-chat-creation",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userGroupNameInput,
+          users,
+        }),
+      }
+    );
+
+    console.log("userGroupNameInput:", userGroupNameInput);
+    console.log("selectedUserEmail:", selectedUserEmail);
+
+    if (response.ok) {
+      const data = await response.json();
+      alert(data.message);
+      createGroupForm.style.display = "none";
+    } else {
+      const error = await response.json();
+      console.log(error.message);
+    }
+  };
+
+  // ============  RETRIEVE CHAT FORM ============
   const retrieveChatForm = async () => {
     let userEmail = localStorage.getItem("userEmail");
 
     const individualChatsResponse = await fetch(
-      `http://localhost:5001/client/single-chat-retrieval/?userEmail=${userEmail}`
+      `http://localhost:5001/client/chat-retrieval/?userEmail=${userEmail}`
     );
 
     if (individualChatsResponse.ok) {
@@ -163,76 +239,62 @@ document.addEventListener("DOMContentLoaded", function () {
       let chatIDs = [];
       individualChatsData.userChat.forEach((chat) => {
         const senderName = chat.senderName;
-        const senderUserEmail = chat.senderUserEmail;
-        const receiverNameInput = chat.receiverNameInput;
-        const receiverEmailInput = chat.receiverEmailInput;
-        const receiverSideSenderName = chat.receiverSideSenderName;
+        const receiverName = chat.receiverName;
+        const emails = chat.emails; // Array of emails
         const chatID = chat._id;
+        const groupName = chat.groupName;
+
+        let senderEmail, receiverEmail, singleRole;
+
+        let ownerEmail, memberEmail, ownerRole, memberRole;
 
         chatIDs.push(chatID);
-        // ============ MAKING HTML AND APPLY DATA INTO IT `============
 
-        if (senderUserEmail === userEmail) {
+        emails.forEach((emailObj) => {
+          if (emailObj.role === "sender") {
+            senderEmail = emailObj.email;
+            singleRole = emailObj.role;
+          } else if (emailObj.role === "receiver") {
+            receiverEmail = emailObj.email;
+            singleRole = emailObj.role;
+          }
+        });
+
+        emails.forEach((emailObj) => {
+          if (emailObj.role === "owner") {
+            ownerEmail = emailObj.email;
+            ownerRole = emailObj.role;
+          } else if (emailObj.role === "member") {
+            memberEmail = emailObj.email;
+            memberRole = emailObj.role;
+          }
+        });
+
+        // Handle single chat case
+
+        if (singleRole === "sender") {
           const chatDiv = document.createElement("div");
           chatDiv.className = "user__container";
           chatDiv.dataset.chatId = chat._id;
           chatDiv.innerHTML = `
-       
-          <div class="user__message__name__container">
-          <div class="user__profile__picture">
-            <i class="bx bx-user-circle user__profile__picture"></i>
-          </div>
-            <p class="user__message__name">${receiverNameInput}</p>
-          </div>
-
-          <div class="user__message__time__container">
-            <p>Test</p>
-          </div>
-      `;
+  
+            <div class="user__message__name__container">
+            <div class="user__profile__picture">
+              <i class="bx bx-user-circle user__profile__picture"></i>
+            </div>
+              <p class="user__message__name">${receiverEmail}</p>
+            </div>
+  
+            <div class="user__message__time__container">
+              <p>Test</p>
+            </div>
+        `;
 
           displayUserContainer.appendChild(chatDiv);
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
-            receiverName.innerHTML = receiverNameInput;
-            currentChatId = chat._id;
-            sendMessage.dataset.chatId = chat._id;
-            retrieveMessages(currentChatId);
-            if (
-              chatBoxNoUserContainer.style.display === "flex" ||
-              chatBoxNoUserContainer.style.display === ""
-            ) {
-              chatBoxNoUserContainer.style.display = "none";
-              chatBoxHeader.style.display = "flex";
-              chatBoxDisplayMessageMainContainer.style.display = "flex";
-              chatBoxDisplayMessageContainer.style.display = "flex";
-              chatBoxEnterMessageContainer.style.display = "flex";
-              enterMessageContainer.style.display = "flex";
-            }
-          });
-        } else if (receiverEmailInput === userEmail) {
-          const chatDiv = document.createElement("div");
-          chatDiv.className = "user__container";
-          chatDiv.dataset.chatId = chat._id;
-          chatDiv.innerHTML = `
-       
-          <div class="user__message__name__container">
-          <div class="user__profile__picture">
-            <i class="bx bx-user-circle user__profile__picture"></i>
-          </div>
-            <p class="user__message__name">${receiverSideSenderName}</p>
-          </div>
-
-          <div class="user__message__time__container">
-            <p>Test</p>
-          </div>
-      `;
-
-          displayUserContainer.appendChild(chatDiv);
-
-          chatDiv.addEventListener("click", async (event) => {
-            event.preventDefault();
-            receiverName.innerHTML = receiverSideSenderName;
+            receiverNameLabel.innerHTML = receiverName;
             currentChatId = chat._id;
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
@@ -249,6 +311,93 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           });
         }
+
+        if (singleRole === "receiver") {
+          const chatDiv = document.createElement("div");
+          chatDiv.className = "user__container";
+          chatDiv.dataset.chatId = chat._id;
+          chatDiv.innerHTML = `
+  
+            <div class="user__message__name__container">
+            <div class="user__profile__picture">
+              <i class="bx bx-user-circle user__profile__picture"></i>
+            </div>
+              <p class="user__message__name">${senderName}</p>
+            </div>
+  
+            <div class="user__message__time__container">
+              <p>Test</p>
+            </div>
+        `;
+
+          displayUserContainer.appendChild(chatDiv);
+
+          chatDiv.addEventListener("click", async (event) => {
+            event.preventDefault();
+            receiverNameLabel.innerHTML = senderName;
+            currentChatId = chat._id;
+            sendMessage.dataset.chatId = chat._id;
+            retrieveMessages(currentChatId);
+            if (
+              chatBoxNoUserContainer.style.display === "flex" ||
+              chatBoxNoUserContainer.style.display === ""
+            ) {
+              chatBoxNoUserContainer.style.display = "none";
+              chatBoxHeader.style.display = "flex";
+              chatBoxDisplayMessageMainContainer.style.display = "flex";
+              chatBoxDisplayMessageContainer.style.display = "flex";
+              chatBoxEnterMessageContainer.style.display = "flex";
+              enterMessageContainer.style.display = "flex";
+            }
+          });
+        }
+
+        if (ownerRole === "owner" && memberRole === "member") {
+          console.log("Owner or member");
+          const chatDiv = document.createElement("div");
+          chatDiv.className = "user__container";
+          chatDiv.dataset.chatId = chat._id;
+          chatDiv.innerHTML = `
+  
+            <div class="user__message__name__container">
+            <div class="user__profile__picture">
+              <i class="bx bx-user-circle user__profile__picture"></i>
+            </div>
+              <p class="user__message__name">${groupName}</p>
+            </div>
+  
+            <div class="user__message__time__container">
+              <p>Test</p>
+            </div>
+        `;
+
+          displayUserContainer.appendChild(chatDiv);
+
+          chatDiv.addEventListener("click", async (event) => {
+            event.preventDefault();
+            receiverNameLabel.innerHTML = groupName;
+            currentChatId = chat._id;
+            sendMessage.dataset.chatId = chat._id;
+            retrieveMessages(currentChatId);
+            if (
+              chatBoxNoUserContainer.style.display === "flex" ||
+              chatBoxNoUserContainer.style.display === ""
+            ) {
+              chatBoxNoUserContainer.style.display = "none";
+              chatBoxHeader.style.display = "flex";
+              chatBoxDisplayMessageMainContainer.style.display = "flex";
+              chatBoxDisplayMessageContainer.style.display = "flex";
+              chatBoxEnterMessageContainer.style.display = "flex";
+              enterMessageContainer.style.display = "flex";
+            }
+          });
+        }
+
+        console.log(
+          `Single chat sender email: ${senderEmail}, receiver email: ${receiverEmail}`
+        );
+
+        // ============ MAKING HTML AND APPLY DATA INTO IT `============
       });
     } else {
       const individualChatsError = await individualChatsResponse.json();
@@ -256,13 +405,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  createGroupButton.addEventListener("click", async (event) => {
+    await createGroupChat(event);
+    await retrieveChatForm(event);
+  });
+
   retrieveChatForm();
 
   addUserButton.addEventListener("click", async (event) => {
     await submitForm(event);
     await retrieveChatForm();
-    receiverNameInput.value = "";
-    receiverEmailInput.value = "";
+    userEmailInput.value = "";
+    userNameInput.value = "";
   });
 });
 
@@ -302,7 +456,7 @@ const sendMessages = async (currentChatId) => {
   if (response.ok) {
     const data = await response.json();
     console.log(data.message);
-    // enterMessage.value = "";
+    enterMessage.value = "";
   } else {
     const error = await response.json();
     console.log(error.message);
@@ -399,13 +553,7 @@ enterMessage.addEventListener("keydown", (event) => {
   }
 });
 
-// =================== GROUP CHAT ===================
-
 // ============== RETRIEVE USER EMAIL FOR GROUP CHAT ================
-
-const userEmailCheckBoxMainContainer = document.getElementById(
-  "userEmailCheckBoxMainContainer"
-);
 
 const retrieveUserChat = async () => {
   userEmailCheckBoxMainContainer.innerHTML = "";
@@ -417,7 +565,7 @@ const retrieveUserChat = async () => {
   }
 
   const response = await fetch(
-    `http://localhost:5001/client/single-chat-retrieval/?userEmail=${userEmail}`
+    `http://localhost:5001/client/chat-retrieval/?userEmail=${userEmail}`
   );
 
   if (response.ok) {
@@ -428,29 +576,36 @@ const retrieveUserChat = async () => {
     let chatIDs = [];
 
     data.userChat.forEach((chat) => {
-      const senderUserEmail = chat.senderUserEmail;
-      const receiverEmailInput = chat.receiverEmailInput;
+      let senderEmail, receiverEmail;
       const chatID = chat._id;
+
+      chat.emails.forEach((emailObj) => {
+        if (emailObj.role === "sender") {
+          senderEmail = emailObj.email;
+        } else if (emailObj.role === "receiver") {
+          receiverEmail = emailObj.email;
+        }
+      });
 
       chatIDs.push(chatID);
 
       // ============ MAKING HTML AND APPLY DATA INTO IT `============
 
-      if (senderUserEmail === userEmail) {
+      if (senderEmail === userEmail) {
         const emailDiv = document.createElement("div");
         emailDiv.className = "user__email__checkbox__container";
         emailDiv.dataset.chatId = chat._id;
         emailDiv.innerHTML = `
      
         <p class="user__email__contacts">
-          ${receiverEmailInput}                          
+          ${receiverEmail}                          
         </p>
 
         <input
           type="checkbox"
           name="userEmail"
           id="userEmailSelect"
-          value="${receiverEmailInput}"
+          value="${receiverEmail}"
         />
     `;
         userEmailCheckBoxMainContainer.appendChild(emailDiv);
@@ -470,21 +625,21 @@ const retrieveUserChat = async () => {
           }
           console.log(selectedUserEmail);
         });
-      } else if (receiverEmailInput === userEmail) {
+      } else if (receiverEmail === userEmail) {
         const emailDiv = document.createElement("div");
         emailDiv.className = "user__email__checkbox__container";
         emailDiv.dataset.chatId = chat._id;
         emailDiv.innerHTML = `
      
         <p class="user__email__contacts">
-          ${senderUserEmail}                          
+          ${senderEmail}                          
         </p>
 
         <input
           type="checkbox"
           name="userEmail"
           id="userEmailSelect"
-          value="${senderUserEmail}"
+          value="${senderEmail}"
         />
     `;
 
@@ -512,64 +667,4 @@ const retrieveUserChat = async () => {
 
 createGroup.addEventListener("click", async (event) => {
   await retrieveUserChat(event);
-});
-
-// ============  CREATE GROUP CHAT ============
-
-const createGroupChat = async () => {
-  const userEmail = localStorage.getItem("userEmail");
-  const userGroupNameInput =
-    document.getElementById("userGroupNameInput").value;
-
-  const userSelectWarning = document.getElementById("userSelectWarning");
-  const groupNameWarning = document.getElementById("groupNameWarning");
-
-  // Client-side validation
-  if (!userGroupNameInput.trim()) {
-    groupNameWarning.style.display = "flex";
-  } else if (userGroupNameInput.trim()) {
-    groupNameWarning.style.display = "none";
-  }
-
-  if (selectedUserEmail.length <= 1) {
-    userSelectWarning.style.display = "flex";
-    return;
-  } else {
-    userSelectWarning.style.display = "none";
-  }
-
-  const users = selectedUserEmail.map((email) => ({
-    email,
-    role: email === userEmail ? "owner" : "member",
-  }));
-
-  const response = await fetch(
-    "http://localhost:5001/client/group-study/group-chat-creation",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userGroupNameInput,
-        users,
-      }),
-    }
-  );
-
-  console.log("userGroupNameInput:", userGroupNameInput);
-  console.log("selectedUserEmail:", selectedUserEmail);
-
-  if (response.ok) {
-    const data = await response.json();
-    alert(data.message);
-    createGroupForm.style.display = "none";
-  } else {
-    const error = await response.json();
-    console.log(error.message);
-  }
-};
-
-createGroupButton.addEventListener("click", async (event) => {
-  await createGroupChat(event);
 });

@@ -138,21 +138,92 @@
               </div>
             </div>
             <div class="right">
-              <div class="today-date">
-                <div class="event-day">Wed</div>
-                <div class="event-date">16 November 2022</div>
+              <div class="today-date-container">
+                <div class="today-date">
+                  <div class="event-day"></div>
+                  <div class="event-date"></div>
+                </div>
+
+                <button class="add-event">
+                  <p class="add-event-p">Add Event</p>
+                  <i class="fas fa-plus"></i>
+                </button>
               </div>
 
               <!-- ========== EVENT REMINDER ADDED CONTAINER ========== -->
-              <div class="events">
-                <div class="event">
-                  <div class="title">
-                    <i class="fas fa-circle"></i>
-                    <h3 class="event-title">Event 1</h3>
+              <div class="events"></div>
+              <!-- ============== ADD EVENT WRAPPER ============== -->
+              <div class="add-event-wrapper">
+                <div class="add-event-header">
+                  <div class="title">Add Event</div>
+                  <i class="fas fa-times close"></i>
+                </div>
+
+                <div class="add-event-body">
+                  <div class="add-event-input">
+                    <input
+                      type="text"
+                      placeholder="Event Name"
+                      class="event-name"
+                    />
                   </div>
-                  <div class="event-time">
-                    10AM - 12PM
+
+                  <div class="add-event-input">
+                    <input
+                      type="time"
+                      placeholder="HH:MM [From]"
+                      class="event-time-from"
+                    />
                   </div>
+
+                  <div class="add-event-input">
+                    <input type="time" placeholder="HH:MM [To]" class="event-time-to" />
+                  </div>
+
+                  <div class="add-event-input">
+                    <textarea
+                      rows="40"
+                      placeholder="Event Description"
+                      class="event-description"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="add-event-footer">
+                  <button class="add-event-btn">Add Event</button>
+                </div>
+              </div>
+            </div>
+            <!-- ============== EVENT REMINDER BACKGROUND ============== -->
+            <div class="background__overlay" id="backgroundEventOverlay"></div>
+            <div
+              class="display-calendar-data-container"
+              id="displayCalendarDataContainer"
+            >
+              <div class="display-calendar-data">
+                <div class="event-logo-container">
+                  <p class="event-logo">Event</p>
+                  <i class="fas fa-times" id="closeEventDisplay"></i>
+                </div>
+
+                <div class="event-info-display">
+                  <p class="title-event">Title:</p>
+                  <p class="event-title" id="eventTitle"></p>
+                </div>
+
+                <div class="event-info-display">
+                  <p class="from-event">From:</p>
+                  <p class="event-from" id="eventFrom"></p>
+                </div>
+
+                <div class="event-info-display">
+                  <p class="to-event">To:</p>
+                  <p class="event-to" id="eventTo"></p>
+                </div>
+
+                <div class="event-info-display">
+                  <p class="description-event">Description:</p>
+                  <p class="event-description" id="eventDescription"></p>
                 </div>
               </div>
             </div>
