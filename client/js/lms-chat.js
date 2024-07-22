@@ -109,6 +109,19 @@ window.addEventListener("click", (event) => {
 // ============ VALIDATE EMPTY FORM IN GROUP CHAT ===============
 
 document.addEventListener("DOMContentLoaded", function () {
+  // ================== TOASTIFY ==================
+  const toastifyChatContainer = document.getElementById(
+    "toastifyChatContainer"
+  );
+  const courseNotification = document.getElementById("courseChatNotification");
+
+  const toastiyfyChatSuccess = () => {
+    // courseNotification.textContent = "Chat Created Successfully";
+    toastifyChatContainer.classList.add("active");
+    setTimeout(() => {
+      toastifyChatContainer.classList.remove("active");
+    }, 2000);
+  };
   // ============  ADD USER ACCOUNT ============
   const submitForm = async (event) => {
     event.preventDefault();
@@ -153,12 +166,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (response.ok) {
       const data = await response.json();
-      alert(data.message);
+      courseNotification.textContent = data.message;
+      toastiyfyChatSuccess();
+      // alert(data.message);
       console.log(data.message);
       addUserForm.style.display = "none";
     } else {
       const error = await response.json();
-      alert(error.message);
+      courseNotification.textContent = error.message;
+      toastifyChatContainer.style.borderBottom = "5px solid red";
+      toastiyfyChatSuccess();
       console.log(error.message);
       addUserForm.style.display = "none";
     }
@@ -212,9 +229,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (response.ok) {
       const data = await response.json();
-      alert(data.message);
+      courseNotification.textContent = data.message;
+      toastiyfyChatSuccess();
       createGroupForm.style.display = "none";
     } else {
+      courseNotification.textContent = error.message;
+      toastifyChatContainer.style.borderBottom = "5px solid red";
+      toastiyfyChatSuccess();
       const error = await response.json();
       console.log(error.message);
     }

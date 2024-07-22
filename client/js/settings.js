@@ -39,15 +39,20 @@ cancelProfileUpload.addEventListener("click", () => {
   }
 });
 
+const showUserEmail = document.getElementById("showUserEmail");
+const showUserName = document.getElementById("showUserName");
+showUserEmail.textContent = "Email: " + localStorage.getItem("userEmail");
+showUserName.textContent = "Username: " + localStorage.getItem("username");
+
 document.addEventListener("DOMContentLoaded", () => {
- // Get the form
+  // Get the form
   const uploadForm = document.getElementById("upload-profile");
 
   if (uploadForm) {
     uploadForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const file = uploadForm.querySelector('input[type="file"]').files[0]
+      const file = uploadForm.querySelector('input[type="file"]').files[0];
 
       if (!file) {
         alert("Please select a file to upload");
@@ -59,68 +64,72 @@ document.addEventListener("DOMContentLoaded", () => {
       const username = localStorage.getItem("username");
       formData.append("username", username);
 
-      const response = await fetch("http://localhost:5001/client/profile-picture", {
-        method: "POST",
-        body: formData
-      });
+      const response = await fetch(
+        "http://localhost:5001/client/profile-picture",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
 
-        pollForImage(data.file, 1000, 10)
-          .then(async (imageResponse) => {
-            // Create a blob URL from the image response
-            const imageBlob = await imageResponse.blob();
-            console.log(imageBlob);
-            const imageUrl = URL.createObjectURL(imageBlob);
+        pollForImage(data.file, 1000, 10).then(async (imageResponse) => {
+          // Create a blob URL from the image response
+          const imageBlob = await imageResponse.blob();
+          console.log(imageBlob);
+          const imageUrl = URL.createObjectURL(imageBlob);
 
-            // Display the image
-            const profilePicture = document.querySelectorAll(".user__account");
+          // Display the image
+          const profilePicture = document.querySelectorAll(".user__account");
 
-            profilePicture.forEach((element) => {
-              // Hide the <i> element
-              element.style.display = 'none';
+          profilePicture.forEach((element) => {
+            // Hide the <i> element
+            element.style.display = "none";
 
-              // Get the parent of profilePicture
-              const parent = element.parentElement;
+            // Get the parent of profilePicture
+            const parent = element.parentElement;
 
-              // Remove the <img> element if it exists
-              const prevImg = parent.querySelector('img');
-              if (prevImg) {
-                prevImg.remove();
-              }
+            // Remove the <img> element if it exists
+            const prevImg = parent.querySelector("img");
+            if (prevImg) {
+              prevImg.remove();
+            }
 
-              // Create a new <img> element
-              const img = document.createElement('img');
-              img.src = imageUrl;
-              img.classList.add("user__account__img");
-              img.alt = 'Profile Picture';
+            // Create a new <img> element
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.classList.add("user__account__img");
+            img.alt = "Profile Picture";
 
-              // Insert the new <img> element after the <i> element
-              element.parentNode.insertBefore(img, element.nextSibling);
+            // Insert the new <img> element after the <i> element
+            element.parentNode.insertBefore(img, element.nextSibling);
 
-              // Remove this element
-              const changeProfileOverlayContainer = document.getElementById("changeProfileOverlayContainer");
-              const backgroundSettingsOverlay = document.getElementById("backgroundSettingsOverlay");
+            // Remove this element
+            const changeProfileOverlayContainer = document.getElementById(
+              "changeProfileOverlayContainer"
+            );
+            const backgroundSettingsOverlay = document.getElementById(
+              "backgroundSettingsOverlay"
+            );
 
-              changeProfileOverlayContainer.style.display = "none";
-              backgroundSettingsOverlay.style.display = "none";
-            });
-          })
+            changeProfileOverlayContainer.style.display = "none";
+            backgroundSettingsOverlay.style.display = "none";
+          });
+        });
       } else {
         const data = await response.json();
         console.error(data);
       }
-    })
+    });
   }
 });
 
 async function pollForImage(file, interval, maxAttempts) {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     // Retrieve the image from the backend
-    const imageResponse = await fetch(
-      `http://localhost:5001/image/${file}`
-    );
+    const imageResponse = await fetch(`http://localhost:5001/image/${file}`);
 
     if (imageResponse.ok) {
       console.log(imageResponse);

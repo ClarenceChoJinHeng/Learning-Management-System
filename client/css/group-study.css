@@ -366,6 +366,37 @@ main {
   color: red;
 }
 
+.toastify__chat__container {
+  position: absolute;
+  padding: 1rem;
+  border-bottom: 5px solid #32cd32;
+  z-index: 2;
+  top: 0%;
+  height: 5rem;
+  width: max-content;
+  left: 52%;
+  opacity: 0;
+  color: black;
+  font-family: var(--Raleway);
+  font-weight: var(--Raleway600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: white;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+  transition: opacity 2s ease;
+}
+
+.toastify__chat__container.active {
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+
+.bx-check {
+  font-size: 1.5rem;
+}
+
 /* ================ RESPONSIVE CSS ================ */
 
 @media screen and (max-width: 1680px) {

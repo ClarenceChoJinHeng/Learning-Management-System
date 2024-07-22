@@ -104,24 +104,43 @@ for (let i = 0; i < inputFields.length; i++) {
   inputFields[i].addEventListener("input", updateButtonColor);
 }
 
+// ================== TOASTIFY ==================
+const toastifyMainContainer = document.getElementById("toastifyMainContainer");
+const courseNotification = document.getElementById("courseNotification");
+
+const toastiyfySuccess = () => {
+  courseNotification.textContent = "Class Created Successfully";
+  toastifyMainContainer.classList.add("active");
+  setTimeout(() => {
+    toastifyMainContainer.classList.remove("active");
+  }, 2000);
+};
+
+const toastiyfyDeletion = () => {
+  courseNotification.textContent = "Class Deleted Successfully";
+  toastifyMainContainer.classList.add("active");
+  setTimeout(() => {
+    toastifyMainContainer.classList.remove("active");
+  }, 2000);
+};
+
 // ==================== CREATE A NEW COURSE ====================
 
 const createClassForm = document.getElementById("createClassForm");
 const sortCoursesContainer = document.getElementById("sortCoursesContainer");
 
-const submitForm = async (event) => {
+const createCourse = async (event) => {
   event.preventDefault();
 
+  const userEmail = localStorage.getItem("userEmail");
   const className = document.getElementById("className").value;
   const lecturerName = document.getElementById("lecturerName").value;
   const classSubject = document.getElementById("classSubject").value;
   const classRoom = document.getElementById("classRoom").value;
   const courseNotes = [];
   const courseFolder = [];
-
-  const userEmail = localStorage.getItem("userEmail");
-
   const students = [];
+
   // ================= MAKE A REQUEST TO THE SERVER =================
   const response = await fetch("http://localhost:5001/client/lms-home", {
     method: "POST",
@@ -148,13 +167,14 @@ const submitForm = async (event) => {
   if (response.ok) {
     const data = await response.json();
     console.log(data.message);
-    alert("Class Created Successfully");
+    // alert("Class Created Successfully");
     updateDisplayProperties();
 
     backgroundOverlay.style.display = "none";
     classPopupOverlay.style.display = "none";
     createCourseContainer.style.display = "none";
     sortCoursesContainer.style.display = "flex";
+    toastiyfySuccess();
     localStorage.setItem("createCourseContainerDisplay", "none");
     createClassForm.reset();
   } else {
@@ -300,7 +320,6 @@ const retrieveCourse = async () => {
           backgroundOverlay.style.display = "none";
           deleteCourseButton.style.background = "red";
           deleteCourseButton.style.color = "white";
-          alert("Delete Succesful");
         }, 1000);
       });
 
@@ -532,7 +551,7 @@ const retrieveCourse = async () => {
 
 // ADD EVENT LISTENER TO THE CREATE COURSE BUTTON
 createCourseButton.addEventListener("click", async (event) => {
-  await submitForm(event);
+  await createCourse(event);
   await retrieveCourse();
 });
 
@@ -582,6 +601,7 @@ const deleteCourse = async (courseId) => {
 
   if (response.ok) {
     const data = await response.json();
+    toastiyfyDeletion();
 
     console.log(data.message);
     // AFTER SUCCESSFUL DELETION, REMOVE THE COURSE FROM THE DOM
@@ -734,91 +754,10 @@ addFile.addEventListener("click", async (event) => {
   await retrieveCreateCourseNotes(currentCourseId);
 });
 
-// ======================= MAKING A FOLDER =======================
-const createFolder = document.getElementById("createFolder");
-
-const createNoteFolder = async (currentCourseId) => {
-  const courseFolder = {
-    noteTitle: "",
-  };
-
-  const response = await fetch(
-    "http://localhost:5001/client/lms-notes-folder",
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        currentCourseId,
-        courseFolder,
-      }),
-    }
-  );
-
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.message);
-  } else {
-    const error = await response.json();
-    console.error(error.message);
-  }
-};
-
-// ==================== RETRIEVE COURSE FOLDER FOR DISPLAY ====================
-
-const retrieveNotesFolder = async (currentCourseId) => {
-  // Response
-  const response = await fetch(
-    `http://localhost:5001/client/lms-retrieve-notes-folder?currentCourseId=${currentCourseId}`
-  );
-
-  displayNotesFilesContainer.innerHTML = "";
-
-  // Check response
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.courseFolder);
-    console.log(data.notesWithoutFolder);
-
-    data.courseFolder.forEach((notes) => {
-      const id = notes._id;
-      // CREATING A DIV
-      const folderDiv = document.createElement("div");
-      folderDiv.className = "folder__main__container";
-      folderDiv.innerHTML = `
-      <div class="folder__container" id="folderContainer">
-      <p>></p><input type="text" class="folder__title" id="folderTitle" placeholder="Untitled">
-      </div>
-      `;
-      displayNotesFilesContainer.appendChild(folderDiv);
-    });
-
-    data.notesWithoutFolder.forEach((note) => {
-      const noteTitle = note.noteTitle;
-      const id = note._id;
-      const noteContainerDiv = document.createElement("div");
-      noteContainerDiv.className = "notes__files__container";
-      noteContainerDiv.id = "notesFiles";
-      noteContainerDiv.dataset.noteId = id;
-      noteContainerDiv.draggable = true;
-      noteContainerDiv.innerHTML = `
-      <input type='text' id='noteTitleName' class='notes__files__title' placeholder='Untitled' value=${noteTitle}  > `;
-      displayNotesFilesContainer.appendChild(noteContainerDiv);
-    });
-  } else {
-    const error = await response.json();
-    console.log(error.message);
-  }
-};
-
-retrieveNotesFolder(currentCourseId);
-
-createFolder.addEventListener("click", async (event) => {
-  event.preventDefault();
-  await createNoteFolder(currentCourseId);
-  await retrieveNotesFolder(currentCourseId);
+teachingNoteNav.addEventListener("click", async (event) => {
+  await retrieveCreateCourseNotes(currentCourseId);
 });
+
 // ============== RETRIEVE COURSE NOTES FOR WRITING AND DISPLAY ===============
 
 const retrieveCourseNotes = async (clickedNoteId) => {
@@ -866,43 +805,6 @@ const retrieveCourseNotes = async (clickedNoteId) => {
     console.error(error.message);
   }
 };
-
-// ================== UPDATING THE NOTES PAGE TITLE ==================
-
-const updateNotesPageTitle = async (clickedNoteId) => {
-  const notePageTitle = document.getElementById("notePageTitle").value;
-
-  const response = await fetch(
-    "http://localhost:5001/client/lms-update-notes-page-title",
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        clickedNoteId,
-        notePageTitle,
-      }),
-    }
-  );
-
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.message);
-    console.log("Note Title Updated Successfully");
-  } else {
-    const error = await response.json();
-    console.error(error.message);
-    alert("Error Updating Note");
-  }
-};
-
-const notePageTitle = document.getElementById("notePageTitle");
-
-notePageTitle.addEventListener("input", (event) => {
-  event.preventDefault();
-  updateNotesPageTitle(clickedNoteId);
-});
 
 // ================== UPDATING THE NOTES DATA ==================
 
@@ -987,4 +889,41 @@ const noteTitleNameSecond = document.getElementById("noteTitleNameSecond");
 noteTitleNameSecond.addEventListener("input", (event) => {
   event.preventDefault();
   updateNotesTitle(clickedNoteId);
+});
+
+// ================== UPDATING THE NOTES PAGE TITLE ==================
+
+const updateNotesPageTitle = async (clickedNoteId) => {
+  const notePageTitle = document.getElementById("notePageTitle").value;
+
+  const response = await fetch(
+    "http://localhost:5001/client/lms-update-notes-page-title",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        clickedNoteId,
+        notePageTitle,
+      }),
+    }
+  );
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data.message);
+    console.log("Note Title Updated Successfully");
+  } else {
+    const error = await response.json();
+    console.error(error.message);
+    alert("Error Updating Note");
+  }
+};
+
+const notePageTitle = document.getElementById("notePageTitle");
+
+notePageTitle.addEventListener("input", (event) => {
+  event.preventDefault();
+  updateNotesPageTitle(clickedNoteId);
 });

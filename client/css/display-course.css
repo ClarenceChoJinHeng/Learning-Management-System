@@ -1,4 +1,36 @@
 @import url("style.css");
+.toastify__main__container {
+  position: absolute;
+  padding: 1rem;
+  border-bottom: 5px solid #32cd32;
+  z-index: 2;
+  top: 10%;
+  height: 5rem;
+  width: 20rem;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-family: var(--Raleway);
+  font-weight: var(--Raleway600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: white;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+  transition: opacity 2s ease;
+}
+
+.toastify__main__container.active {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.bx-check {
+  font-size: 1.5rem;
+}
+
 .lms__display__main__functionality__container {
   padding: 0rem 1rem 1rem 7rem;
   width: 100%;
@@ -16,10 +48,16 @@
   column-gap: 1.5rem;
   row-gap: 1rem;
   width: 100%;
-  height: 77%;
+  height: 100%;
   overflow-y: auto;
   padding-top: 1rem;
   /* border: 1px solid black; */
+}
+
+@media screen and (max-height: 768px) {
+  .display__course__main__container {
+    height: 70%;
+  }
 }
 
 .display__course__container {
@@ -356,25 +394,26 @@
 }
 
 .notes__files__title {
-  font-size: 1rem;
-  font-weight: var(--Raleway600);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
-  width: 100%;
   z-index: -1;
   text-decoration: none;
-  outline: none;
-  user-select: none;
-  border: none;
+  /* user-select: none; */
   background: none;
-  color: black;
   box-shadow: none;
   resize: none;
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  width: 100%;
+  height: 30px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: var(--Raleway500);
+  color: black;
+  border-radius: 5px;
 }
 
 .notes__files__title:hover {
@@ -922,12 +961,25 @@
 .folder__container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border: 1px solid black;
+}
+
+.folder__container.active {
+  min-height: 5rem;
 }
 
 .folder__title {
-  width: 10rem;
+  width: 100%;
+  height: 30px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: var(--Raleway500);
+  color: black;
+  border-radius: 5px;
 }

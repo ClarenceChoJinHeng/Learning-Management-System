@@ -53,7 +53,6 @@ const database = client.db("lms-management-system");
 const userCollection = database.collection("Users");
 const courseCollection = database.collection("Courses");
 const Chat = database.collection("Chat");
-const groupChat = database.collection("GroupChat");
 const calendarCollection = database.collection("Calendar");
 const uploadFiles = database.collection("uploads.files");
 const uploadChunks = database.collection("uploads.chunks");
@@ -143,7 +142,7 @@ app.post("/client/login", async (req, res) => {
   }
 });
 
-// ================ CREATE CLASS VALIDATION ==================
+// ================ CREATE A NEW COURSE ==================
 
 app.post("/client/lms-home", async (req, res) => {
   try {
@@ -182,7 +181,6 @@ app.post("/client/lms-home", async (req, res) => {
       students: " ",
       courseNotes,
       courseFolder,
-      git,
     });
 
     if (insert.acknowledged === true) {
@@ -192,14 +190,6 @@ app.post("/client/lms-home", async (req, res) => {
     }
   } catch (error) {
     console.error("Error handling form submission:", error);
-
-    // CHECK IF THE ERROR IS A DUPLICATE KEY ERROR IN OTHER TERMS TO CHECK IF THE USER ALREADY EXISTS
-    if (error.code === 11000) {
-      return res.status(400).json({ message: "User already exists" });
-    } else {
-      console.error("Error handling form submission:", error);
-      res.status(500).send({ error: "Internal Server Error" });
-    }
   }
 });
 
@@ -265,17 +255,28 @@ app.post("/client/single-chat-creation", async (req, res) => {
       if (!user) {
         return res
           .status(400)
-          .json({ message: `User ${email} does not exist` });
+          .json({ message: `User ${receiverEmail} does not exist` });
         continue;
       }
 
       // ============== CHECK FOR USER'S EXISTENCE IN THE CHAT ==============
       const chatUser = await Chat.findOne({
-        "emails.email": receiverEmail,
+        $and: [
+          {
+            emails: { $elemMatch: { email: senderEmail, role: "sender" } },
+          },
+          {
+            emails: { $elemMatch: { email: receiverEmail, role: "receiver" } },
+          },
+        ],
       });
 
       if (chatUser) {
-        errors.push(`User with email ${email} already exists in the chat`);
+        return res
+          .status(400)
+          .json({
+            message: `You have already added ${receiverEmail} in the chat`,
+          });
       }
     }
 
@@ -414,41 +415,12 @@ app.post("/client/group-study/group-chat-creation", async (req, res) => {
     if (insert) {
       return res
         .status(200)
-        .json({ message: "Group Chat Created Successfully" });
+        .json({ message: `${userGroupNameInput} Group Chat Created Successfully` });
     }
   } catch (error) {
     return res.status(500).json({ message: "Failed to create group chat" });
   }
 });
-
-// ================ RETRIEVE THE GROUP CHAT AND DISPLAY ================
-
-// app.get("/client/group-chat-retrieval", async (req, res) => {
-//   try {
-//     const { userEmail } = req.query;
-
-//     // FILTER CHAT BASE ON //     const chats = await client
-//       .db("lms-management-system")
-//       .collection("Chat")
-//       .find({
-//         $or: [
-//           { emails: { $elemMatch: { email: userEmail } } },
-//           { senderUserEmail: userEmail },
-//           { receiverEmailInput: userEmail },
-//         ],
-//       })
-//       .toArray();
-
-//     if (!chats || chats.length === 0) {
-//       return res.status(400).json({ message: "Invalid request" });
-//     }
-
-//     return res.status(200).json({ chats: chats });
-//   } catch (error) {
-//     console.error("Error retrieving user account:", error);
-//     return res.status(500).send({ error: "Internal Server Error" });
-//   }
-// });
 
 // ================ UPLOAD PROFILE PICTURE ================
 app.post("/client/profile-picture", async (req, res) => {
@@ -549,6 +521,7 @@ app.post("/client/profile-picture", async (req, res) => {
   }
 });
 
+// ================ RETRIEVE PROFILE PICTURE ================ //
 app.get("/image/:file", async (req, res) => {
   try {
     const file = req.params.file;
@@ -616,7 +589,6 @@ app.post("/client/retrieveProfilePicture", async (req, res) => {
 });
 
 // ================== CREATING NOTES FOR COURSES ==================
-
 app.put("/client/lms-notes", async (req, res) => {
   try {
     const { currentCourseId, courseNotes } = req.body;
@@ -682,79 +654,6 @@ app.get("/client/lms-retrieve-notes", async (req, res) => {
     return res.status(200).json({ courseFolder: folder, notesWithoutFolder });
   } catch (error) {
     return res.status(500).json({ message: "An error occurred.", error });
-  }
-});
-
-// ================== CREATING FOLDER FOR COURSES ==================
-
-app.put("/client/lms-notes-folder", async (req, res) => {
-  try {
-    const { currentCourseId, courseFolder } = req.body;
-
-    let objectId;
-    try {
-      // @ts-expect-error
-      objectId = new ObjectId(currentCourseId);
-    } catch (error) {
-      return res.status(400).json({ message: "Invalid ObjectId" });
-    }
-
-    const update = await courseCollection.findOneAndUpdate(
-      { _id: objectId },
-      { $push: { courseFolder: { _id: new ObjectId(), ...courseFolder } } },
-      { returnOriginal: false }
-    );
-
-    if (update) {
-      res.status(200).json({ message: "Course notes updated successfully." });
-    } else {
-      res.status(404).json({ message: "Course not found." });
-    }
-  } catch (err) {
-    res.status(500).json({ message: "An error occurred.", error: err });
-  }
-});
-
-// ==================== RETRIEVE COURSE NOTES FOR DISPLAY ====================
-app.get("/client/lms-retrieve-notes-folder", async (req, res) => {
-  try {
-    // Retrieve data from client (id)
-    let objectId = req.query.currentCourseId;
-
-    if (
-      !objectId ||
-      objectId.length !== 24 ||
-      !/^[0-9a-fA-F]+$/.test(objectId)
-    ) {
-      return res.status(400).json({ message: "Invalid ObjectId" });
-    }
-
-    const course = await courseCollection.findOne({
-      _id: new ObjectId(objectId),
-    });
-
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
-
-    // Retrieve Folder and File together
-    const courseFolder = course.courseFolder; // Array of folders
-    const courseNotes = course.courseNotes; // Array of notes
-
-    // Map courseFolder and courseNotes to get the folder and file
-    const folder = courseFolder.map((folder) => {
-      const notes = courseNotes.filter(
-        (note) => note.folderId === folder._id.toString()
-      );
-      return { ...folder, notes };
-    });
-
-    // Find files that are not inside the folder
-    const notesWithoutFolder = courseNotes.filter((note) => !note.folderId);
-
-    return res.status(200).json({ courseFolder: folder, notesWithoutFolder });
-  } catch (err) {
-    return res.status(500).json({ message: "An error occured", err });
   }
 });
 
@@ -891,56 +790,6 @@ app.put("/client/lms-update-notes-title", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: "An error occurred.", error: err });
-  }
-});
-
-// ================== SENDING CALENDAR DATA TO THE DATABASE ==================
-app.post("/client/calendar", async (req, res) => {
-  try {
-    const { userEmail, newEvent } = req.body;
-
-    // VALIDATION
-    if (!userEmail || !newEvent) {
-      return res.status(400).json({ message: "Invalid form data" });
-    }
-
-    // INSERT DATA INTO THE DATABASE
-    const insert = await calendarCollection.insertOne({
-      userEmail,
-      newEvent,
-    });
-
-    if (insert.acknowledged === true) {
-      return res.status(200).json({ message: "Event Created Successfully" });
-    } else {
-      res.status(500).json({ error: "Failed to insert data" });
-    }
-  } catch (error) {
-    console.error("Error handling form submission:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// ================== RETRIEVE CALENDAR DATA FROM THE DATABASE ==================
-
-app.get("/client/retrieve-calendar", async (req, res) => {
-  try {
-    const { userEmail } = req.query;
-
-    const retrieveCalendar = await calendarCollection
-      .find({ userEmail: userEmail })
-      .toArray();
-
-    if (retrieveCalendar.length > 0) {
-      // Map the array of documents to an array of newEvent objects
-      const events = retrieveCalendar.map((doc) => doc.newEvent);
-      return res.status(200).json({ retrieveCalendar: events });
-    } else {
-      return res.status(404).json({ message: "No event found" });
-    }
-  } catch (error) {
-    console.error("Error retrieving calendar:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
