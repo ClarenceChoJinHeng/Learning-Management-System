@@ -197,7 +197,8 @@
             <div
               class="display__user__container"
               id="displayUserContainer"
-            ></div>
+            >
+          </div>
           </div>
 
           <!-- ============== CHAT BOX ============== -->
@@ -235,10 +236,6 @@
                   <p id="receiverStatus"></p>
                 </div>
               </div>
-
-              <div class="video__audio__call">
-                <i class="bx bx-video"></i> <i class="bx bx-phone"></i>
-              </div>
             </div>
 
             <!-- ============== CHAT BOX BODY ============== -->
@@ -255,7 +252,25 @@
             <!-- ============== CHAT BOX FOOTER ============== -->
             <div class="chatbox__enter__message__container">
               <div class="enter__message__container">
-                <i class="bx bx-paperclip"></i>
+                <!-- Hidden file input -->
+                <i class="bx bx-paperclip" id="addDocument"></i>
+                <form id="upload-file-form">
+                  <i
+                    class="bx bx-x cancel-file-upload"
+                    id="cancelFileUpload"
+                  ></i>
+                  <i class="bx bx-file file-icon"></i>
+                  <div class="file__container">
+                    <input
+                      type="file"
+                      id="upload-file"
+                      name="file"
+                      accept="*"
+                    />
+                    <button type="submit" id="uploadFile">Submit</button>
+                  </div>
+                </form>
+
                 <input
                   type="text"
                   name="Enter Message"
@@ -273,7 +288,7 @@
     <script src="js/authMiddleware.js"></script>
     <script src="js/lms-home.js"></script>
     <script src="js/lms-nav.js"></script>
-    <script src="js/single-chat.js"></script>
+    <!-- <script src="js/single-chat.js"></script> -->
     <script src="js/lms-chat.js"></script>
     <script src="js/retrieveProfilePicture.js"></script>
   </body>

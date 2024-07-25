@@ -15,6 +15,7 @@ const receiverNameInput = document.getElementById("receiverNameInput");
 const receiverEmailInput = document.getElementById("receiverEmailInput");
 const userNameInput = document.getElementById("userNameInput");
 const userEmailInput = document.getElementById("userEmailInput");
+const userGroupNameInput = document.getElementById("userGroupNameInput");
 // ============ RETRIEVE THE USER ACCOUNT DATABASE ============
 const displayUserContainer = document.getElementById("displayUserContainer");
 const addUserButton = document.getElementById("addUserButton");
@@ -90,7 +91,7 @@ cancelGroupButton.addEventListener("click", (event) => {
   event.stopPropagation();
   event.preventDefault();
   createGroupForm.style.display = "none";
-  addUserForm.style.display = "none";
+  userGroupNameInput.value = "";
 });
 
 // ============  CANCEL ADD USER FORM ============
@@ -103,6 +104,34 @@ window.addEventListener("click", (event) => {
     addUserContainer.style.display = "none";
     addUserForm.style.display = "none";
     createGroupForm.style.display = "none";
+    userGroupNameInput.value = "";
+    userNameInput.value = "";
+    userEmailInput.value = "";
+  }
+});
+
+// ============= UPLOAD FILE FORM CONTAINER ===============
+const uploadFileForm = document.getElementById("upload-file-form");
+const addDocument = document.getElementById("addDocument");
+const cancelFileUpload = document.getElementById("cancelFileUpload");
+const uploadFile = document.getElementById("uploadFile");
+const uploadInput = document.getElementById("upload-file");
+
+addDocument.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  uploadFileForm.style.display = "flex";
+});
+
+cancelFileUpload.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  uploadFileForm.style.display = "none";
+});
+
+document.addEventListener("click", (event) => {
+  if (!uploadFileForm.contains(event.target)) {
+    uploadFileForm.style.display = "none";
   }
 });
 
@@ -233,11 +262,11 @@ document.addEventListener("DOMContentLoaded", function () {
       toastiyfyChatSuccess();
       createGroupForm.style.display = "none";
     } else {
+      const error = await response.json();
+      console.log(error.message);
       courseNotification.textContent = error.message;
       toastifyChatContainer.style.borderBottom = "5px solid red";
       toastiyfyChatSuccess();
-      const error = await response.json();
-      console.log(error.message);
     }
   };
 
@@ -303,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="user__profile__picture">
               <i class="bx bx-user-circle user__profile__picture"></i>
             </div>
-              <p class="user__message__name">${receiverEmail}</p>
+              <p class="user__message__name">${receiverName}</p>
             </div>
   
             <div class="user__message__time__container">
@@ -458,6 +487,7 @@ const sendMessages = async (currentChatId) => {
   const message = {
     sender: userEmail,
     text: messageText,
+    file: "",
   };
 
   const response = await fetch(
@@ -689,3 +719,75 @@ const retrieveUserChat = async () => {
 createGroup.addEventListener("click", async (event) => {
   await retrieveUserChat(event);
 });
+
+// ===================== RETRIEVE FILE FOR DISPLAY =====================
+document.addEventListener("DOMContentLoaded", () => {
+  // Get the form
+  const uploadFileForm = document.getElementById("upload-file-form");
+
+  if (uploadFileForm) {
+    uploadFileForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const file = uploadFileForm.querySelector('input[type="file"]').files[0];
+
+      if (!file) {
+        alert("Please select a file to upload");
+        return;
+      }
+
+      const formData = new FormData(uploadFileForm);
+
+      const username = localStorage.getItem("username");
+      formData.append("username", username);
+
+      // Assuming userEmail is the email of the user
+      const userEmail = localStorage.getItem("userEmail");
+      formData.append("userEmail", userEmail);
+
+      formData.append("currentCourseId", currentCourseId);
+
+      const response = await fetch("http://localhost:5001/client/file-upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        pollForFile(data.file, 1000, 10).then(async (fileResponse) => {
+          // Create a blob URL from the file response
+          const fileBlob = await fileResponse.blob();
+          console.log(fileBlob);
+          const fileUrl = URL.createObjectURL(fileBlob);
+
+          // uploadFile.addEventListener("click", (event) => {
+          //   event.preventDefault();
+          //   event.stopPropagation();
+          //   uploadFileForm.style.display = "none";
+          //   uploadInput.value = "";
+          // });
+        });
+      } else {
+        const data = await response.json();
+        console.error(data);
+      }
+    });
+  }
+});
+
+async function pollForFile(file, interval, maxAttempts) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    // Retrieve the file from the backend
+    const fileResponse = await fetch(`http://localhost:5001/file/${file}`);
+
+    if (fileResponse.ok) {
+      console.log(fileResponse);
+      return fileResponse;
+    }
+
+    // File not found, wait for the interval then try again
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  throw new Error("File not found after maximum attempts");
+}

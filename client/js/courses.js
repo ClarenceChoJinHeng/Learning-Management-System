@@ -1,5 +1,6 @@
 let currentCourseId = "";
 let clickedNoteId = "";
+let clickedNoteIdArray = [];
 
 // DISPLAY CREATE CLASS POPUP
 const createClassButton = document.getElementById("createClassButton");
@@ -7,6 +8,15 @@ const backgroundOverlay = document.getElementById("backgroundOverlay");
 const classPopupOverlay = document.getElementById("classPopupOverlay");
 const cancelCreateButton = document.getElementById("cancelCreateButton");
 const createCourseButton = document.getElementById("createCourseButton");
+const folderNameInput = document.getElementById("folderNameInput");
+const folderErrorResponse = document.getElementById("folderErrorResponse");
+const fileErrorResponse = document.getElementById("fileErrorResponse");
+const selectedNotes = document.getElementById("selectedNotes");
+const addFolder = document.getElementById("addFolder");
+const cancelFolder = document.getElementById("cancelFolder");
+const openFolderContainer = document.getElementById("openFolderContainer");
+const folderMainContainer = document.getElementById("folderMainContainer");
+const filesInputCheckBox = document.getElementById("filesInputCheckBox");
 
 // FUNCTION TO SHOW THE POPUP
 createClassButton.addEventListener("click", (event) => {
@@ -110,19 +120,46 @@ const courseNotification = document.getElementById("courseNotification");
 
 const toastiyfySuccess = () => {
   courseNotification.textContent = "Class Created Successfully";
+  toastifyMainContainer.style.display = "flex";
   toastifyMainContainer.classList.add("active");
   setTimeout(() => {
     toastifyMainContainer.classList.remove("active");
+    toastifyMainContainer.style.display = "none";
   }, 2000);
 };
 
 const toastiyfyDeletion = () => {
+  toastifyMainContainer.style.display = "flex";
   courseNotification.textContent = "Class Deleted Successfully";
   toastifyMainContainer.classList.add("active");
   setTimeout(() => {
     toastifyMainContainer.classList.remove("active");
+    toastifyMainContainer.style.display = "none";
   }, 2000);
 };
+
+// =============== FOLDER FUNCTIONALITY ===============
+openFolderContainer.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  if (folderMainContainer.style.display == "none") {
+    folderMainContainer.style.display = "flex";
+  } else if (folderMainContainer.style.display == "flex") {
+    folderMainContainer.style.display = "none";
+  }
+});
+
+cancelFolder.addEventListener("click", (event) => {
+  folderMainContainer.style.display = "none";
+});
+
+document.addEventListener("click", (event) => {
+  if (!folderMainContainer.contains(event.target)) {
+    event.stopPropagation();
+    folderNameInput.value = "";
+    folderMainContainer.style.display = "none";
+  }
+});
 
 // ==================== CREATE A NEW COURSE ====================
 
@@ -519,7 +556,7 @@ const retrieveCourse = async () => {
         displayPeopleDetailsMainContainer.style.display = "none";
         displayGradesDetailsMainContainer.style.display = "none";
         displayNotesDetailsMainContainer.style.display = "flex";
-        await retrieveNotesFolder(currentCourseId);
+        // await retrieveNotesFolder(currentCourseId);
       });
 
       // =================== TEACHING STREAM UNDERLINE ===================
@@ -637,6 +674,7 @@ const createCoursesNotes = async (currentCourseId) => {
     noteTitle: "",
     notePageTitle: "",
     noteContent: "",
+    type: "file",
   };
 
   const response = await fetch("http://localhost:5001/client/lms-notes", {
@@ -681,18 +719,20 @@ const retrieveCreateCourseNotes = async (currentCourseId) => {
   if (response.ok) {
     const data = await response.json();
     console.log(data.courseNotes); // Changed from data.notes to data.courseNotes
+    console.log(data.courseFolder);
     displayNotesFilesContainer.innerHTML = "";
+    let isDataValid = data.courseNotes && Array.isArray(data.courseFolder);
 
-    data.notesWithoutFolder.forEach((note) => {
-      // Changed from data.notes to data.courseNotes
-      const noteTitle = note.noteTitle;
-      const id = note._id;
-      const noteContainerDiv = document.createElement("div");
-      noteContainerDiv.className = "notes__files__container";
-      noteContainerDiv.id = "notesFiles";
-      noteContainerDiv.dataset.noteId = id;
-      noteContainerDiv.draggable = true;
-      noteContainerDiv.innerHTML = `
+    if (isDataValid) {
+      data.courseNotes.forEach((note) => {
+        const noteTitle = note.noteTitle;
+        const id = note._id;
+        const noteContainerDiv = document.createElement("div");
+        noteContainerDiv.className = "notes__files__container";
+        noteContainerDiv.id = "notesFiles";
+        noteContainerDiv.dataset.noteId = id;
+        noteContainerDiv.draggable = true;
+        noteContainerDiv.innerHTML = `
       <input type='text' id='noteTitleName' class='notes__files__title' placeholder='Untitled' value=${noteTitle}  >
 
       <div class="notes__files__functionality__container" id="notesFilesFunctionalityContainer">
@@ -702,44 +742,69 @@ const retrieveCreateCourseNotes = async (currentCourseId) => {
 
       `;
 
-      noteContainerDiv.addEventListener("contextmenu", function (event) {
-        event.preventDefault();
-      });
-
-      noteContainerDiv.addEventListener("click", async (event) => {
-        clickedNoteId = event.currentTarget.dataset.noteId;
-        console.log(clickedNoteId, "1");
-        retrieveCourseNotes(clickedNoteId);
-      });
-
-      // RIGHT CLICK FUNCTIONALITY
-
-      noteContainerDiv.addEventListener("mousedown", function (event) {
-        if (event.button === 2) {
+        noteContainerDiv.addEventListener("contextmenu", function (event) {
           event.preventDefault();
-          notesFilesFunctionalityContainer.style.display = "flex";
-        }
+        });
+
+        noteContainerDiv.addEventListener("click", async (event) => {
+          clickedNoteId = event.currentTarget.dataset.noteId;
+          console.log(clickedNoteId, "1");
+          retrieveCourseNotes(clickedNoteId);
+        });
+
+        // RIGHT CLICK FUNCTIONALITY
+
+        noteContainerDiv.addEventListener("mousedown", function (event) {
+          if (event.button === 2) {
+            event.preventDefault();
+            notesFilesFunctionalityContainer.style.display = "flex";
+          }
+        });
+
+        window.onclick = function (event) {
+          notesFilesFunctionalityContainer.style.display = "none";
+        };
+
+        displayNotesFilesContainer.appendChild(noteContainerDiv);
       });
 
-      window.onclick = function (event) {
-        notesFilesFunctionalityContainer.style.display = "none";
-      };
+      data.courseFolder.forEach((folder) => {
+        const folderName = folder.folderName;
+        const id = folder._id;
+        const folderContainerDiv = document.createElement("div");
+        folderContainerDiv.className = "folder__files__container";
+        folderContainerDiv.id = "folderFilesContainer";
+        folderContainerDiv.dataset.noteId = id;
+        folderContainerDiv.draggable = true;
+        folderContainerDiv.innerHTML = `
+        <i class='bx bx-chevron-right'></i>
+        <input type='text' id='folderTitleName' class='folder__files__title' placeholder='${folderName}'  data-id='${id}' >
+        `;
+        folderContainerDiv.addEventListener("click", async (event) => {
+          clickedNoteId = event.currentTarget.dataset.noteId;
 
-      displayNotesFilesContainer.appendChild(noteContainerDiv);
-    });
+          const noteTitle = folder.noteTitle;
+          const id = note._id;
+          const noteContainerDiv = document.createElement("div");
+          noteContainerDiv.className = "notes__files__container";
+          noteContainerDiv.id = "notesFiles";
+          noteContainerDiv.dataset.noteId = id;
+          noteContainerDiv.draggable = true;
+          noteContainerDiv.innerHTML = `
+      <input type='text' id='noteTitleName' class='notes__files__title' placeholder='Untitled' value=${noteTitle}  >
 
-    data.courseFolder.forEach((notes) => {
-      const id = notes._id;
-      // CREATING A DIV
-      const folderDiv = document.createElement("div");
-      folderDiv.className = "folder__main__container";
-      folderDiv.innerHTML = `
-      <div class="folder__container" id="folderContainer">
-      <p>></p><input type="text" class="folder__title" id="folderTitle" placeholder="Untitled">
+      <div class="notes__files__functionality__container" id="notesFilesFunctionalityContainer">
+       
+          <input type="submit" name="Delete" value="Delete" id="deleteNoteButton" class="delete__note__button"/>
       </div>
+
       `;
-      displayNotesFilesContainer.appendChild(folderDiv);
-    });
+
+          retrieveCourseNotes(clickedNoteId);
+        });
+        displayNotesFilesContainer.appendChild(folderContainerDiv);
+      });
+    }
   } else {
     const error = await response.json();
     console.error(error.message);
@@ -756,9 +821,9 @@ addFile.addEventListener("click", async (event) => {
 
 teachingNoteNav.addEventListener("click", async (event) => {
   await retrieveCreateCourseNotes(currentCourseId);
+  console.log(currentCourseId, "log");
 });
-
-// ============== RETRIEVE COURSE NOTES FOR WRITING AND DISPLAY ===============
+// =============== RETRIEVE NOTES FOR DISPLAY ===============
 
 const retrieveCourseNotes = async (clickedNoteId) => {
   const response = await fetch(
@@ -803,6 +868,213 @@ const retrieveCourseNotes = async (clickedNoteId) => {
   } else {
     const error = await response.json();
     console.error(error.message);
+  }
+};
+
+// =================== RETRIEVE FILES FOR FOLDER ====================
+
+const retrieveCreatedFile = async (currentCourseId) => {
+  const response = await fetch(
+    `http://localhost:5001/client/lms-retrieve-notes?currentCourseId=${currentCourseId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data.courseNotes); // Changed from data.notes to data.courseNotes
+    filesInputCheckBox.innerHTML = "";
+
+    data.courseNotes.forEach((note) => {
+      const noteTitle = note.noteTitle;
+      const noteId = note._id;
+      const filesContainer = document.createElement("div");
+      filesContainer.className = "files__container";
+      filesContainer.id = "filesContainer";
+      filesContainer.innerHTML = `
+        <input type='text' id='' class='notes__files__insert' placeholder='Untitled' value='${noteTitle}' data-id='${noteId}' >
+          <input
+              type="checkbox"
+              class="folder__checkbox"
+              id="${noteId}"
+              placeholder="testing"
+              value="${noteTitle}"
+          />
+    `;
+      filesInputCheckBox.appendChild(filesContainer);
+
+      const folderCheckbox = filesContainer.querySelector(
+        "input[type='checkbox']"
+      );
+
+      folderCheckbox.addEventListener("click", async (event) => {
+        if (event.target.checked) {
+          clickedNoteIdArray.push(event.target.id);
+        } else {
+          clickedNoteIdArray = clickedNoteIdArray.filter(
+            (id) => id !== event.target.id
+          );
+        }
+        console.log(clickedNoteIdArray);
+      });
+    });
+  } else {
+    const error = await response.json();
+    console.error(error.message);
+  }
+};
+
+retrieveCreatedFile(currentCourseId);
+
+openFolderContainer.addEventListener("click", async (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  await retrieveCreatedFile(currentCourseId);
+});
+
+// =================== CREATE FOLDER ===================
+const createFolder = async () => {
+  const folderName = folderNameInput.value;
+
+  if (folderNameInput.value === "" || clickedNoteIdArray.length === 0) {
+    folderErrorResponse.style.display = "flex";
+    fileErrorResponse.style.display = "flex";
+    return;
+  }
+
+  // Retrieve the notes
+  const responseNotes = await fetch(
+    `http://localhost:5001/client/lms-retrieve-notes?currentCourseId=${currentCourseId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!responseNotes.ok) {
+    const error = await responseNotes.json();
+    console.error(error.message);
+    alert("Error Retrieving Notes");
+    return;
+  }
+
+  const dataNotes = await responseNotes.json();
+
+  // Create an array of note objects
+  const folderNotes = clickedNoteIdArray.map((id) => {
+    const note = dataNotes.courseNotes.find((note) => note._id === id);
+    return note
+      ? {
+          _id: note._id,
+          noteContent: note.noteContent,
+          notePageTitle: note.notePageTitle,
+          noteTitle: note.noteTitle,
+        }
+      : null;
+  });
+
+  const response = await fetch("http://localhost:5001/client/lms-folder", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      currentCourseId,
+      folderName,
+      folderNotes,
+      type: "folder",
+    }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data.message);
+    alert("Folder Created Successfully");
+    folderErrorResponse.style.display = "none";
+    fileErrorResponse.style.display = "none";
+    folderMainContainer.style.display = "none";
+    folderNameInput.value = "";
+    clickedNoteIdArray = [];
+    await retrieveCreatedFile(currentCourseId);
+  } else {
+    const error = await response.json();
+    console.error(error.message);
+    alert("Error Creating Folder");
+  }
+};
+
+addFolder.addEventListener("click", async (event) => {
+  event.preventDefault();
+  await createFolder();
+  await retrieveCreateCourseNotes(currentCourseId);
+  await deleteFolder(currentCourseId);
+  await retrieveCreateCourseNotes(currentCourseId);
+});
+
+const nav__function__container = document.querySelectorAll(
+  "nav__function__container"
+);
+
+//  =================== DELETE FOLDER ====================
+const deleteFolder = async (currentCourseId) => {
+  // FETCHING THE FOLDER ID
+  const fetchFolderId = await fetch(
+    `http://localhost:5001/client/lms-retrieve-notes?currentCourseId=${currentCourseId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  let folderId; // Define folderId here
+
+  if (fetchFolderId.ok) {
+    const data = await fetchFolderId.json();
+    console.log("Data:", data);
+    console.log("Course Folder:", data.courseFolder);
+
+    if (data.courseNotes && Array.isArray(data.courseFolder)) {
+      data.courseFolder.forEach((folder) => {
+        folderId = folder._id; // Assign a value to folderId here
+        console.log(folderId, "CHUCK");
+      });
+    } else {
+      const error = await fetchFolderId.json();
+      console.error(error.message);
+      console.error("courseFolder is undefined or not an array");
+    }
+  }
+  if (folderId) {
+    const response = await fetch(
+      `http://localhost:5001/client/lms-folder/${folderId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.message);
+      alert("Folder Deleted Successfully");
+      await retrieveCreatedFile(folderId);
+    } else {
+      const error = await response.json();
+      console.error(error.message);
+      alert("Error Deleting Folder");
+    }
+  } else {
+    console.error("Folder ID is undefined");
   }
 };
 

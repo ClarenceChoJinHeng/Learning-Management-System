@@ -584,6 +584,7 @@ function getEvents() {
 
 addEventSubmit.addEventListener("click", (event) => {
   addNoteCalendar(event);
+  addEventContainer.classList.remove("active");
 });
 
 // =============== RETRIEVE EVENTS FROM DATABASE ===============

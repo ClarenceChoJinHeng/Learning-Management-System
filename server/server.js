@@ -56,6 +56,8 @@ const Chat = database.collection("Chat");
 const calendarCollection = database.collection("Calendar");
 const uploadFiles = database.collection("uploads.files");
 const uploadChunks = database.collection("uploads.chunks");
+const uploadFilesChat = database.collection("uploads.files.chat");
+const uploadChunksChat = database.collection("uploads.chunks.chat");
 
 /* ========== EXPRESS SIGNUP CONFIGURATION ========== */
 app.post("/client/signup", async (req, res) => {
@@ -272,11 +274,9 @@ app.post("/client/single-chat-creation", async (req, res) => {
       });
 
       if (chatUser) {
-        return res
-          .status(400)
-          .json({
-            message: `You have already added ${receiverEmail} in the chat`,
-          });
+        return res.status(400).json({
+          message: `You have already added ${receiverEmail} in the chat`,
+        });
       }
     }
 
@@ -289,6 +289,7 @@ app.post("/client/single-chat-creation", async (req, res) => {
       receiverName,
       emails,
       messages: [], // Initialize messages as an empty array
+     
     });
 
     if (insert.acknowledged === true) {
@@ -413,9 +414,9 @@ app.post("/client/group-study/group-chat-creation", async (req, res) => {
     });
 
     if (insert) {
-      return res
-        .status(200)
-        .json({ message: `${userGroupNameInput} Group Chat Created Successfully` });
+      return res.status(200).json({
+        message: `${userGroupNameInput} Group Chat Created Successfully`,
+      });
     }
   } catch (error) {
     return res.status(500).json({ message: "Failed to create group chat" });
@@ -588,6 +589,122 @@ app.post("/client/retrieveProfilePicture", async (req, res) => {
   }
 });
 
+// ================ UPLOAD FILE ================ //
+app.post("/client/file-upload", async (req, res) => {
+  try {
+    const form = formidable({});
+
+    // PARSE THE FORM DATA
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+
+      // EXTRACT THE USERNAME AND THE FILE FROM THE FORM DATA
+      const filePath = files.file[0].filepath;
+      const username = fields.username[0];
+      const userEmail = fields.userEmail; 
+      const originalFileName = files.file[0].originalFilename;
+      const fileType = files.file[0].mimetype;
+
+      // Generate a unique filename by appending a timestamp to the original filename
+      const fileName = `${Date.now()}-${originalFileName}`;
+
+      // FIND THE USER IN THE DATABASE
+      const user = await userCollection.findOne({ username });
+
+      // IF THE USER IS NOT FOUND
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // UPLOAD THE FILE TO THE DATABASE
+      const writestream = bucket.openUploadStream(fileName, {
+        chunkSizeBytes: 1048576,
+        contentType: fileType,
+      });
+
+      // READSTREAM
+      const readstream = fs.createReadStream(filePath);
+
+      readstream.pipe(writestream);
+
+      writestream.on("error", (error) => {
+        console.error("Error uploading file:", error);
+        return res.status(500).json({ message: error.message });
+      });
+
+      writestream.on("finish", async () => {
+        // UPDATE THE USER COLLECTION WITH NEW FILE
+        if (user) {
+          await userCollection.updateOne(
+            { _id: user._id },
+            { $set: { profilePicture: fileName } }
+          );
+        }
+      });
+
+      // EXTRACT THE profilePicture FIELD FROM USER COLLECTION
+      const profilePictureFromUsersCollection = user.profilePicture;
+
+      if (profilePictureFromUsersCollection) {
+        // EXTRACT THE FILENAME FROM THE UPLOAD.FILES.CHAT COLLECTION
+        const fileNameFromDB = await uploadFilesChat.findOne({
+          filename: profilePictureFromUsersCollection,
+        });
+
+        // EXTRACT THE profilePicture FIELD FROM UPLOAD.FILES.CHAT COLLECTION
+        if (fileNameFromDB) {
+          const profilePictureFromUploadCollection = fileNameFromDB.filename;
+
+          // COMPARE THE BOTH COLLECTIONS
+          if (
+            profilePictureFromUsersCollection ===
+            profilePictureFromUploadCollection
+          ) {
+            // EXTRACT THE _ID FROM THE UPLOAD.FILES.CHAT COLLECTION
+            const id = fileNameFromDB._id;
+
+            // FIND ALL THE CHUNKS USING THE ID ABOVE
+            await uploadChunksChat.find({ files_id: id }).toArray();
+
+            // DELETE ALL THE CHUNKS THAT MATCHES THE ID
+            await uploadFilesChat.deleteOne({ _id: id });
+            await uploadChunksChat.deleteMany({ files_id: id });
+          }
+        }
+      }
+
+      res.status(200).json({
+        message: "File uploaded successfully",
+        file: fileName,
+      });
+    });
+  } catch (error) {
+    console.error(error); // Log the error
+    return res.status(500).json({ error: error.message }); // Send a response in case of error
+  }
+});
+
+// ================ RETRIEVE FILE ================ //
+app.get("/file/:file", async (req, res) => {
+  try {
+    const file = req.params.file;
+    const files = await bucket.find({ filename: file }).toArray();
+
+    if (!files || files.length === 0) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    res.set("Content-Type", files[0].contentType);
+    const readstream = bucket.openDownloadStreamByName(file);
+    readstream.pipe(res);
+  } catch (error) {
+    console.error("Error retrieving file:", error);
+    res.status(500).send("Error retrieving file");
+  }
+});
+
 // ================== CREATING NOTES FOR COURSES ==================
 app.put("/client/lms-notes", async (req, res) => {
   try {
@@ -636,22 +753,15 @@ app.get("/client/lms-retrieve-notes", async (req, res) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    // Retrieve Folder and File together
-    const courseFolder = course.courseFolder; // Array of folders
-    const courseNotes = course.courseNotes; // Array of notes
-
-    // Map courseFolder and courseNotes to get the folder and file
-    const folder = courseFolder.map((folder) => {
-      const notes = courseNotes.filter(
-        (note) => note.folderId === folder._id.toString()
-      );
-      return { ...folder, notes };
-    });
-
-    // Find files that are not inside the folder
-    const notesWithoutFolder = courseNotes.filter((note) => !note.folderId);
-
-    return res.status(200).json({ courseFolder: folder, notesWithoutFolder });
+    // Check if courseFolder exists
+    if (course.courseFolder) {
+      return res.status(200).json({
+        courseNotes: course.courseNotes,
+        courseFolder: course.courseFolder,
+      });
+    } else {
+      return res.status(200).json({ courseNotes: course.courseNotes });
+    }
   } catch (error) {
     return res.status(500).json({ message: "An error occurred.", error });
   }
@@ -790,6 +900,77 @@ app.put("/client/lms-update-notes-title", async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: "An error occurred.", error: err });
+  }
+});
+
+// ================== CREATE FOLDER ===================
+app.put("/client/lms-folder", async (req, res) => {
+  try {
+    const { currentCourseId, folderName, folderNotes } = req.body;
+
+    let objectId;
+    try {
+      // @ts-expect-error
+      objectId = new ObjectId(currentCourseId);
+    } catch (error) {
+      return res.status(400).json({ message: "Invalid ObjectId" });
+    }
+
+    const update = await courseCollection.findOneAndUpdate(
+      { _id: objectId },
+      {
+        $push: {
+          courseFolder: { _id: new ObjectId(), folderName, folderNotes },
+        },
+      },
+      { returnOriginal: false }
+    );
+
+    if (update) {
+      res.status(200).json({ message: "Course folder updated successfully." });
+    } else {
+      res.status(404).json({ message: "Course not found." });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "An error occurred.", error: err });
+  }
+});
+
+// ================== DELETE FOLDER ===================
+app.delete("/client/lms-folder/:folderId", async (req, res) => {
+  const { folderId } = req.params;
+
+  try {
+    // Find the course document that contains the folder with the given ID
+    const course = await courseCollection.findOne({
+      "courseFolder._id": new ObjectId(folderId),
+    });
+
+    if (!course) {
+      return res.status(404).json({ message: "Folder not found" });
+    }
+
+    // Extract the IDs of the notes in the folder
+    const folder = course.courseFolder.find(
+      (folder) => folder._id.toString() === folderId
+    );
+    const noteIdsInFolder = folder.folderNotes.map(
+      (note) => new ObjectId(note._id)
+    );
+
+    // Delete the notes from the courseNotes array
+    const result = await courseCollection.updateOne(
+      { _id: course._id },
+      { $pull: { courseNotes: { _id: { $in: noteIdsInFolder } } } }
+    );
+
+    if (result.modifiedCount === 1) {
+      res.json({ message: "Notes deleted successfully" });
+    } else {
+      res.status(404).json({ message: "Notes not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

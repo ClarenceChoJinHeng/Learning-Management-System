@@ -310,7 +310,10 @@ main {
   word-wrap: break-word;
   border-radius: 0.2rem;
   width: max-content;
+  gap: 3rem;
+  margin-top: 0.5rem;
   max-width: 33rem;
+  padding: 0 0.5rem;
 }
 
 .receiver__container {
@@ -397,6 +400,22 @@ main {
   font-size: 1.5rem;
 }
 
+.receiver__name__container,
+.sender__name__container {
+  border: 1px solid black;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10rem;
+}
+
+.empty__div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
 /* ================ RESPONSIVE CSS ================ */
 
 @media screen and (max-width: 1680px) {
@@ -408,3 +427,4 @@ main {
     /* height: 78%; */
   }
 }
+

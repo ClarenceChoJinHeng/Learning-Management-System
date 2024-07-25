@@ -305,16 +305,51 @@
                 <p class="notes__title">Notes</p>
                 <div>
                   <i class="bx bx-edit create__file" id="addFile"></i>
+                  <i class="bx bx-folder-plus" id="openFolderContainer"></i>
+                </div>
+
+                <!-- ============= ADDING INTO FOLDER CONTAINER ============= -->
+
+                <div class="folder__main__container" id="folderMainContainer">
+                  <div class="folder__container">
+                    <div class="folder__input__container">
+                      <p class="folder__name__container">Folder name:</p>
+                      <input
+                        type="text"
+                        class="folder__name__input"
+                        placeholder="Add to folder"
+                        id="folderNameInput"
+                      />
+                      <p
+                        class="folder__error__response"
+                        id="folderErrorResponse"
+                      >Folder Name cannot be empty</p>
+                    </div>
+
+                    <div class="files__checkbox__container">
+                      <p class="select__file__label">Choose File:</p>
+                      <div
+                        class="files__input__checkbox"
+                        id="filesInputCheckBox"
+                      ></div>
+
+                      <p
+                        class="file__error__response"
+                        id="fileErrorResponse"
+                      >Choose a File</p>
+                    </div>
+
+                    <div class="folder__create__cancel__container">
+                      <button class="folder__button" id="addFolder">Add</button>
+                      <button class="cancel__folder__button" id="cancelFolder">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="search__notes__file__folder__container">
-                <input
-                  type="text"
-                  class="search__notes__file__folder"
-                  placeholder="Search Notes"
-                />
-              </div>
+              
 
               <div
                 class="display__notes__files__container"
