@@ -288,6 +288,16 @@ document.addEventListener("DOMContentLoaded", function () {
       // ============  CREATE AN ARRAY TO STORE THE COURSE IDS ============
       let chatIDs = [];
       individualChatsData.userChat.forEach((chat) => {
+        // ============  HOUR AND MINUTES ============
+        const now = new Date();
+        let hour = now.getHours();
+        let minutes = now.getMinutes();
+        if (hour < 12) {
+          hour = `${hour}:${minutes} AM`;
+        } else if (hour > 12) {
+          hour = `${hour - 12}:${minutes} PM`;
+        }
+
         const senderName = chat.senderName;
         const receiverName = chat.receiverName;
         const emails = chat.emails; // Array of emails
@@ -299,6 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let ownerEmail, memberEmail, ownerRole, memberRole;
 
         chatIDs.push(chatID);
+        console.log(senderName);
 
         emails.forEach((emailObj) => {
           if (emailObj.role === "sender") {
@@ -322,7 +333,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Handle single chat case
 
-        if (singleRole === "sender") {
+        if (senderEmail === userEmail) {
           const chatDiv = document.createElement("div");
           chatDiv.className = "user__container";
           chatDiv.dataset.chatId = chat._id;
@@ -336,15 +347,18 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
   
             <div class="user__message__time__container">
-              <p>Test</p>
+              <p class="time"></p>
             </div>
         `;
 
           displayUserContainer.appendChild(chatDiv);
+          const chatDivTime = chatDiv.querySelector(".time");
+          chatDivTime.innerHTML = hour;
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverNameLabel.innerHTML = receiverName;
+            chatDivTime.innerHTML = hour;
             currentChatId = chat._id;
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
@@ -362,7 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         }
 
-        if (singleRole === "receiver") {
+        if (receiverEmail === userEmail) {
           const chatDiv = document.createElement("div");
           chatDiv.className = "user__container";
           chatDiv.dataset.chatId = chat._id;
@@ -376,16 +390,20 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
   
             <div class="user__message__time__container">
-              <p>Test</p>
+              <p class="time"></p>
             </div>
         `;
 
           displayUserContainer.appendChild(chatDiv);
+          const chatDivTime = chatDiv.querySelector(".time");
+          chatDivTime.innerHTML = hour;
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverNameLabel.innerHTML = senderName;
             currentChatId = chat._id;
+            chatDivTime.innerHTML = hour;
+
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
             if (
@@ -417,15 +435,18 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
   
             <div class="user__message__time__container">
-              <p>Test</p>
+              <p class="time"></p>
             </div>
         `;
 
           displayUserContainer.appendChild(chatDiv);
+          const chatDivTime = chatDiv.querySelector(".time");
+          chatDivTime.innerHTML = hour;
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverNameLabel.innerHTML = groupName;
+            chatDivTime.innerHTML = hour;
             currentChatId = chat._id;
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
@@ -548,21 +569,69 @@ const retrieveMessages = async (currentChatId) => {
       let messageType;
       if (message.sender === userEmail) {
         messageType = "sender";
+        // ============ MESSAGE CONTAINER ============
+        const container = document.createElement("div");
+        container.className = messageType + "__container";
+        // ============ MESSAGE ============
+        const messages = document.createElement("p");
+        messages.className = messageType + "__message";
+
+        // ============ PROFILE PICTURE ============
+        const firstNameIndex = message.sender.charAt(0);
+        const profilePicture = document.createElement("div");
+        profilePicture.className = messageType + "__profile__picture";
+        profilePicture.innerHTML = `<p>${firstNameIndex}</p>`;
+
+        // ============ DISPLAY USER EMAIL FOR PP ============
+
+        // Create a text node with the message content
+        const textNode = document.createTextNode(message.text); // Change this line
+        messages.appendChild(textNode);
+        // Append the text node to the container
+        container.appendChild(messages);
+        container.appendChild(profilePicture);
+
+        // Append the container to the chatBoxDisplayMessageContainer
+        chatBoxDisplayMessageContainer.appendChild(container);
       } else {
         messageType = "receiver";
+        // ============ MESSAGE CONTAINER ============
+        const container = document.createElement("div");
+        container.className = messageType + "__container";
+        // ============ MESSAGE ============
+        const messages = document.createElement("p");
+        messages.className = messageType + "__message";
+
+        // ============ PROFILE PICTURE ============
+        const firstNameIndex = message.sender.charAt(0);
+        const receiverEmail = message.sender.split("@")[0];
+        const profilePicture = document.createElement("div");
+        profilePicture.className = messageType + "__profile__picture";
+        profilePicture.innerHTML = `<p>${firstNameIndex}</p>`;
+
+        const userNameMessageDiv = document.createElement("div");
+        userNameMessageDiv.className = "user__name__message__div";
+        const receiverName = document.createElement("p");
+        receiverName.className = "receiver__name";
+        receiverName.innerHTML = `<u>${receiverEmail}<u>`;
+
+        // Create a text node with the message content
+        const textNode = document.createTextNode(message.text); // Change this line
+        messages.appendChild(textNode);
+        userNameMessageDiv.appendChild(receiverName);
+        userNameMessageDiv.appendChild(messages);
+        // Append the text node to the container
+        container.appendChild(profilePicture);
+        container.appendChild(userNameMessageDiv);
+
+        profilePicture.addEventListener("click", async (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        });
+
+        // Append the container to the chatBoxDisplayMessageContainer
+        chatBoxDisplayMessageContainer.appendChild(container);
       }
-
-      const container = document.createElement("div");
-      container.className = messageType + "__container";
-
-      // Create a text node with the message content
-      const textNode = document.createTextNode(message.text); // Change this line
-
-      // Append the text node to the container
-      container.appendChild(textNode);
-
-      // Append the container to the chatBoxDisplayMessageContainer
-      chatBoxDisplayMessageContainer.appendChild(container);
     });
 
     // Scroll to the bottom of the chatBoxDisplayMessageContainer

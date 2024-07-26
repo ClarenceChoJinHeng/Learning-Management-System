@@ -191,7 +191,7 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 9rem;
+  max-width: 7.5rem;
 }
 
 .user__email__contacts {
@@ -302,8 +302,49 @@ main {
   width: 100%;
 }
 
+.chatDivTime {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
 .receiver__container,
 .sender__container {
+  display: flex;
+  /* border: 1px solid black; */
+  height: max-content;
+  word-wrap: break-word;
+  border-radius: 0.2rem;
+  width: max-content;
+  /* gap: 3rem; */
+  margin-top: 0.5rem;
+  max-width: 33rem;
+  padding: 0 0.5rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user__name__message__div {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  height: max-content;
+  word-wrap: break-word;
+  border-radius: 0.2rem;
+  width: max-content;
+  max-width: 33rem;
+  padding: 0 0.5rem;
+}
+
+.receiver__name {
+  font-size: 0.8rem;
+  font-weight: var(--Raleway600);
+  cursor: pointer;
+}
+
+.sender__message {
   display: block;
   border: 1px solid black;
   height: max-content;
@@ -314,6 +355,33 @@ main {
   margin-top: 0.5rem;
   max-width: 33rem;
   padding: 0 0.5rem;
+}
+
+.sender__profile__picture,
+.receiver__profile__picture {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: var(--Raleway600);
+  height: 1.5rem;
+  width: 1.5rem;
+  justify-content: center;
+  padding: 1rem;
+  border: 1px solid black;
+  border-radius: 20rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sender__profile__picture:hover,
+.receiver__profile__picture:hover {
+  background: lightgrey;
+}
+
+.sender__profile__picture:active,
+.receiver__profile__picture:active {
+  background: grey;
+  transform: scale(0.9);
 }
 
 .receiver__container {
@@ -403,7 +471,7 @@ main {
 .receiver__name__container,
 .sender__name__container {
   border: 1px solid black;
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10rem;
@@ -427,4 +495,3 @@ main {
     /* height: 78%; */
   }
 }
-

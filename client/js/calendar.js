@@ -226,36 +226,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// ============== EVENT DISPLAY ===============
-addEvent.forEach((event) => {
-  event.addEventListener("click", () => {
-    console.log("Element clicked!");
-    backgroundEventOverlay.style.display = "flex";
-    displayCalendarDataContainer.style.display = "flex";
-  });
-});
-
-closeEventDisplay.addEventListener("click", () => {
-  backgroundEventOverlay.style.display = "none";
-  displayCalendarDataContainer.style.display = "none";
-});
-
-// document.addEventListener("click", (e) => {
-//   console.log("Document clicked!");
-//   if (e.target.classList.contains("event") || e.target.closest(".event")) {
-//     console.log("Clicked on .event element!");
-//     return;
-//   }
-//   if (
-//     e.target !== displayCalendarDataContainer &&
-//     !displayCalendarDataContainer.contains(e.target)
-//   ) {
-//     console.log("Condition met!");
-//     backgroundEventOverlay.style.display = "none";
-//     displayCalendarDataContainer.style.display = "none";
-//   }
-// });
-
 // =============== ADD EVENT FUNCTION FOR DAYS AFTER AND BEFORE MAKING IT ACTIVE FOR BOTH ===============
 
 function addListener() {
@@ -497,34 +467,6 @@ const addNoteCalendar = async () => {
   const activeDayElem = document.querySelector(".day.active");
   if (!activeDayElem.classList.contains("event")) {
     activeDayElem.classList.add("event");
-  }
-
-  const userEmail = localStorage.getItem("userEmail");
-  const response = await fetch("http://localhost:5001/client/calendar", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      userEmail: userEmail,
-      newEvent: newEvent,
-    }),
-  });
-  console.log("newEvent:", newEvent);
-
-  if (response.ok) {
-    const data = await response.json();
-    console.log(data.message);
-    // REMOVE ACTIVE FROM ADD EVENT FORM
-    addEventContainer.classList.remove("active");
-    // Clear the fields
-    addEventTitle.value = "";
-    addEventFrom.value = "";
-    addEventTo.value = "";
-    addEventDescription.value = "";
-  } else {
-    const error = await response.json();
-    console.log(error.message);
   }
 };
 
