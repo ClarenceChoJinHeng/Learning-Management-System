@@ -134,7 +134,7 @@ const submitForm = async (event) => {
   if (response.ok) {
     const data = await response.json()
     console.log(data.message)
-    alert('Signup Successful! Please Login to continue')
+    // alert('Signup Successful! Please Login to continue')
     window.location.href = 'login.html'
   } else {
     const error = await response.json()

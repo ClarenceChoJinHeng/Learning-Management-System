@@ -1,5 +1,5 @@
 // PREVENT USER FROM GOING TO lms-home.html WHEN LOCAL STORAGE DONT HAVE USERNAME
-const logoutButton = document.getElementById("logoutButton");
+const logoutButton = document.getElementById("logoutButtonContainer");
 
 const protectRoute = () => {
   const username = localStorage.getItem("username");
@@ -28,4 +28,6 @@ const logout = () => {
   window.location.href = "index.html";
 };
 
-document.getElementById("logoutButton").addEventListener("click", logout);
+logoutButton.addEventListener("click", () => {
+  logout();
+});

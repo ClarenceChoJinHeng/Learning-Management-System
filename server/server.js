@@ -53,7 +53,7 @@ const database = client.db("lms-management-system");
 const userCollection = database.collection("Users");
 const courseCollection = database.collection("Courses");
 const Chat = database.collection("Chat");
-const calendarCollection = database.collection("Calendar");
+const addFriendRequest = database.collection("AddFriendRequest");
 const uploadFiles = database.collection("uploads.files");
 const uploadChunks = database.collection("uploads.chunks");
 const uploadFilesChat = database.collection("uploads.files.chat");
@@ -106,7 +106,6 @@ app.post("/client/signup", async (req, res) => {
 });
 
 // ================ LOGIN VALIDATION ==================
-
 app.post("/client/login", async (req, res) => {
   try {
     // RETRIEVE THE DATA FROM THE DATABASE
@@ -145,7 +144,6 @@ app.post("/client/login", async (req, res) => {
 });
 
 // ================ CREATE A NEW COURSE ==================
-
 app.post("/client/lms-home", async (req, res) => {
   try {
     // GET THE VALUES FROM THE CLIENT (JSON.stringify)
@@ -157,7 +155,6 @@ app.post("/client/lms-home", async (req, res) => {
       userEmail,
       students,
       courseNotes,
-      courseFolder,
     } = req.body;
 
     if (
@@ -167,8 +164,7 @@ app.post("/client/lms-home", async (req, res) => {
       !classRoom ||
       !userEmail ||
       !students ||
-      !courseNotes ||
-      !courseFolder
+      !courseNotes
     ) {
       return res.status(400).json({ message: "Invalid form data" });
     }
@@ -182,7 +178,6 @@ app.post("/client/lms-home", async (req, res) => {
       userEmail,
       students: " ",
       courseNotes,
-      courseFolder,
     });
 
     if (insert.acknowledged === true) {
@@ -212,7 +207,6 @@ app.get("/client/lms-home", async (req, res) => {
 });
 
 // ================ DELETE CLASS VALIDATION ==================
-
 app.delete("/client/lms/:courseId", async (req, res) => {
   const { courseId } = req.params;
 
@@ -227,6 +221,130 @@ app.delete("/client/lms/:courseId", async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// =============== SEND ADD FRIEND REQUEST TO NOTIFICATION ===============
+app.post("/client/friend-request", async (req, res) => {
+  try {
+    const { sender, receiver } = req.body;
+
+    if (!sender || !receiver) {
+      return res.status(400).json({ message: "Invalid form data" });
+    }
+
+    const receiverEmail = receiver.receiverEmail;
+    const senderEmail = sender.senderEmail;
+
+    const user = await userCollection.findOne({ email: receiverEmail });
+
+    const chatUser = await Chat.findOne({
+      $and: [
+        {
+          emails: { $elemMatch: { email: senderEmail } },
+        },
+        {
+          emails: { $elemMatch: { email: receiverEmail } },
+        },
+      ],
+    });
+
+    if (chatUser) {
+      return res.status(400).json({
+        message: `You have already added ${receiverEmail} in the chat`,
+      });
+    }
+
+    // ============== CHECK FOR USER'S EXISTENCE IN THE DATABASE ==============
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: `User ${receiverEmail} does not exist` });
+    }
+
+    if (receiverEmail === senderEmail) {
+      return res
+        .status(400)
+        .json({ message: "You can't send a request to yourself" });
+    }
+
+    const receiverValidation = await addFriendRequest.findOne({
+      "receiver.receiverEmail": receiverEmail,
+    });
+
+    if (receiverValidation) {
+      return res.status(400).json({
+        message: `Request to ${receiverEmail} is pending...`,
+      });
+    }
+
+    const senderValidation = await addFriendRequest.findOne({
+      "sender.senderEmail": receiverEmail,
+    });
+
+    if (senderValidation) {
+      return res
+        .status(400)
+        .json({ message: `${receiverEmail} sent a request to you...` });
+    }
+
+    const insert = await addFriendRequest.insertOne({
+      sender,
+      receiver,
+    });
+
+    if (insert.acknowledged === true) {
+      return res.status(200).json({ message: "Friend Request Sent" });
+    } else {
+      res.status(500).json({ error: "Failed to send friend request" });
+    }
+  } catch (error) {
+    console.error("Error handling form submission:", error);
+  }
+});
+
+// ================ RETRIEVE FRIEND REQUEST ==================
+app.get("/client/retrieve-friend-request", async (req, res) => {
+  try {
+    const { userEmail } = req.query;
+
+    const retrieveFriendRequests = await addFriendRequest
+      .find({
+        $or: [
+          { "sender.senderEmail": userEmail },
+          { "receiver.receiverEmail": userEmail },
+        ],
+      })
+      .toArray();
+
+    if (!retrieveFriendRequests || retrieveFriendRequests.length === 0) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    return res.status(200).json({ friendRequests: retrieveFriendRequests });
+  } catch (error) {
+    console.error("Error retrieving friend request:", error);
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+
+// ================ DELETE FRIEND REQUEST ==================
+app.delete("/client/decline-request/:requestId", async (req, res) => {
+  const { requestId } = req.params;
+  try {
+    const result = await addFriendRequest.deleteOne({
+      _id: new ObjectId(requestId),
+    });
+
+    if (result.deletedCount === 1) {
+      res.json({ message: "Friend Request Declined" });
+    } else {
+      res.status(404).json({ message: "Friend Request Deletion Fail" });
+    }
+  } catch (error) {
+    console.error("Error", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -258,7 +376,7 @@ app.post("/client/single-chat-creation", async (req, res) => {
         return res
           .status(400)
           .json({ message: `User ${receiverEmail} does not exist` });
-        continue;
+        // continue;
       }
 
       // ============== CHECK FOR USER'S EXISTENCE IN THE CHAT ==============
@@ -287,9 +405,9 @@ app.post("/client/single-chat-creation", async (req, res) => {
     const insert = await Chat.insertOne({
       senderName,
       receiverName,
+      chatTime: "",
       emails,
       messages: [], // Initialize messages as an empty array
-     
     });
 
     if (insert.acknowledged === true) {
@@ -326,7 +444,6 @@ app.get("/client/chat-retrieval", async (req, res) => {
 });
 
 // ================= SEND MESSAGES =================
-
 app.put("/client/single-chat-send-message", async (req, res) => {
   try {
     const { message, currentChatId } = req.body;
@@ -358,6 +475,39 @@ app.put("/client/single-chat-send-message", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// ================= UPDATE TIME =================
+app.put("/client/single-chat-update-time", async (req, res) => {
+  try {
+    const { time, currentChatId } = req.body;
+
+    if (!currentChatId || !time) {
+      return res.status(400).json({ message: "Invalid request" });
+    }
+
+    let objectId;
+    try {
+      objectId = new ObjectId(currentChatId);
+    } catch (error) {
+      return res.status(400).json({ message: "Invalid ObjectId" });
+    }
+
+    const insert = await Chat.updateOne(
+      { _id: objectId },
+      {
+        $set: {
+          chatTime: time,
+        },
+      }
+    );
+
+    console.log("Update result:", insert);
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // ================ RETRIEVE THE MESSAGES FROM A SPECIFIC CHAT ================
 app.get(
   "/client/single-chat-message-retrieval/api/chats/:chatId/messages",
@@ -386,7 +536,6 @@ app.get(
 );
 
 // ================ CREATE THE GROUP CHAT AND INSERT INTO DATABASE ================
-
 app.post("/client/group-study/group-chat-creation", async (req, res) => {
   try {
     const { userGroupNameInput, users } = req.body;
@@ -409,6 +558,7 @@ app.post("/client/group-study/group-chat-creation", async (req, res) => {
 
     const insert = await Chat.insertOne({
       groupName: userGroupNameInput,
+      chatTime: "",
       emails: users,
       messages: [], // Initialize messages as an empty array
     });
@@ -603,7 +753,7 @@ app.post("/client/file-upload", async (req, res) => {
       // EXTRACT THE USERNAME AND THE FILE FROM THE FORM DATA
       const filePath = files.file[0].filepath;
       const username = fields.username[0];
-      const userEmail = fields.userEmail; 
+      const userEmail = fields.userEmail;
       const originalFileName = files.file[0].originalFilename;
       const fileType = files.file[0].mimetype;
 
@@ -754,21 +904,15 @@ app.get("/client/lms-retrieve-notes", async (req, res) => {
     }
 
     // Check if courseFolder exists
-    if (course.courseFolder) {
-      return res.status(200).json({
-        courseNotes: course.courseNotes,
-        courseFolder: course.courseFolder,
-      });
-    } else {
-      return res.status(200).json({ courseNotes: course.courseNotes });
-    }
+    return res.status(200).json({
+      courseNotes: course.courseNotes,
+    });
   } catch (error) {
     return res.status(500).json({ message: "An error occurred.", error });
   }
 });
 
 // ================= RETRIEVE SPECIFIC NOTES FOR COURSES ==================
-
 app.get("/client/lms-specific-retrieve-notes", async (req, res) => {
   try {
     const { clickedNoteId } = req.query;
@@ -903,74 +1047,15 @@ app.put("/client/lms-update-notes-title", async (req, res) => {
   }
 });
 
-// ================== CREATE FOLDER ===================
-app.put("/client/lms-folder", async (req, res) => {
+// ================== DELETE NOTES ==================
+app.delete("/client/lms-delete-note", async (req, res) => {
+  const { noteId } = req.query;
   try {
-    const { currentCourseId, folderName, folderNotes } = req.body;
-
-    let objectId;
-    try {
-      // @ts-expect-error
-      objectId = new ObjectId(currentCourseId);
-    } catch (error) {
-      return res.status(400).json({ message: "Invalid ObjectId" });
-    }
-
-    const update = await courseCollection.findOneAndUpdate(
-      { _id: objectId },
-      {
-        $push: {
-          courseFolder: { _id: new ObjectId(), folderName, folderNotes },
-        },
-      },
-      { returnOriginal: false }
-    );
-
-    if (update) {
-      res.status(200).json({ message: "Course folder updated successfully." });
-    } else {
-      res.status(404).json({ message: "Course not found." });
-    }
-  } catch (err) {
-    res.status(500).json({ message: "An error occurred.", error: err });
-  }
-});
-
-// ================== DELETE FOLDER ===================
-app.delete("/client/lms-folder/:folderId", async (req, res) => {
-  const { folderId } = req.params;
-
-  try {
-    // Find the course document that contains the folder with the given ID
-    const course = await courseCollection.findOne({
-      "courseFolder._id": new ObjectId(folderId),
-    });
-
-    if (!course) {
-      return res.status(404).json({ message: "Folder not found" });
-    }
-
-    // Extract the IDs of the notes in the folder
-    const folder = course.courseFolder.find(
-      (folder) => folder._id.toString() === folderId
-    );
-    const noteIdsInFolder = folder.folderNotes.map(
-      (note) => new ObjectId(note._id)
-    );
-
-    // Delete the notes from the courseNotes array
-    const result = await courseCollection.updateOne(
-      { _id: course._id },
-      { $pull: { courseNotes: { _id: { $in: noteIdsInFolder } } } }
-    );
-
-    if (result.modifiedCount === 1) {
-      res.json({ message: "Notes deleted successfully" });
-    } else {
-      res.status(404).json({ message: "Notes not found" });
-    }
+    await Note.findByIdAndDelete(noteId);
+    res.sendStatus(200);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Server Error", error: error.toString() });
   }
 });
 

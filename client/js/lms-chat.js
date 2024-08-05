@@ -1,6 +1,7 @@
 let selectedUserEmail = []; // Array to store the selected user emails
 let currentChatId = "";
 let messageRetrievalInterval;
+
 // ============  EXPORTING ID INTO VARIABLE ============
 const triggerAddUser = document.getElementById("triggerAddUser");
 const addUserContainer = document.getElementById("addUserContainer");
@@ -23,6 +24,15 @@ const addUserButton = document.getElementById("addUserButton");
 const chatBoxNoUserContainer = document.getElementById(
   "chatBoxNoUserContainer"
 );
+
+const receiverNameLabel = document.getElementById("receiverName");
+
+const userEmailCheckBoxMainContainer = document.getElementById(
+  "userEmailCheckBoxMainContainer"
+);
+
+const successAddingSymbol = document.getElementById("successAddingSymbol");
+
 const chatBoxHeader = document.querySelector(".chatbox__header");
 const chatBoxDisplayMessageContainer = document.querySelector(
   ".chatbox__display__message__container"
@@ -33,33 +43,33 @@ const chatBoxEnterMessageContainer = document.querySelector(
 const enterMessageContainer = document.querySelector(
   ".enter__message__container"
 );
-const receiverNameLabel = document.getElementById("receiverName");
 
 const chatBoxDisplayMessageMainContainer = document.querySelector(
   ".chatbox__display__message__main__container"
 );
 
-const userEmailCheckBoxMainContainer = document.getElementById(
-  "userEmailCheckBoxMainContainer"
-);
-
 // ============  TRIGGER ADD USER CONTAINER ============
+
 triggerAddUser.addEventListener("click", (event) => {
   event.preventDefault();
   event.stopPropagation();
   if (
     addUserForm.style.display === "flex" ||
+    acceptDeclineOverlayContainer.style.display === "flex" ||
     createGroupForm.style.display === "flex"
   ) {
     addUserForm.style.display = "none";
     createGroupForm.style.display = "none";
+    acceptDeclineOverlayContainer.style.display = "none";
   } else if (
     addUserContainer.style.display === "none" ||
     addUserContainer.style.display === ""
   ) {
     addUserContainer.style.display = "flex";
+    acceptDeclineOverlayContainer.style.display = "none";
   } else {
     addUserContainer.style.display = "none";
+    acceptDeclineOverlayContainer.style.display = "none";
   }
 });
 
@@ -70,6 +80,7 @@ addUser.addEventListener("click", (event) => {
   addUserContainer.style.display = "none";
   addUserForm.style.display = "flex";
   createGroupForm.style.display = "none";
+  acceptDeclineOverlayContainer.style.display = "none";
 });
 
 createGroup.addEventListener("click", (event) => {
@@ -110,6 +121,43 @@ window.addEventListener("click", (event) => {
   }
 });
 
+const acceptDeclineOverlayContainer = document.getElementById(
+  "acceptDeclineOverlayContainer"
+);
+
+const triggerAcceptDeclineContainer = document.getElementById(
+  "triggerAcceptDeclineContainer"
+);
+
+// ============  TRIGGER ACCEPT DECLINE CONTAINER ============
+triggerAcceptDeclineContainer.addEventListener("click", (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  let computedDisplay = window.getComputedStyle(
+    acceptDeclineOverlayContainer
+  ).display;
+  console.log("Clicked! Current display:", computedDisplay);
+
+  if (computedDisplay === "none") {
+    acceptDeclineOverlayContainer.style.display = "flex";
+    addUserForm.style.display = "none";
+    createGroupForm.style.display = "none";
+  } else {
+    acceptDeclineOverlayContainer.style.display = "none";
+    addUserForm.style.display = "none";
+    createGroupForm.style.display = "none";
+  }
+});
+
+acceptDeclineOverlayContainer.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+document.addEventListener("click", (event) => {
+  if (!acceptDeclineOverlayContainer.contains(event.target)) {
+    acceptDeclineOverlayContainer.style.display = "none";
+  }
+});
 // ============= UPLOAD FILE FORM CONTAINER ===============
 const uploadFileForm = document.getElementById("upload-file-form");
 const addDocument = document.getElementById("addDocument");
@@ -151,14 +199,253 @@ document.addEventListener("DOMContentLoaded", function () {
       toastifyChatContainer.classList.remove("active");
     }, 2000);
   };
-  // ============  ADD USER ACCOUNT ============
-  const submitForm = async (event) => {
-    event.preventDefault();
-    const senderName = localStorage.getItem("username");
-    const senderEmail = localStorage.getItem("userEmail");
-    const receiverName = document.getElementById("userNameInput").value;
-    const receiverEmail = document.getElementById("userEmailInput").value;
 
+  // ============= SEND ADD FRIEND REQUEST TO NOTIFICATION ==============
+  const sendAddFriendRequest = async (event) => {
+    event.preventDefault();
+    const senderEmail = localStorage.getItem("userEmail");
+    const senderName = localStorage.getItem("username");
+    const receiverEmail = document.getElementById("userEmailInput").value;
+    const receiverName = document.getElementById("userNameInput").value;
+
+    console.log(senderEmail, senderName, receiverEmail, receiverName);
+
+    const senderEmailConfirmation = "";
+    const receiverEmailConfirmation = "";
+    const sender = { senderEmail, senderName, receiverEmailConfirmation };
+    const receiver = { receiverEmail, receiverName, senderEmailConfirmation };
+    const response = await fetch(
+      "http://localhost:5001/client/friend-request",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sender,
+          receiver,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      addUserForm.style.display = "none";
+      successAddingSymbol.style.display = "none";
+      courseNotification.innerHTML = `<i class='bx bxs-user-check' ></i>${data.message}`;
+      toastiyfyChatSuccess();
+      console.log(data.message);
+    } else {
+      const error = await response.json();
+      addUserForm.style.display = "none";
+      successAddingSymbol.style.display = "none";
+      toastifyChatContainer.style.borderBottom = "5px solid red";
+      courseNotification.innerHTML = `<i class='bx bxs-user-x'></i>${error.message}`;
+      toastiyfyChatSuccess();
+      console.log(error.message);
+    }
+  };
+
+  const retrieveAddFriendRequest = async (event) => {
+    // event.preventDefault();
+    const userEmail = localStorage.getItem("userEmail");
+
+    const response = await fetch(
+      `http://localhost:5001/client/retrieve-friend-request/?userEmail=${userEmail}`
+    );
+
+    acceptDeclineOverlayContainer.innerHTML = "";
+
+    if (response.ok) {
+      const data = await response.json();
+      // console.log(data.message);
+
+      data.friendRequests.forEach((friendRequest) => {
+        const senderName = friendRequest.sender.senderName;
+        const senderEmail = friendRequest.sender.senderEmail;
+        const receiverEmail = friendRequest.receiver.receiverEmail;
+        const receiverName = friendRequest.receiver.receiverName;
+        const _id = friendRequest._id;
+        if (receiverEmail === userEmail) {
+          const userProfileNameContainer = document.createElement("div");
+          userProfileNameContainer.className = "user__profile__name__container";
+          userProfileNameContainer.dataset.friendRequestId = _id;
+          userProfileNameContainer.innerHTML = `
+
+
+                      <!-- =========== USER PROFILE ============ -->
+                      <div class="user__profile__picture">
+                        <i class="bx bx-user-circle user__profile__picture"></i>
+                      </div>
+
+                      <!-- =========== USER INFO ============ -->
+                      <div class="user__info__container">
+                        <p class="user__profile__email">${senderEmail}</p>
+                        <p class="user__profile__incoming__status"> Incoming Friend Request</p>
+                      </div>
+
+                      <!-- =========== ACCEPT OR DECLINE BUTTON ============ -->
+                      <div class="accept__decline__button__container">
+                        <i class="bx bx-check accept-request" id="accept-request" data-decline-request-id="${_id}"></i>
+                        <i
+                          class="bx bx-x decline-request"
+                          id="delete-request"  data-decline-request-id=${_id}
+                        ></i>
+                      </div>
+     
+                    `;
+
+          acceptDeclineOverlayContainer.appendChild(userProfileNameContainer);
+          const acceptRequests = document.querySelectorAll("#accept-request");
+          acceptRequests.forEach((acceptRequest) => {
+            // Store the required data in the dataset of the acceptRequest element
+            acceptRequest.dataset.senderEmail = senderEmail;
+            acceptRequest.dataset.senderName = senderName;
+            acceptRequest.dataset.receiverEmail = receiverEmail;
+            acceptRequest.dataset.receiverName = receiverName;
+
+            acceptRequest.addEventListener("click", async (event) => {
+              event.stopPropagation();
+              console.log("Accept Button is Clicked");
+
+              setTimeout(async () => {
+                // Retrieve the data from the dataset of the acceptRequest element
+                const senderEmail = event.target.dataset.senderEmail;
+                const senderName = event.target.dataset.senderName;
+                const receiverEmail = event.target.dataset.receiverEmail;
+                const receiverName = event.target.dataset.receiverName;
+                const requestId = event.target.dataset.declineRequestId;
+                // Call the submitForm function with the required data
+                submitForm(
+                  senderEmail,
+                  senderName,
+                  receiverEmail,
+                  receiverName
+                );
+
+                await deleteRequest(requestId);
+                await retrieveChatForm();
+              }, 1000);
+            });
+          });
+
+          const declineRequests = document.querySelectorAll("#delete-request");
+          declineRequests.forEach((declineRequest) => {
+            declineRequest.addEventListener("click", (event) => {
+              event.stopPropagation();
+              console.log("Decline Button is Clicked");
+
+              setTimeout(() => {
+                // event.preventDefault();
+                console.log("Decline Button is Clicked");
+                const requestId = event.target.dataset.declineRequestId;
+                deleteRequest(requestId);
+              }, 1000);
+            });
+          });
+        } else if (senderEmail === userEmail) {
+          const userProfileNameContainer = document.createElement("div");
+          userProfileNameContainer.className = "user__profile__name__container";
+          userProfileNameContainer.dataset.friendRequestId = _id;
+          userProfileNameContainer.innerHTML = `
+      
+          <div class="user__profile__name__container">
+          <!-- =========== USER PROFILE ============ -->
+          <div class="user__profile__picture">
+            <i class="bx bx-user-circle user__profile__picture"></i>
+          </div>
+
+          <!-- =========== USER INFO ============ -->
+          <div class="user__info__container">
+            <p class="user__profile__email">${receiverEmail}</p>
+            <p class="user__profile__outgoing__status"> Outgoing Friend Request</p>
+          </div>
+
+          <!-- =========== ACCEPT OR DECLINE BUTTON ============ -->
+          <div class="accept__decline__button__container">
+            <i
+              class="bx bx-x decline-request"
+              id="delete-request" data-decline-request-id=${_id}
+            ></i>
+          </div>
+        </div>
+        `;
+
+          acceptDeclineOverlayContainer.appendChild(userProfileNameContainer);
+
+          const declineRequests = document.querySelectorAll("#delete-request");
+          declineRequests.forEach((declineRequest) => {
+            declineRequest.addEventListener("click", (event) => {
+              event.stopPropagation();
+              console.log("Decline Button is Clicked");
+
+              setTimeout(() => {
+                // event.preventDefault();
+                console.log("Decline Button is Clicked");
+                const requestId = event.target.dataset.declineRequestId;
+                deleteRequest(requestId);
+              }, 1000);
+            });
+          });
+        }
+      });
+    } else {
+      const error = await response.json();
+      console.log(error.message);
+    }
+  };
+
+  addUserButton.addEventListener("click", async (event) => {
+    await sendAddFriendRequest(event);
+    userEmailInput.value = "";
+    userNameInput.value = "";
+  });
+
+  triggerAcceptDeclineContainer.addEventListener("click", async (event) => {
+    await retrieveAddFriendRequest(event);
+  });
+
+  // ============  ACCEPT OR DECLINE FRIEND REQUEST ============
+  const deleteRequest = async (requestId) => {
+    const response = await fetch(
+      `http://localhost:5001/client/decline-request/${requestId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Friend request deleted successfully");
+      const requestDiv = document.querySelector(
+        `div[data-friend-request-id="${requestId}"]`
+      );
+      requestDiv.remove();
+      await retrieveAddFriendRequest();
+      await retrieveChatForm();
+      // successAddingSymbol.style.display = "none";
+      // courseNotification.innerHTML = `<i class='bx bxs-user-check' ></i>${data.message}`;
+      // toastiyfyChatSuccess();
+    } else {
+      const error = await response.json();
+      courseNotification.textContent = error.message;
+      successAddingSymbol.style.display = "none";
+      toastifyChatContainer.style.borderBottom = "5px solid red";
+      toastiyfyChatSuccess();
+      console.log(error.message);
+    }
+  };
+
+  // ============  ADD USER ACCOUNT ============
+  const submitForm = async (
+    senderEmail,
+    senderName,
+    receiverEmail,
+    receiverName
+  ) => {
     if (receiverEmail === senderEmail) {
       alert("You cannot add yourself to a chat");
       return;
@@ -199,6 +486,7 @@ document.addEventListener("DOMContentLoaded", function () {
       toastiyfyChatSuccess();
       // alert(data.message);
       console.log(data.message);
+      acceptDeclineOverlayContainer.style.display = "none";
       addUserForm.style.display = "none";
     } else {
       const error = await response.json();
@@ -289,20 +577,13 @@ document.addEventListener("DOMContentLoaded", function () {
       let chatIDs = [];
       individualChatsData.userChat.forEach((chat) => {
         // ============  HOUR AND MINUTES ============
-        const now = new Date();
-        let hour = now.getHours();
-        let minutes = now.getMinutes();
-        if (hour < 12) {
-          hour = `${hour}:${minutes} AM`;
-        } else if (hour > 12) {
-          hour = `${hour - 12}:${minutes} PM`;
-        }
 
         const senderName = chat.senderName;
         const receiverName = chat.receiverName;
         const emails = chat.emails; // Array of emails
         const chatID = chat._id;
         const groupName = chat.groupName;
+        const chatTime = chat.chatTime;
 
         let senderEmail, receiverEmail, singleRole;
 
@@ -338,14 +619,14 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.className = "user__container";
           chatDiv.dataset.chatId = chat._id;
           chatDiv.innerHTML = `
-  
+
             <div class="user__message__name__container">
             <div class="user__profile__picture">
               <i class="bx bx-user-circle user__profile__picture"></i>
             </div>
               <p class="user__message__name">${receiverName}</p>
             </div>
-  
+
             <div class="user__message__time__container">
               <p class="time"></p>
             </div>
@@ -353,15 +634,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
           displayUserContainer.appendChild(chatDiv);
           const chatDivTime = chatDiv.querySelector(".time");
-          chatDivTime.innerHTML = hour;
+          chatDivTime.innerHTML = chatTime;
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverNameLabel.innerHTML = receiverName;
-            chatDivTime.innerHTML = hour;
             currentChatId = chat._id;
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
+            updateTime(currentChatId);
             if (
               chatBoxNoUserContainer.style.display === "flex" ||
               chatBoxNoUserContainer.style.display === ""
@@ -381,14 +662,14 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.className = "user__container";
           chatDiv.dataset.chatId = chat._id;
           chatDiv.innerHTML = `
-  
+
             <div class="user__message__name__container">
             <div class="user__profile__picture">
               <i class="bx bx-user-circle user__profile__picture"></i>
             </div>
               <p class="user__message__name">${senderName}</p>
             </div>
-  
+
             <div class="user__message__time__container">
               <p class="time"></p>
             </div>
@@ -396,16 +677,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
           displayUserContainer.appendChild(chatDiv);
           const chatDivTime = chatDiv.querySelector(".time");
-          chatDivTime.innerHTML = hour;
+          chatDivTime.innerHTML = chatTime;
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverNameLabel.innerHTML = senderName;
             currentChatId = chat._id;
-            chatDivTime.innerHTML = hour;
 
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
+            updateTime(currentChatId);
             if (
               chatBoxNoUserContainer.style.display === "flex" ||
               chatBoxNoUserContainer.style.display === ""
@@ -426,14 +707,14 @@ document.addEventListener("DOMContentLoaded", function () {
           chatDiv.className = "user__container";
           chatDiv.dataset.chatId = chat._id;
           chatDiv.innerHTML = `
-  
+
             <div class="user__message__name__container">
             <div class="user__profile__picture">
               <i class="bx bx-user-circle user__profile__picture"></i>
             </div>
               <p class="user__message__name">${groupName}</p>
             </div>
-  
+
             <div class="user__message__time__container">
               <p class="time"></p>
             </div>
@@ -441,15 +722,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
           displayUserContainer.appendChild(chatDiv);
           const chatDivTime = chatDiv.querySelector(".time");
-          chatDivTime.innerHTML = hour;
+          chatDivTime.innerHTML = chatTime;
 
           chatDiv.addEventListener("click", async (event) => {
             event.preventDefault();
             receiverNameLabel.innerHTML = groupName;
-            chatDivTime.innerHTML = hour;
             currentChatId = chat._id;
             sendMessage.dataset.chatId = chat._id;
             retrieveMessages(currentChatId);
+            updateTime(currentChatId);
             if (
               chatBoxNoUserContainer.style.display === "flex" ||
               chatBoxNoUserContainer.style.display === ""
@@ -482,23 +763,24 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   retrieveChatForm();
-
-  addUserButton.addEventListener("click", async (event) => {
-    await submitForm(event);
-    await retrieveChatForm();
-    userEmailInput.value = "";
-    userNameInput.value = "";
-  });
 });
 
 // ================= SEND MESSAGES =================
-
 const enterMessage = document.getElementById("enterMessage");
 const sendMessage = document.getElementById("sendMessage");
 const sendMessages = async (currentChatId) => {
   let userEmail = localStorage.getItem("userEmail");
   let messageText = enterMessage.value;
+  const now = new Date();
+  let hour = now.getHours();
+  let minutes = now.getMinutes();
+  if (hour < 12) {
+    hour = `${hour}:${minutes} AM`;
+  } else if (hour > 12) {
+    hour = `${hour - 12}:${minutes} PM`;
+  }
 
+  console.log(hour);
   // Prevent sending empty messages
   if (!messageText.trim()) {
     console.log("Cannot send an empty message");
@@ -508,6 +790,7 @@ const sendMessages = async (currentChatId) => {
   const message = {
     sender: userEmail,
     text: messageText,
+    time: hour,
     file: "",
   };
 
@@ -582,14 +865,25 @@ const retrieveMessages = async (currentChatId) => {
         profilePicture.className = messageType + "__profile__picture";
         profilePicture.innerHTML = `<p>${firstNameIndex}</p>`;
 
+        // ============ DISPLAY USER TIME FOR MESSAGE ============
+        const time = document.createElement("p");
+        time.className = `${messageType}__time`;
+        time.innerHTML = message.time;
+
+        const messageTimeDiv = document.createElement("div");
+        messageTimeDiv.className = "sender__time__div";
+
         // ============ DISPLAY USER EMAIL FOR PP ============
 
         // Create a text node with the message content
         const textNode = document.createTextNode(message.text); // Change this line
         messages.appendChild(textNode);
-        // Append the text node to the container
-        container.appendChild(messages);
+        messageTimeDiv.appendChild(messages);
+        messageTimeDiv.appendChild(time);
+        container.appendChild(messageTimeDiv);
         container.appendChild(profilePicture);
+
+        chatDivTime = time;
 
         // Append the container to the chatBoxDisplayMessageContainer
         chatBoxDisplayMessageContainer.appendChild(container);
@@ -603,26 +897,58 @@ const retrieveMessages = async (currentChatId) => {
         messages.className = messageType + "__message";
 
         // ============ PROFILE PICTURE ============
+        const receiverFullEmail = message.sender;
         const firstNameIndex = message.sender.charAt(0);
         const receiverEmail = message.sender.split("@")[0];
         const profilePicture = document.createElement("div");
         profilePicture.className = messageType + "__profile__picture";
         profilePicture.innerHTML = `<p>${firstNameIndex}</p>`;
 
+        // ============ DISPLAY USER TIME FOR MESSAGE ============
+        const time = document.createElement("p");
+        time.className = `${messageType}__time`;
+        time.innerHTML = message.time;
+
+        const messageTimeDiv = document.createElement("div");
+        messageTimeDiv.className = "receiver__time__div";
+
+        const messageTimeDivContainer = document.createElement("div");
+        messageTimeDivContainer.className = "receiver__time__div__container";
+
+        const receiverNameAndEmailDiv = document.createElement("div");
+        receiverNameAndEmailDiv.className = "receiver__name__email__div";
+        receiverNameAndEmailDiv.innerHTML = ` 
+        <p class="receiver__name">${receiverEmail}</p>
+     
+        `;
+
         const userNameMessageDiv = document.createElement("div");
         userNameMessageDiv.className = "user__name__message__div";
-        const receiverName = document.createElement("p");
-        receiverName.className = "receiver__name";
-        receiverName.innerHTML = `<u>${receiverEmail}<u>`;
+        // const receiverName = document.createElement("p");
+        // receiverName.className = "receiver__name";
+        // receiverName.innerHTML = `<u>${receiverEmail}<u>`;
+
+        // <div class="receiver__container">
+
+        //   <div class="receiver__profile__picture">
+        //     <p>h</p>
+        //     </div>
+        //   <div class="receiver__time__div">
+        //     <p class="receiver__message">yes?</p>
+        //     <p class="receiver__time">10:20 PM</p>
+        //   </div>
+        //   </div>
 
         // Create a text node with the message content
         const textNode = document.createTextNode(message.text); // Change this line
         messages.appendChild(textNode);
-        userNameMessageDiv.appendChild(receiverName);
-        userNameMessageDiv.appendChild(messages);
-        // Append the text node to the container
         container.appendChild(profilePicture);
-        container.appendChild(userNameMessageDiv);
+        container.appendChild(messageTimeDivContainer);
+        messageTimeDivContainer.appendChild(receiverNameAndEmailDiv);
+        messageTimeDiv.appendChild(messages);
+        messageTimeDiv.appendChild(time);
+        messageTimeDivContainer.appendChild(messageTimeDiv);
+        // container.appendChild(messageTimeDiv);
 
         profilePicture.addEventListener("click", async (event) => {
           event.preventDefault();
@@ -654,8 +980,10 @@ window.onload = () => {
 
 async function handleSendMessage(event) {
   event.preventDefault();
+  // await updateTime(currentChatId);
   await sendMessages(currentChatId);
   await retrieveMessages(currentChatId);
+  await updateTime(currentChatId);
 
   clearInterval(messageRetrievalInterval);
   messageRetrievalInterval = setInterval(
@@ -672,6 +1000,41 @@ enterMessage.addEventListener("keydown", (event) => {
     enterMessage.value = "";
   }
 });
+
+// ================== UPDATE TIME ==================
+const updateTime = async (currentChatId) => {
+  // ================= UPDATE TIME FOR CHAT =================
+  const now = new Date();
+  let hour = now.getHours();
+  let minutes = now.getMinutes();
+  if (hour < 12) {
+    hour = `${hour}:${minutes} AM`;
+  } else if (hour > 12) {
+    hour = `${hour - 12}:${minutes} PM`;
+  }
+
+  const response = await fetch(
+    "http://localhost:5001/client/single-chat-update-time",
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        time: hour,
+        currentChatId,
+      }),
+    }
+  );
+
+  if (response.ok) {
+    const data = await response.json();
+    console.log(data.message);
+  } else {
+    const error = await response.json();
+    console.log(error.message);
+  }
+};
 
 // ============== RETRIEVE USER EMAIL FOR GROUP CHAT ================
 

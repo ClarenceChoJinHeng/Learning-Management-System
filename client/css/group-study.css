@@ -38,7 +38,9 @@ main {
   flex-direction: column;
   height: 100%;
   border-right: 1px solid grey;
-  width: 20rem;
+  width: 15rem;
+  /* max-width: 20rem; */
+  min-width: 15rem;
 }
 
 .search__user__container {
@@ -52,11 +54,18 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0rem 1rem 0rem 1rem;
+  /* padding: 0rem 1rem 0rem 1rem; */
+}
+
+.search__title h1 {
+  font-weight: var(--Raleway600);
 }
 
 .display__add__user__container {
   position: relative;
+  /* display:flex;
+  align-items: center;
+  gap: 0.5rem; */
 }
 
 .display__add__user__overlay__container {
@@ -79,17 +88,105 @@ main {
 }
 
 /* ================= DISPLAY OVERLAY ================= */
+.accept__or__decline__request__overlay__container {
+  /* border: 1px solid black; */
+  padding: 0.5rem;
+  position: absolute;
+  transform: translate(-65%, 2.5%);
+  background: white;
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  height: 20rem;
+  overflow-y: auto;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  max-width: 16rem;
+  width: 16rem;
+  border-radius: 0.5rem;
+}
+
+.accept__decline__no__request__container {
+  position: absolute;
+  /* top: 90%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  gap: 0.5rem;
+}
+
+.circle-shape {
+  font-size: 1.5rem;
+}
+
+.accept__decline__no__request__container > p {
+  font-weight: var(--Raleway500);
+}
+
+@media screen and (max-height: 768px) {
+  .accept__or__decline__request__overlay__container {
+    transform: translate(-68%, 2.5%);
+  }
+}
+
+.user__profile__name__container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user__profile__incoming__status {
+  font-size: 0.7rem;
+}
+
+.user__profile__outgoing__status {
+  font-size: 0.8rem;
+}
+
+.user__profile__email {
+  font-size: 0.9rem;
+}
+
+.user__profile__name,
+.user__profile__email {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 8rem;
+}
+
+.accept__decline__button__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accept-request,
+.decline-request {
+  padding: 0.1rem;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.accept-request:hover,
+.decline-request:hover {
+  background: lightgrey;
+}
 
 .add__user__input__overlay__container {
   position: absolute;
   top: 1%;
-  transform: translate(-80%, 14%);
+  transform: translate(-70%, 14%);
   height: max-content;
   background: white;
   padding: 1rem;
   display: none;
   flex-direction: column;
   gap: 1rem;
+  width: 14rem;
   border-radius: 0.5rem;
 }
 
@@ -106,10 +203,21 @@ main {
   border-radius: 0.5rem;
 }
 
+@media screen and (max-height: 768px) {
+  .add__user__input__overlay__container {
+    width: 14rem;
+  }
+
+  .create__group__input__overlay__container {
+    width: max-content;
+  }
+}
+
 #userNameInput,
 #userEmailInput,
 #userGroupNameInput {
   padding: 0.5rem;
+  width: 100%;
 }
 
 .add__user__button__container {
@@ -133,7 +241,8 @@ main {
   transition: all 0.2s ease;
 }
 
-#triggerAddUser {
+#triggerAddUser,
+#triggerAcceptDeclineContainer {
   font-size: 1.5rem;
   cursor: pointer;
 }
@@ -288,9 +397,12 @@ main {
   justify-content: flex-end;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1rem;
   gap: 2rem;
-  width: 100%;
+  width: 100rem;
+  max-width: 100rem;
+  /* border: 1px solid black; */
 }
 
 .chatbox__display__message__container {
@@ -298,32 +410,92 @@ main {
   flex-direction: column;
   height: max-content;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1rem;
   width: 100%;
+  max-width: 100%;
 }
 
 .chatDivTime {
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-
-
 .receiver__container,
 .sender__container {
   display: flex;
-  /* border: 1px solid black; */
   height: max-content;
   word-wrap: break-word;
   border-radius: 0.2rem;
   width: max-content;
-  /* gap: 3rem; */
   margin-top: 0.5rem;
-  max-width: 33rem;
   padding: 0 0.5rem;
-  align-items: center;
   gap: 0.5rem;
+}
+
+@media screen and (max-height: 768px) {
+  .chatbox__display__message__main__container {
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 1rem;
+    gap: 2rem;
+    width: 100%;
+    max-width: 100%;
+    /* border: 1px solid black; */
+  }
+
+  .receiver__container,
+  .sender__container {
+    display: flex;
+    height: max-content;
+    word-wrap: break-word;
+    border-radius: 0.2rem;
+    width: max-content;
+    margin-top: 0.5rem;
+    padding: 0 0.5rem;
+    gap: 0.5rem100%
+  }
+
+  .receiver__message {
+    display: block;
+    /* border: 1px solid black; */
+    height: max-content;
+    word-wrap: break-word;
+    align-items: center;
+    border-radius: 0.2rem;
+    width: max-content;
+    gap: 3rem;
+    max-width: 10rem;
+    padding: 0 0.5rem;
+  }
+
+  .sender__message {
+    display: block;
+    /* border: 1px solid black; */
+    height: max-content;
+    word-wrap: break-word;
+    align-items: center;
+    border-radius: 0.2rem;
+    width: max-content;
+    gap: 3rem;
+    max-width: 10rem;
+    padding: 0 0.5rem;
+  }
+
+  .search__user__main__container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-right: 1px solid grey;
+    width: 15rem;
+    /* max-width: 20rem; */
+    min-width: 15rem;
+  }
 }
 
 .user__name__message__div {
@@ -344,15 +516,28 @@ main {
   cursor: pointer;
 }
 
-.sender__message {
+.receiver__message {
   display: block;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   height: max-content;
   word-wrap: break-word;
+  align-items: center;
   border-radius: 0.2rem;
   width: max-content;
   gap: 3rem;
-  margin-top: 0.5rem;
+  max-width: 33rem;
+  padding: 0 0.5rem;
+}
+
+.sender__message {
+  display: block;
+  /* border: 1px solid black; */
+  height: max-content;
+  word-wrap: break-word;
+  align-items: center;
+  border-radius: 0.2rem;
+  width: max-content;
+  gap: 3rem;
   max-width: 33rem;
   padding: 0 0.5rem;
 }
@@ -386,6 +571,7 @@ main {
 
 .receiver__container {
   align-self: flex-start;
+  text-align: left;
 }
 
 .sender__container {
@@ -468,6 +654,25 @@ main {
   font-size: 1.5rem;
 }
 
+.receiver__time__div__container {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.receiver__name__email__div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.receiver__email {
+  font-size: 0.6rem;
+}
+
 .receiver__name__container,
 .sender__name__container {
   border: 1px solid black;
@@ -482,6 +687,42 @@ main {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+}
+
+.sender__time__div {
+  display: flex;
+  align-items: center;
+  background: white;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.receiver__time__div {
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  /* border: 1px solid black; */
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.sender__time,
+.receiver__time {
+  font-size: 0.8rem;
+}
+
+.course__notification {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bxs-user-check,
+.bxs-user-x {
+  font-size: 1.5rem;
 }
 
 /* ================ RESPONSIVE CSS ================ */

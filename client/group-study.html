@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Group Study</title>
+    <title>Group Chat</title>
 
     <!-- ========= LINK CSS ========= -->
 
@@ -29,7 +29,7 @@
 
     <!-- ======== FAVICON ========  -->
     <link rel="icon" href="Images/book-reader-regular-24(2).png" />
-    <title>Group Study</title>
+    <title>Group Chat</title>
   </head>
   <body>
     <header>
@@ -73,7 +73,7 @@
           </a>
           <a class="nav__function__container" href="group-study.html">
             <i class="bx bx-group"></i>
-            <p id="sideLabel">Study Group</p>
+            <p id="sideLabel">Group Chat</p>
           </a>
           <a href="settings.html" class="nav__function__container">
             <i class="bx bx-cog"></i>
@@ -92,6 +92,7 @@
               <div class="search__title">
                 <h1>Group Chat</h1>
                 <div class="display__add__user__container">
+                  <i class="bx bx-bell" id="triggerAcceptDeclineContainer"></i>
                   <i class="bx bx-comment-add" id="triggerAddUser"></i>
 
                   <!-- ============ ADD USER OVERLAY ============ -->
@@ -106,6 +107,21 @@
 
                     <div class="create__group__contacts__container">
                       <button id="createGroup">Create Group</button>
+                    </div>
+                  </div>
+
+                  <!-- =============== ACCEPT OR DECLINE FRIEND REQUEST OVERLAY =============== -->
+
+                  <div
+                    class="accept__or__decline__request__overlay__container"
+                    id="acceptDeclineOverlayContainer"
+                  >
+                    <div
+                      class="accept__decline__no__request__container"
+                      id="acceptDeclineNoRequestContainer"
+                    >
+                      <i class="bx bxs-shapes circle-shape"></i>
+                      <p>No friend request</p>
                     </div>
                   </div>
 
@@ -197,8 +213,7 @@
             <div
               class="display__user__container"
               id="displayUserContainer"
-            >
-          </div>
+            ></div>
           </div>
 
           <!-- ============== CHAT BOX ============== -->
@@ -208,7 +223,7 @@
             <!-- =============== TOASTIFY =============== -->
 
             <div class="toastify__chat__container" id="toastifyChatContainer">
-              <i class="bx bx-check"></i>
+              <i class="bx bx-check" id="successAddingSymbol"></i>
               <p class="course__notification" id="courseChatNotification"></p>
             </div>
 

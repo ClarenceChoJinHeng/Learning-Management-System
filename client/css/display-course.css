@@ -355,7 +355,7 @@
   display: flex;
   flex-direction: column;
   padding: 0.1rem;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .search__notes__file__folder {
@@ -379,6 +379,18 @@
   display: flex;
   flex-direction: column;
   border-top: 1px solid lightgrey;
+}
+
+@media screen and (max-height: 768px) {
+  .display__folder__files__container {
+    height: 50rem;
+    overflow-y: auto;
+  }
+
+  .display__notes__files__container {
+    height: 50rem;
+    overflow-y: auto;
+  }
 }
 
 .display__notes__title__container {
@@ -1028,8 +1040,8 @@
 }
 
 .folder__container__name {
-  display:flex;
-align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .files__input__checkbox {
@@ -1098,6 +1110,7 @@ align-items: center;
   display: flex;
   align-items: center;
   flex-direction: column;
+  height: max-content;
   border: 1px solid black;
 }
 
@@ -1105,6 +1118,20 @@ align-items: center;
   border: 1px solid black;
   display: flex;
   align-items: center;
+  cursor: pointer;
+}
+
+.folder__files__title__container:hover {
+  background: lightgrey;
+}
+
+.folder__files__functionality__container {
+  border: 1px solid black;
+  padding: 1px;
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  height: max-content;
 }
 
 .folder__files__title {

@@ -383,14 +383,12 @@ const addNoteCalendar = async () => {
   const eventTitle = addEventTitle.value;
   const eventTimeFrom = addEventFrom.value;
   const eventTimeTo = addEventTo.value;
-  const eventDescription = addEventDescription.value;
 
   //=========== VALIDATIONS ============
   if (
     eventTitle === " " ||
     eventTimeFrom === "" ||
-    eventTimeTo === "" ||
-    eventDescription === ""
+    eventTimeTo === "" 
   ) {
     alert("All Fields Are Required");
     return;
@@ -427,7 +425,6 @@ const addNoteCalendar = async () => {
     title: eventTitle,
     timeFrom: timeFrom,
     timeTo: timeTo,
-    description: eventDescription,
   };
 
   let eventAdded = false;
